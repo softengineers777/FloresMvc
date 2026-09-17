@@ -8,19 +8,19 @@
     "net8.0": []
   },
   "packageFolders": {
-    "/home/ingeniero-james/.nuget/packages/": {}
+    "C:\\Users\\jhon.bolivar\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/home/ingeniero-james/Documentos/Mountain/FloresMvc/FloresMvc.csproj",
+      "projectUniqueName": "C:\\Users\\jhon.bolivar\\OneDrive - GR Chia S.A.S\\Documentos\\Desarrollo\\FloresMvc\\FloresMvc.csproj",
       "projectName": "FloresMvc",
-      "projectPath": "/home/ingeniero-james/Documentos/Mountain/FloresMvc/FloresMvc.csproj",
-      "packagesPath": "/home/ingeniero-james/.nuget/packages/",
-      "outputPath": "/home/ingeniero-james/Documentos/Mountain/FloresMvc/obj/",
+      "projectPath": "C:\\Users\\jhon.bolivar\\OneDrive - GR Chia S.A.S\\Documentos\\Desarrollo\\FloresMvc\\FloresMvc.csproj",
+      "packagesPath": "C:\\Users\\jhon.bolivar\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\jhon.bolivar\\OneDrive - GR Chia S.A.S\\Documentos\\Desarrollo\\FloresMvc\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "/home/ingeniero-james/.nuget/NuGet/NuGet.Config"
+        "C:\\Users\\jhon.bolivar\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net8.0"
@@ -67,7 +67,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/local/dotnet/sdk/8.0.416/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.425/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

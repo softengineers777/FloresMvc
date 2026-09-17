@@ -1,21 +1,51 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="utf-8" />
+    @* <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - FloresMvc</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/FloresMvc.styles.css" asp-append-version="true" />
-    <link rel="stylesheet" href="">
+    <link rel="stylesheet" href=""> *@
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FloresMvc</title>
+
+    <!-- SEO Optimization -->
+    <meta name="description" content="Spark Admin - Premium Bootstrap 5 Admin Dashboard Template">
+    <meta name="author" content="Spark Admin Team">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="assets/images/favicon.ico">
+
+    <!-- Local Third-Party Libraries (100% Offline Compatible) -->
+    <link rel="stylesheet" href="assets/libs/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/libs/bootstrap-icons/bootstrap-icons.css">
+    <link rel="stylesheet" href="assets/libs/apexcharts/apexcharts.css">
+    <link rel="stylesheet" href="assets/libs/flatpickr/flatpickr.min.css">
+
+    <!-- Main Design System & Custom Stylesheet -->
+    <link rel="stylesheet" href="assets/css/main.css">
 </head>
+
 <body>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
+            @await Html.PartialAsync(partialViewName: "_Login")
+            @await Html.PartialAsync(partialViewName: "_Sidebar")
+            @await Html.PartialAsync(partialViewName: "_startDashboard")
+            @await Html.PartialAsync(partialViewName: "_startFooter")
+            @await Html.PartialAsync(partialViewName: "_startMain")
+            @await Html.PartialAsync(partialViewName: "_startNavbar")
+            @await Html.PartialAsync(partialViewName: "_page_blank")
+            @await Html.PartialAsync(partialViewName: "page-404")
+
+            @* <div class="container-fluid">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">FloresMvc</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
+                        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
@@ -24,11 +54,12 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home"
+                               asp-action="Privacy">Privacy</a>
                         </li>
                     </ul>
                 </div>
-            </div>
+            </div> *@
         </nav>
     </header>
     <div class="container">
@@ -42,9 +73,16 @@
             &copy; 2026 - FloresMvc - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
+    <script src="assets/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/libs/apexcharts/apexcharts.min.js"></script>
+    <script src="assets/libs/flatpickr/flatpickr.min.js"></script>
+
+    <!-- Local dashboard interactions controller -->
+    @* <script src="assets/js/dashboard.js"></script>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script> *@
     @await RenderSectionAsync("Scripts", required: false)
 </body>
+
 </html>
