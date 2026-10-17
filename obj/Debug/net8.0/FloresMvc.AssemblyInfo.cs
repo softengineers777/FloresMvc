@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("FloresMvc")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+06a1248e48314d0417f403898c6ba816368e2c9f")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+12b70de6d0ec7a32e3a7e76413a964be3e0871f0")]
 [assembly: System.Reflection.AssemblyProductAttribute("FloresMvc")]
 [assembly: System.Reflection.AssemblyTitleAttribute("FloresMvc")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

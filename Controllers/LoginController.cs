@@ -35,8 +35,8 @@ namespace FloresMvc.Controllers
             }
             return View(Login);
         }
-        [HttpGet]
-        public async Task<IActionResult> Create()
+                [HttpGet]
+        public IActionResult Create()
         {
             return View();
         }
@@ -59,7 +59,7 @@ namespace FloresMvc.Controllers
             {
                 return NotFound();
             }
-            var login = await _context.Login.FindAsync();
+            var login = await _context.Login.FindAsync(id);
             if (login == null)
             {
                 return NotFound();
@@ -68,8 +68,7 @@ namespace FloresMvc.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind
-        ("IdLogin,user_id,password_hash,ultimo_acceso,activo")]Login login)
+        public async Task<IActionResult> Edit(int id, [Bind("IdLogin,user_id,password_hash,ultimo_acceso,activo")] Login login)
         {
             if (id != login.IdLogin)
             {
@@ -93,11 +92,9 @@ namespace FloresMvc.Controllers
                         throw;
                     }
                 }
-                RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index));
             }
             return View(login);
-
-
         }
         public bool LoginExists(int id)
         {

@@ -40,8 +40,8 @@ namespace FloresMvc.Controllers
             }
             return View(Usuarios);
         }
-        [HttpGet]
-        public async Task<IActionResult> Create()
+                [HttpGet]
+        public IActionResult Create()
         {
             return View();
         }
@@ -135,7 +135,5 @@ namespace FloresMvc.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
-
-
     }
 }
