@@ -1,13 +1,140 @@
-// using System.Diagnostics;
-// using Microsoft.AspNetCore.Mvc;
-// using FloresMvc.Models;
+using System;
+using Microsoft.AspNetCore.Mvc;
+using System.Data;
+using FloresMvc.Models;
+using Microsoft.EntityFrameworkCore;
 
-// namespace FloresMvc.Controllers;
+namespace FloresMvc.Controllers
+{
+    public class LoginController : Controller
+    {
+        private readonly FloresDbContext _context;
+        private readonly IConfiguration _configuration;
+        public LoginController(FloresDbContext context, IConfiguration configuration)
+        {
+            _context = context;
+            _configuration = configuration;
+        }
 
-// public class LoginController : Controller
+        public async Task<IActionResult> Index()
+        {
+            return View(await _context.Login.ToListAsync());
+        }
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var Login = await _context.Login
+            .FirstOrDefaultAsync(l => l.IdLogin == id);
 
-// {
-    
-//     private readonly IConfiguration 
-//     private readonly FloresdbContext
-// }
+            if (Login == null)
+            {
+                return NotFound();
+            }
+            return View(Login);
+        }
+        [HttpGet]
+        public async Task<IActionResult> Create()
+        {
+            return View();
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create([Bind("IdLogin,user_id,password_hash,ultimo_acceso,activo")] Login login)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Add(login);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            return View(login);
+        }
+        [HttpGet]
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var login = await _context.Login.FindAsync();
+            if (login == null)
+            {
+                return NotFound();
+            }
+            return View(login);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, [Bind
+        ("IdLogin,user_id,password_hash,ultimo_acceso,activo")]Login login)
+        {
+            if (id != login.IdLogin)
+            {
+                return NotFound();
+            }
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(login);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!LoginExists(login.IdLogin))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                RedirectToAction(nameof(Index));
+            }
+            return View(login);
+
+
+        }
+        public bool LoginExists(int id)
+        {
+            return _context.Login.Any(l => l.IdLogin == id);
+        }
+        [HttpGet, ActionName("Delete")]
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var login = await _context.Login
+            .FirstOrDefaultAsync(l => l.IdLogin == id);
+            if (login == null)
+            {
+                return NotFound();
+            }
+            return View(login);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var login = await _context.Login.FindAsync(id);
+            if (login == null)
+            {
+                return NotFound();
+            }
+            _context.Login.Remove(login);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+    }
+}
+
+
+
+

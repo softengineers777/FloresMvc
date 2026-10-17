@@ -18,7 +18,7 @@ namespace FloresMvc.Models
         // Mapeo de las tablas (DbSet)
         public DbSet<Roles> Roles { get; set; }
         public DbSet<Usuarios> Usuarios { get; set; }
-        public DbSet<Login> Logins { get; set; }
+        public DbSet<Login> Login { get; set; }
 
         protected override void  OnModelCreating(ModelBuilder modelBuilder)
         {
