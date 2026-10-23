@@ -16,9 +16,50 @@ namespace FloresMvc.Controllers
             _configuration = configuration;
         }
 
-        public async Task<IActionResult> Index()
+                public async Task<IActionResult> Index()
         {
-            return View(await _context.Login.ToListAsync());
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Autenticar(string email, string password)
+        {
+            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
+            {
+                ViewBag.Error = "Por favor completa todos los campos.";
+                return View("Index");
+            }
+
+            // Buscamos el usuario por su correo en la tabla Usuarios
+            var usuario = await _context.Usuarios.FirstOrDefaultAsync(u => u.email == email);
+            if (usuario == null)
+            {
+                ViewBag.Error = "Credenciales incorrectas (Usuario no encontrado).";
+                return View("Index");
+            }
+
+            // Buscamos el registro de login asociado a este usuario
+            var loginRecord = await _context.Login.FirstOrDefaultAsync(l => l.user_id == usuario.IdUsuarios);
+            if (loginRecord == null || loginRecord.password_hash != password) // Nota: aquí puedes implementar hashing de contraseña si usas BCrypt o SHA256
+            {
+                ViewBag.Error = "Contraseña incorrecta.";
+                return View("Index");
+            }
+
+            if (!loginRecord.activo)
+            {
+                ViewBag.Error = "Este usuario se encuentra inactivo.";
+                return View("Index");
+            }
+
+            // Actualizamos último acceso
+            loginRecord.ultimo_acceso = DateTime.Now;
+            _context.Update(loginRecord);
+            await _context.SaveChangesAsync();
+
+            // Redirigimos al Index de Roles o al Dashboard principal
+            return RedirectToAction("Index", "Roles");
         }
         public async Task<IActionResult> Details(int? id)
         {

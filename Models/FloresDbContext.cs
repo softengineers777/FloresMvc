@@ -47,6 +47,16 @@ namespace FloresMvc.Models
                entity.Property(l=>l.ultimo_acceso);
                entity.Property(l=>l.activo); 
             });
+            modelBuilder.Entity<Fincas>(entity =>
+            {
+               entity.HasKey(f=>f.IdFinca);
+               entity.Property(f=>f.NomFinca); 
+            });
+            modelBuilder.Entity<Areas>(entity =>
+            {
+               entity.HasKey(a=>a.IdArea);
+               entity.Property(a=>a.NomArea); 
+            });
         }
     }
 }
