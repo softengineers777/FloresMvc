@@ -19,6 +19,8 @@ namespace FloresMvc.Models
         public DbSet<Roles> Roles { get; set; }
         public DbSet<Usuarios> Usuarios { get; set; }
         public DbSet<Login> Login { get; set; }
+        public DbSet<Areas> Areas { get; set; }
+        public DbSet<Fincas> Fincas { get; set; }
 
         protected override void  OnModelCreating(ModelBuilder modelBuilder)
         {
