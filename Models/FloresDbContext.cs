@@ -10,7 +10,6 @@ namespace FloresMvc.Models
         { 
         }
 
-        // Constructor vacío (opcional)
         public FloresDbContext()
         {
         }
@@ -21,6 +20,9 @@ namespace FloresMvc.Models
         public DbSet<Login> Login { get; set; }
         public DbSet<Areas> Areas { get; set; }
         public DbSet<Fincas> Fincas { get; set; }
+        public DbSet<Presupuesto> Presupuesto { get; set; }
+        public DbSet<Categorias> Categorias { get; set; }
+        public DbSet<SubCategorias> SubCategorias { get; set; }
 
         protected override void  OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -39,6 +41,7 @@ namespace FloresMvc.Models
             {
                entity.HasKey(r=>r.IdRol); 
                entity.Property(r=>r.Nombre); 
+               entity.Property(p=>p.fecha_Creacion);
             });
 
             modelBuilder.Entity<Login>(entity =>
@@ -53,12 +56,44 @@ namespace FloresMvc.Models
             {
                entity.HasKey(f=>f.IdFinca);
                entity.Property(f=>f.NomFinca); 
+               entity.Property(p=>p.fecha_Creacion);
             });
             modelBuilder.Entity<Areas>(entity =>
             {
                entity.HasKey(a=>a.IdArea);
                entity.Property(a=>a.NomArea); 
+               entity.Property(p=>p.fecha_Creacion);
             });
+            modelBuilder.Entity<Presupuesto>(entity =>
+            {
+               entity.HasKey(p=>p.IdPresupuesto);
+               entity.Property(p=>p.IdArea);
+               entity.Property(p=>p.IdFinca);
+               entity.Property(p=>p.IdCategoria);
+               entity.Property(p=>p.IdSubcategoria);
+               entity.Property(p=>p.fecha_Creacion);
+               entity.Property(p=>p.Nombre);
+               entity.Property(p=>p.Apellido);
+               entity.Property(p=>p.Cedula);
+               entity.Property(p=>p.Subtotal);
+               entity.Property(p=>p.Total);
+               entity.Property(p=>p.Observaciones);            
+            });
+            modelBuilder.Entity<Categorias>(entity =>
+            {
+               entity.HasKey(c=> c.IdCategoria);
+               entity.Property(c=> c.Nomcategoria);
+               entity.Property(p=>p.fecha_Creacion);
+
+            });
+            modelBuilder.Entity<SubCategorias>(entity =>
+            {
+               entity.HasKey(c=> c.IdSubcategoria);
+               entity.Property(c=> c.NomSubcategoria); 
+               entity.Property(p=>p.fecha_Creacion);
+
+            });
+
         }
     }
 }

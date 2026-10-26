@@ -14,6 +14,8 @@ namespace FloresMvc.Models
         public int IdFinca { get; set; }
         [Display(Name = "Nombre Finca")]
         public string NomFinca { get; set; }
+        public DateTime fecha_Creacion { get; set; }
+
         public string? Owner { get; set; }          // Quién lo creó
         public DateTime DateOwner { get; set; }     // Cuándo se creó
         public string? LastModify { get; set; }     // Quién lo modificó por última vez
