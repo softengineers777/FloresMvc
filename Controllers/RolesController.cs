@@ -21,6 +21,31 @@ namespace FloresMvc.Controllers
         {
             return View(await _context.Roles.ToListAsync());
         }
+         public async Task<IActionResult> GetRolesJson()
+        {
+            var roles = await _context.Roles.ToListAsync();
+            return Json(roles);
+        }
+         public async Task<IActionResult> ActualizarCelda([FromBody] Usuarios rolModificado)
+        {
+            if (rolModificado == null)
+            {
+                return BadRequest(new { success = false, message = "Datos inválidos." });
+            }
+            var rolDb = await _context.Roles.FindAsync(rolModificado.IdRol);
+            if (rolDb == null)
+            {
+                return NotFound(new { success = false, message = "Rol no encontrado" });
+            }
+
+            rolDb.Nombre = rolModificado.Nombre;
+            
+
+            _context.Update(rolDb);
+            await _context.SaveChangesAsync();
+
+            return Json(new { success = true, message = "actualizacion correcta" });
+        }
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.Roles == null)

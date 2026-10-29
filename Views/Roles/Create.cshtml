@@ -1,0 +1,29 @@
+<!-- Modal de Creación de Usuario -->
+<div class="modal fade" id="createUserModal" tabindex="-1" aria-labelledby="createUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bg-dark text-white border-secondary">
+            <div class="modal-header border-secondary">
+                <h5 class="modal-title" id="createUserModalLabel">Registrar Nuevo Rol</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="formCreateUser">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="Nombre" class="form-label">Nombre</label>
+                        <input type="text" class="form-control bg-secondary text-white border-0" id="Nombre" name="Nombre" required>
+                    </div>
+                </div>
+                 <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="fecha" class="form-label">Fecha Creacion</label>
+                        <input type="date" class="form-control bg-secondary text-white border-0" id="fecha" name="fecha" required>
+                    </div>
+                </div>
+                <div class="modal-footer border-secondary">
+                    <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-success">Guardar Usuario</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
