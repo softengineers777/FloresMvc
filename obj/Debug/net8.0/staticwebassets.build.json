@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "j/dyI+9AC/AvV1GP9ByiAmPzblkpttTez4SepCgkfQQ=",
+  "Hash": "RNJE1uCNVc39Kp05rC4ehLnqDkKji+kuIpDoONKKb88=",
   "Source": "FloresMvc",
   "BasePath": "_content/FloresMvc",
   "Mode": "Default",
@@ -528,6 +528,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\favicon.ico"
+    },
+    {
+      "Identity": "C:\\Users\\jhon.bolivar\\OneDrive - GR Chia S.A.S\\Documentos\\Desarrollo\\FloresMvc\\wwwroot\\js\\commonModal.js",
+      "SourceId": "FloresMvc",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\jhon.bolivar\\OneDrive - GR Chia S.A.S\\Documentos\\Desarrollo\\FloresMvc\\wwwroot\\",
+      "BasePath": "_content/FloresMvc",
+      "RelativePath": "js/commonModal.js",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\js\\commonModal.js"
     },
     {
       "Identity": "C:\\Users\\jhon.bolivar\\OneDrive - GR Chia S.A.S\\Documentos\\Desarrollo\\FloresMvc\\wwwroot\\js\\site.js",

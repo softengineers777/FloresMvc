@@ -1,0 +1,35 @@
+<!-- Modal de Creación de Usuario -->
+<div class="modal fade" id="createUserModal" tabindex="-1" aria-labelledby="createUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bg-dark text-white border-secondary">
+            <div class="modal-header border-secondary">
+                <h5 class="modal-title" id="createUserModalLabel">Registrar Nuevo Usuario</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="formCreateUser">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="Nombre" class="form-label">Nombre</label>
+                        <input type="text" class="form-control bg-secondary text-white border-0" id="Nombre" name="Nombre" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="Apellido" class="form-label">Apellido</label>
+                        <input type="text" class="form-control bg-secondary text-white border-0" id="Apellido" name="Apellido" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Correo Electrónico</label>
+                        <input type="email" class="form-control bg-secondary text-white border-0" id="email" name="email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="IdRol" class="form-label">Rol ID</label>
+                        <input type="number" class="form-control bg-secondary text-white border-0" id="IdRol" name="IdRol" value="1" required>
+                    </div>
+                </div>
+                <div class="modal-footer border-secondary">
+                    <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-success">Guardar Usuario</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

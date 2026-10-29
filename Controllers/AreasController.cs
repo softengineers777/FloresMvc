@@ -17,7 +17,6 @@ namespace FloresMvc.Controllers
         {
             _configuration =  configuration;
             _context = context;
-
         }
         public async Task<IActionResult> Index ()
         {

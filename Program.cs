@@ -1,4 +1,12 @@
+using Microsoft.Extensions.Options;
+using Microsoft.EntityFrameworkCore;
+using FloresMvc.Models;
+using Npgsql.EntityFrameworkCore.PostgreSQL;
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddDbContext<FloresDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();

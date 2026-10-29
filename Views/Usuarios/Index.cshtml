@@ -1,0 +1,25 @@
+@{
+    ViewData["Title"] = "Gestion de Usuarios";
+}
+
+<div class="container-fluid mt-4">
+    <h2>Gestion Interativa de Usuarios</h2>
+    <p class="text-muted">💡 <strong>Instruccion:</strong>Haz doble clic cualquier lugar de la celda (Nombre, Apellido o
+        Correo) para editarla directamente al estilo Excel. los Cambios se guardaran automaticamentte</p>
+        <div class="mb-3">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createUserModal">
+                <i class="bi bi-plus-circle me-1"></i> Crear Nuevo Usuario
+            </button>
+        </div>
+
+        <div id="usuarios-table"></div>
+    </div>
+    @await Html.PartialAsync("Create")
+
+    <link href="https://unpkg.com/tabulator-tables@5.5.2/dist/css/tabulator_bootstrap5.min.css" rel="stylesheet">
+    <!-- Script JS de Tabulator -->
+    <script type="text/javascript" src="https://unpkg.com/tabulator-tables@5.5.2/dist/js/tabulator.min.js"></script>
+    <script src="~/js/TablaUsuarios.js"></script>
+    <script src="~/js/commonModal.js" asp-append-version="true"></script>
+    <!-- Luego el script específico del módulo -->
+    <script src="~/js/usuarios.js" asp-append-version="true"></script>
