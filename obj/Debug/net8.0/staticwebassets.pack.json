@@ -105,6 +105,10 @@
       "PackagePath": "staticwebassets\\favicon.ico"
     },
     {
+      "Id": "C:\\Users\\jhon.bolivar\\OneDrive - GR Chia S.A.S\\Documentos\\Desarrollo\\FloresMvc\\wwwroot\\js\\TablaRoles.js",
+      "PackagePath": "staticwebassets\\js\\TablaRoles.js"
+    },
+    {
       "Id": "C:\\Users\\jhon.bolivar\\OneDrive - GR Chia S.A.S\\Documentos\\Desarrollo\\FloresMvc\\wwwroot\\js\\TablaUsuarios.js",
       "PackagePath": "staticwebassets\\js\\TablaUsuarios.js"
     },
