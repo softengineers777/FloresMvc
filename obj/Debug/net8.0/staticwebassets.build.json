@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "URDGPcFhOXKQdTBt5v9iplptfUI5SA3vI32+F69zWjY=",
+  "Hash": "imoScvFBnY2zX1Q1qCem0zrdljRJrg3T7+9lDPrq9Mw=",
   "Source": "FloresMvc",
   "BasePath": "_content/FloresMvc",
   "Mode": "Default",
@@ -72,6 +72,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\assets\\css\\main.css"
+    },
+    {
+      "Identity": "C:\\Users\\jhon.bolivar\\OneDrive - GR Chia S.A.S\\Documentos\\Desarrollo\\FloresMvc\\wwwroot\\assets\\images\\AdminImage.com",
+      "SourceId": "FloresMvc",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\jhon.bolivar\\OneDrive - GR Chia S.A.S\\Documentos\\Desarrollo\\FloresMvc\\wwwroot\\",
+      "BasePath": "_content/FloresMvc",
+      "RelativePath": "assets/images/AdminImage.com",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\assets\\images\\AdminImage.com"
     },
     {
       "Identity": "C:\\Users\\jhon.bolivar\\OneDrive - GR Chia S.A.S\\Documentos\\Desarrollo\\FloresMvc\\wwwroot\\assets\\images\\avatar.png",
