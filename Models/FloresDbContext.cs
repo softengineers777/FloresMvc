@@ -1,3 +1,6 @@
+using System;
+using FloresMvc.Models;
+using System.ComponentModel.DataAnnotations;
 using Microsoft.EntityFrameworkCore;
 
 namespace FloresMvc.Models
