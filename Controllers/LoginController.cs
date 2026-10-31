@@ -16,7 +16,7 @@ namespace FloresMvc.Controllers
             _configuration = configuration;
         }
 
-                public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
             return View();
         }

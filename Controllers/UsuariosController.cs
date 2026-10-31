@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using FloresMvc.Models;
 using System.Runtime.CompilerServices;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace FloresMvc.Controllers
 {
@@ -75,6 +76,27 @@ namespace FloresMvc.Controllers
         public IActionResult Create()
         {
             return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> CreateUsuario([FromBody] Usuarios usuarios)
+        {
+            if (usuarios == null)
+            {
+                return BadRequest(new { success = false, message = "Datos invalidos" });
+            }
+            if (ModelState.IsValid)
+            {
+                if (usuarios.fecha_creacion == default)
+                {
+                    usuarios.fecha_creacion = DateTime.UtcNow;
+                }
+                _context.Add(usuarios);
+                await _context.SaveChangesAsync();
+
+                return Json(new { success = true, message = "Usuario Creado Con exito" });
+            }
+            return BadRequest(new { success = false, message = "Los datos proporcionados no son válidos" });
+
         }
         [HttpPost]
         [ValidateAntiForgeryToken]

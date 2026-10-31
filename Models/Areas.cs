@@ -14,7 +14,7 @@ namespace FloresMvc.Models
         public int IdArea { get; set; }
         [Required]
         [Display(Name = "Nombre Area")]
-        public string NomArea { get; set; }
+        public required string NomArea { get; set; }
         public DateTime fecha_Creacion { get; set; }
 
         public string? Owner { get; set; }

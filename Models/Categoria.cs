@@ -11,7 +11,9 @@ namespace FloresMvc.Models
         [Key]
         [Display(Name = "Consecutivo")]
         public int IdCategoria { get; set; }
-        public string Nomcategoria { get; set; }
+        [Required]
+        [Display(Name ="Categoria")]
+        public required string Nomcategoria { get; set; }
         public DateTime fecha_Creacion { get; set; }
 
         public string? Owner { get; set; }          // Quién lo creó

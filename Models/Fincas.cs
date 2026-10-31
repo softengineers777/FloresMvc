@@ -13,7 +13,8 @@ namespace FloresMvc.Models
         [Display(Name = "Consecutivo")]
         public int IdFinca { get; set; }
         [Display(Name = "Nombre Finca")]
-        public string NomFinca { get; set; }
+        [Required]
+        public required string NomFinca { get; set; }
         public DateTime fecha_Creacion { get; set; }
 
         public string? Owner { get; set; }          // Quién lo creó
