@@ -47,6 +47,7 @@ namespace FloresMvc.Controllers
         {
             if (ModelState.IsValid)
             {
+                areas.fecha_Creacion = DateTime.Now;
                 areas.DateOwner = DateTime.Now;
                 areas.Owner = "Admin";
                 _context.Add(areas);
@@ -71,7 +72,7 @@ namespace FloresMvc.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task <IActionResult>Edit (int id,[Bind("IdArea,NomArea,Owner,DateOwner")]Areas areas)
+        public async Task <IActionResult>Edit (int id,[Bind("IdArea,NomArea")]Areas areas)
         {
             if (id != areas.IdArea)
             {
@@ -80,12 +81,18 @@ namespace FloresMvc.Controllers
 
             if (ModelState.IsValid)
             {
+                var areaDb = await _context.Areas.FindAsync(id);
+                if (areaDb == null)
+                {
+                    return NotFound();
+                }
+
                 try
                 {
-                    areas.LastModify = "Admin";
-                    areas.LastDate = DateTime.Now;
+                    areaDb.NomArea = areas.NomArea;
+                    areaDb.LastModify = "Admin";
+                    areaDb.LastDate = DateTime.Now;
 
-                    _context.Update(areas);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -103,6 +110,41 @@ namespace FloresMvc.Controllers
             }
             return View(areas);
         }
+        [HttpGet, ActionName("Delete")]
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var areas = await _context.Areas
+                .FirstOrDefaultAsync(a => a.IdArea == id);
+
+            if (areas == null)
+            {
+                return NotFound();
+            }
+
+            return View(areas);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var areas = await _context.Areas.FindAsync(id);
+
+            if (areas == null)
+            {
+                return NotFound();
+            }
+
+            _context.Areas.Remove(areas);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
         public bool AreasExists(int id)
         {
             return _context.Areas.Any(a => a.IdArea == id);

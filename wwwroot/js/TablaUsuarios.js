@@ -14,6 +14,8 @@ document.addEventListener("DOMContentLoaded", function () {
             { title: "Nombre", field: "nombre", editor: "input", width: "25%" },
             { title: "Apellido", field: "apellido", editor: "input", width: "25%" },
             { title: "Correo Electrónico", field: "email", editor: "input", width: "30%" },
+            { title: "Fecha Creacion", field: "fecha_creacion", editor: "input", width: "30%" },
+
             {
                 title: "Fecha Creación",
                 field: "fecha_creacion",

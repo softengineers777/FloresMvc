@@ -26,25 +26,37 @@ namespace FloresMvc.Controllers
             var roles = await _context.Roles.ToListAsync();
             return Json(roles);
         }
-         public async Task<IActionResult> ActualizarCelda([FromBody] Usuarios rolModificado)
+        [HttpPost]
+        public async Task<IActionResult> ActualizarCelda([FromBody] Roles rolModificado)
         {
             if (rolModificado == null)
             {
                 return BadRequest(new { success = false, message = "Datos inválidos." });
             }
+            if (string.IsNullOrWhiteSpace(rolModificado.Nombre))
+            {
+                return BadRequest(new { success = false, message = "El nombre del rol es obligatorio." });
+            }
+
             var rolDb = await _context.Roles.FindAsync(rolModificado.IdRol);
             if (rolDb == null)
             {
                 return NotFound(new { success = false, message = "Rol no encontrado" });
             }
 
-            rolDb.Nombre = rolModificado.Nombre;
-            
+            rolDb.Nombre = rolModificado.Nombre.Trim();
+            rolDb.LastModify = "Admin";
+            rolDb.LastDate = DateTime.Now;
 
-            _context.Update(rolDb);
             await _context.SaveChangesAsync();
 
-            return Json(new { success = true, message = "actualizacion correcta" });
+            return Json(new
+            {
+                success = true,
+                message = "Actualización correcta",
+                lastModify = rolDb.LastModify,
+                lastDate = rolDb.LastDate
+            });
         }
         public async Task<IActionResult> Details(int? id)
         {
@@ -71,11 +83,44 @@ namespace FloresMvc.Controllers
         {
             if (ModelState.IsValid)
             {
+                roles.fecha_Creacion = DateTime.UtcNow;
+                roles.Owner = "Admin";
+                roles.DateOwner = DateTime.Now;
                 _context.Add(roles);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View(roles);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateAjax([FromBody] Roles rol)
+        {
+            if (rol == null)
+            {
+                return BadRequest(new { success = false, message = "Datos inválidos." });
+            }
+            if (string.IsNullOrWhiteSpace(rol.Nombre))
+            {
+                return BadRequest(new { success = false, message = "El nombre del rol es obligatorio." });
+            }
+
+            rol.Nombre = rol.Nombre.Trim();
+            rol.fecha_Creacion = DateTime.UtcNow;
+            rol.Owner = "Admin";
+            rol.DateOwner = DateTime.Now;
+            rol.LastModify = null;
+            rol.LastDate = null;
+
+            _context.Roles.Add(rol);
+            await _context.SaveChangesAsync();
+
+            return Json(new
+            {
+                success = true,
+                message = "Rol creado con éxito",
+                idRol = rol.IdRol
+            });
         }
 
                 [HttpGet]
@@ -105,9 +150,17 @@ namespace FloresMvc.Controllers
             {
                 try
                 {
-                    _context.Update(roles);
+                    var rolDb = await _context.Roles.FindAsync(id);
+                    if (rolDb == null)
+                    {
+                        return NotFound();
+                    }
+
+                    rolDb.Nombre = roles.Nombre;
+                    rolDb.LastModify = "Admin";
+                    rolDb.LastDate = DateTime.Now;
+
                     await _context.SaveChangesAsync();
-                    // return RedirectToAction(nameof(Index));
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -120,9 +173,9 @@ namespace FloresMvc.Controllers
                         throw;
                     }
                 }
-                RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index));
             }
-            return View();
+            return View(roles);
         }
         public bool RolesExist(int id)
         {

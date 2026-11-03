@@ -48,6 +48,9 @@ namespace FloresMvc.Controllers
         {
             if(ModelState.IsValid)
             {
+                categorias.fecha_Creacion = DateTime.Now;
+                categorias.DateOwner = DateTime.Now;
+                categorias.Owner = "Admin";
                 _context.Add(categorias);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -78,14 +81,22 @@ namespace FloresMvc.Controllers
             }
             if(ModelState.IsValid)
             {
+                var categoriaDb = await _context.Categorias.FindAsync(id);
+                if (categoriaDb == null)
+                {
+                    return NotFound();
+                }
+
                 try
                 {
-                    _context.Update(categorias);
+                    categoriaDb.Nomcategoria = categorias.Nomcategoria;
+                    categoriaDb.LastModify = "Admin";
+                    categoriaDb.LastDate = DateTime.Now;
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (CategoriaExist(categorias.IdCategoria))
+                    if (!CategoriaExist(categorias.IdCategoria))
                     {
                         return NotFound();
                     }
@@ -94,7 +105,7 @@ namespace FloresMvc.Controllers
                         throw;
                     }
                 }
-                RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index));
             }
             return View(categorias);
         }

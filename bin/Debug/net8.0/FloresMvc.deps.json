@@ -9,7 +9,7 @@
       "FloresMvc/1.0.0": {
         "dependencies": {
           "Microsoft.EntityFrameworkCore.Design": "8.0.33",
-          "Microsoft.EntityFrameworkCore.Tools": "8.0.33",
+          "Microsoft.EntityFrameworkCore.Tools": "10.0.14",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "8.0.11",
           "Swashbuckle.AspNetCore": "10.1.4"
         },
@@ -304,7 +304,7 @@
           }
         }
       },
-      "Microsoft.EntityFrameworkCore.Tools/8.0.33": {
+      "Microsoft.EntityFrameworkCore.Tools/10.0.14": {
         "dependencies": {
           "Microsoft.EntityFrameworkCore.Design": "8.0.33"
         }
@@ -663,12 +663,12 @@
       "path": "microsoft.entityframeworkcore.relational/8.0.33",
       "hashPath": "microsoft.entityframeworkcore.relational.8.0.33.nupkg.sha512"
     },
-    "Microsoft.EntityFrameworkCore.Tools/8.0.33": {
+    "Microsoft.EntityFrameworkCore.Tools/10.0.14": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-HWr5TJuALXJQcNx8nCDYgg0nmaeFwUoCAfdamhY40wNRksHEUL7sa2TY/yxGcG/xeym9BVruFH00DY3CqOtGVQ==",
-      "path": "microsoft.entityframeworkcore.tools/8.0.33",
-      "hashPath": "microsoft.entityframeworkcore.tools.8.0.33.nupkg.sha512"
+      "sha512": "sha512-PyslTG7UWVz/KOwo0nL4dvhfOn7XxBXJs9kG2dJ6yz2CH7xuJVPwcU0qFuvao5wbVDmU8/7q0pm9NXiOFXoWuQ==",
+      "path": "microsoft.entityframeworkcore.tools/10.0.14",
+      "hashPath": "microsoft.entityframeworkcore.tools.10.0.14.nupkg.sha512"
     },
     "Microsoft.Extensions.ApiDescription.Server/8.0.0": {
       "type": "package",

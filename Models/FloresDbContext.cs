@@ -26,6 +26,7 @@ namespace FloresMvc.Models
         public DbSet<Presupuesto> Presupuesto { get; set; }
         public DbSet<Categorias> Categorias { get; set; }
         public DbSet<SubCategorias> SubCategorias { get; set; }
+        public DbSet<Inventario> Inventario { get; set; }
 
         protected override void  OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -42,9 +43,15 @@ namespace FloresMvc.Models
 
             modelBuilder.Entity<Roles>(entity=>
             {
-               entity.HasKey(r=>r.IdRol); 
-               entity.Property(r=>r.Nombre); 
-               entity.Property(p=>p.fecha_Creacion);
+               entity.ToTable("Roles");
+               entity.HasKey(r=>r.IdRol);
+               entity.Property(r=>r.IdRol).HasColumnName("IdRol");
+               entity.Property(r=>r.Nombre).HasColumnName("Nombre").IsRequired();
+               entity.Property(r=>r.fecha_Creacion).HasColumnName("fecha_Creacion").HasColumnType("timestamp with time zone");
+               entity.Property(r=>r.Owner).HasColumnName("Owner");
+               entity.Property(r=>r.DateOwner).HasColumnName("DateOwner").HasColumnType("timestamp without time zone");
+               entity.Property(r=>r.LastModify).HasColumnName("LastModify");
+               entity.Property(r=>r.LastDate).HasColumnName("LastDate").HasColumnType("timestamp without time zone");
             });
 
             modelBuilder.Entity<Login>(entity =>
@@ -63,9 +70,15 @@ namespace FloresMvc.Models
             });
             modelBuilder.Entity<Areas>(entity =>
             {
+               entity.ToTable("areas");
                entity.HasKey(a=>a.IdArea);
-               entity.Property(a=>a.NomArea); 
-               entity.Property(p=>p.fecha_Creacion);
+               entity.Property(a=>a.IdArea).HasColumnName("idarea");
+               entity.Property(a=>a.NomArea).HasColumnName("nomarea");
+               entity.Property(a=>a.fecha_Creacion).HasColumnName("fecha_creacion").HasColumnType("timestamp without time zone");
+               entity.Property(a=>a.Owner).HasColumnName("owner");
+               entity.Property(a=>a.DateOwner).HasColumnName("dateowner").HasColumnType("timestamp without time zone");
+               entity.Property(a=>a.LastModify).HasColumnName("lastmodify");
+               entity.Property(a=>a.LastDate).HasColumnName("lastdate").HasColumnType("timestamp without time zone");
             });
             modelBuilder.Entity<Presupuesto>(entity =>
             {
@@ -95,6 +108,15 @@ namespace FloresMvc.Models
                entity.Property(c=> c.NomSubcategoria); 
                entity.Property(p=>p.fecha_Creacion);
 
+            });
+            modelBuilder.Entity<Inventario>(entity =>
+            {
+               entity.HasKey(i=> i.IdInventario);
+               entity.Property(i=> i.Nombre);
+               entity.Property(i=> i.Descripcion);
+               entity.Property(i=> i.Cantidad);
+               entity.Property(i=> i.Precio);
+               entity.Property(i=> i.fecha_Creacion);
             });
 
         }

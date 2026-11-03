@@ -1,0 +1,55 @@
+@model FloresMvc.Models.Categorias
+@{
+    ViewData["Title"] = "Eliminar Categoría";
+}
+
+<div class="page-header d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+    <div>
+        <h1 class="page-title">Eliminar Categoría</h1>
+        <p class="page-subtitle mb-0">Confirma la eliminación de la categoría seleccionada.</p>
+    </div>
+    <a asp-action="Index" class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left me-1"></i> Volver al listado
+    </a>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-lg-7">
+        <div class="card border-0 shadow-sm border-start border-danger border-4">
+            <div class="card-body p-4">
+                <div class="d-flex align-items-start gap-3 mb-4">
+                    <div class="text-danger" style="font-size: 2rem;">
+                        <i class="bi bi-exclamation-triangle-fill"></i>
+                    </div>
+                    <div>
+                        <h5 class="mb-1">¿Estás seguro de eliminar esta categoría?</h5>
+                        <p class="text-muted mb-0">Esta acción no se puede deshacer.</p>
+                    </div>
+                </div>
+
+                <dl class="row mb-4">
+                    <dt class="col-sm-4 text-muted">Consecutivo</dt>
+                    <dd class="col-sm-8">@Model.IdCategoria</dd>
+
+                    <dt class="col-sm-4 text-muted">Nombre de la categoría</dt>
+                    <dd class="col-sm-8 fw-semibold">@Model.Nomcategoria</dd>
+
+                    <dt class="col-sm-4 text-muted">Fecha de creación</dt>
+                    <dd class="col-sm-8">
+                        @(Model.fecha_Creacion == default ? "—" : Model.fecha_Creacion.ToString("dd/MM/yyyy HH:mm"))
+                    </dd>
+                </dl>
+
+                <form asp-action="DeleteConfirmed" asp-route-id="@Model.IdCategoria" method="post">
+                    <input type="hidden" name="id" value="@Model.IdCategoria" />
+                    <div class="d-flex justify-content-end gap-2">
+                        <a asp-action="Index" class="btn btn-outline-secondary">Cancelar</a>
+                        <button type="submit" class="btn btn-danger">
+                            <i class="bi bi-trash me-1"></i> Eliminar Categoría
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

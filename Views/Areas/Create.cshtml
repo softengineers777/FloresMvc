@@ -1,0 +1,48 @@
+@model FloresMvc.Models.Areas
+@{
+    ViewData["Title"] = "Nueva Área";
+}
+
+<div class="page-header d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+    <div>
+        <h1 class="page-title">Nueva Área</h1>
+        <p class="page-subtitle mb-0">Registra una nueva área para la organización.</p>
+    </div>
+    <a asp-action="Index" class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left me-1"></i> Volver al listado
+    </a>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-lg-7">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body p-4">
+                <form asp-action="Create" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                    <div class="mb-3">
+                        <label asp-for="NomArea" class="form-label fw-semibold"></label>
+                        <input asp-for="NomArea" class="form-control" placeholder="Ej. Cultivo, Riego, Empaque..." autofocus />
+                        <span asp-validation-for="NomArea" class="text-danger"></span>
+                    </div>
+
+                    <div class="alert alert-light border small text-muted mb-4">
+                        <i class="bi bi-info-circle me-1"></i>
+                        La fecha de creación y el usuario creador se asignan automáticamente.
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2">
+                        <a asp-action="Index" class="btn btn-outline-secondary">Cancelar</a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-save me-1"></i> Guardar Área
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
