@@ -1,3 +1,8 @@
+@using System.Security.Claims
+@{
+    var nombreUsuario = User.Identity?.Name ?? "Usuario";
+    var emailUsuario = User.FindFirst(ClaimTypes.Email)?.Value ?? "";
+}
 <div class="main-wrapper">
 
     <!-- START: Top Navbar Component -->
@@ -23,7 +28,7 @@
                 <ul class="dropdown-menu dropdown-menu-quick-action" aria-labelledby="quick-actions-dropdown">
                     <li class="dropdown-header">Quick Action Shortcuts</li>
                     @* <li><a class="dropdown-item" href="#"><i class="bi bi-file-earmark-plus"></i> New Invoice</a></li> *@
-                    <li><a class="dropdown-item" href="#"><i class="bi bi-person-plus"></i> Nuevo Uusario</a></li>
+                    <li><a class="dropdown-item" href="#"><i class="bi bi-person-plus"></i> Nuevo Usuario</a></li>
                     <li><a class="dropdown-item" href="#"><i class="bi bi-box-seam"></i> Nuevo Producto</a></li>
                     <li>
                         <hr class="dropdown-divider">
@@ -101,22 +106,35 @@
             <div class="dropdown ms-2">
                 <button class="navbar-profile-btn dropdown-toggle" type="button" data-bs-toggle="dropdown"
                         aria-expanded="false" id="profile-dropdown">
-                    <img src="assets/images/avatar.png" alt="Profile Image" class="navbar-profile-img">
-                    <span class="navbar-profile-name d-none d-md-inline">Administrador</span>
+                    <img src="~/assets/images/avatar.png" alt="Profile Image" class="navbar-profile-img" />
+                    <span class="navbar-profile-name d-none d-md-inline">@nombreUsuario</span>
                     <i class="bi bi-chevron-down navbar-profile-caret"></i>
                 </button>
                 <ul class="dropdown-menu dropdown-menu-end dropdown-menu-profile" aria-labelledby="profile-dropdown">
-                    <li class="dropdown-header">Bienvenido!</li>
+                    <li class="dropdown-header">Bienvenido, @nombreUsuario</li>
+                    @if (!string.IsNullOrWhiteSpace(emailUsuario))
+                    {
+                        <li><span class="dropdown-item-text small text-muted">@emailUsuario</span></li>
+                    }
                     <li><a class="dropdown-item" href="#"><i class="bi bi-person"></i> Mi Cuenta</a></li>
-                    <li><a class="dropdown-item" href="#"><i class="bi bi-gear"></i> Configuraciones/a></li>
-                    <li><a class="dropdown-item" href="#"><i class="bi bi-lock"></i> Cerrar Pantalla</a></li>
+                    <li>
+                        <a class="dropdown-item" asp-controller="Login" asp-action="CambiarPassword">
+                            <i class="bi bi-key"></i> Cambiar Contraseña
+                        </a>
+                    </li>
+                    <li><a class="dropdown-item" href="#"><i class="bi bi-gear"></i> Configuraciones</a></li>
                     <li>
                         <hr class="dropdown-divider">
                     </li>
-                    <li><a class="dropdown-item text-danger" href="page-login.html"><i
-                        class="bi bi-box-arrow-right"></i>
-                        Cierre de Sesion</a></li>
-                    </ul>
+                    <li>
+                        <form asp-controller="Login" asp-action="Logout" method="post" class="m-0">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="dropdown-item text-danger">
+                                <i class="bi bi-box-arrow-right"></i> Cierre de Sesión
+                            </button>
+                        </form>
+                    </li>
+                </ul>
                 </div>
             </div>
         </header>

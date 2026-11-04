@@ -56,11 +56,19 @@ namespace FloresMvc.Models
 
             modelBuilder.Entity<Login>(entity =>
             {
-               entity.HasKey(l=>l.IdLogin);
-               entity.Property(l=>l.user_id);
-               entity.Property(l=>l.password_hash);
-               entity.Property(l=>l.ultimo_acceso);
-               entity.Property(l=>l.activo); 
+               // La tabla real en PostgreSQL es "login" y sus columnas están
+               // en minúsculas, por eso se mapean explícitamente.
+               entity.ToTable("login");
+               entity.HasKey(l => l.IdLogin);
+               entity.Property(l => l.IdLogin).HasColumnName("idlogin");
+               entity.Property(l => l.user_id).HasColumnName("user_id");
+               entity.Property(l => l.password_hash).HasColumnName("password_hash");
+               entity.Property(l => l.ultimo_acceso).HasColumnName("ultimo_acceso").HasColumnType("timestamp without time zone");
+               entity.Property(l => l.activo).HasColumnName("activo");
+               entity.Property(l => l.Owner).HasColumnName("owner");
+               entity.Property(l => l.DateOwner).HasColumnName("dateowner").HasColumnType("timestamp without time zone");
+               entity.Property(l => l.LastModify).HasColumnName("lastmodify");
+               entity.Property(l => l.LastDate).HasColumnName("lastdate").HasColumnType("timestamp without time zone");
             });
             modelBuilder.Entity<Fincas>(entity =>
             {

@@ -20,13 +20,30 @@
                         <label for="email" class="form-label">Correo Electrónico</label>
                         <input type="email" class="form-control bg-secondary text-white border-0" id="email" name="email" required>
                     </div>
-                     <div class="mb-3">
-                        <label for="date" class="form-label">Fecha Creacion</label>
-                        <input type="date" class="form-control bg-secondary text-white border-0" id="email" name="fecha_creacion" required>
+                    <div class="mb-3">
+                        <label for="Password" class="form-label">Contraseña</label>
+                        <input type="password" class="form-control bg-secondary text-white border-0"
+                               id="Password" name="Password" minlength="6" autocomplete="new-password" required>
+                        <div class="form-text text-white-50">Mínimo 6 caracteres. Con esta clave iniciará sesión.</div>
                     </div>
                     <div class="mb-3">
-                        <label for="IdRol" class="form-label">Rol ID</label>
-                        <input type="number" class="form-control bg-secondary text-white border-0" id="IdRol" name="IdRol" value="1" required>
+                        <label for="ConfirmPassword" class="form-label">Confirmar Contraseña</label>
+                        <input type="password" class="form-control bg-secondary text-white border-0"
+                               id="ConfirmPassword" name="ConfirmPassword" minlength="6" autocomplete="new-password" required>
+                    </div>
+                     <div class="mb-3">
+                        <label for="fecha_creacion" class="form-label">Fecha Creación (opcional)</label>
+                        <input type="date" class="form-control bg-secondary text-white border-0" id="fecha_creacion" name="fecha_creacion">
+                    </div>
+                    <div class="mb-3">
+                        <label for="IdRol" class="form-label">Rol</label>
+                        <select class="form-select bg-secondary text-white border-0" id="IdRol" name="IdRol" required>
+                            <option value="">Cargando roles...</option>
+                        </select>
+                    </div>
+                    <div class="alert alert-secondary border-0 small mb-0">
+                        <i class="bi bi-info-circle me-1"></i>
+                        Si no indicas la fecha, se asigna automáticamente al guardar.
                     </div>
                 </div>
                 <div class="modal-footer border-secondary">

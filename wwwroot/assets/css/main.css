@@ -146,6 +146,7 @@ a:hover {
     width: var(--sidebar-width);
     background-color: var(--brand-forest-dark);
     height: 100vh;
+    height: 100dvh;
     position: fixed;
     top: 0;
     left: 0;
@@ -415,7 +416,9 @@ body.sidebar-minimized .sidebar-profile {
     padding: 1.25rem 2.5rem;
     border-bottom: 1px solid rgba(0, 0, 0, 0.05);
     display: grid !important;
-    grid-template-columns: 1fr 480px 1fr !important;
+    /* Las columnas laterales se ajustan a su contenido y el buscador
+       absorbe el espacio restante, evitando desbordes en portátiles. */
+    grid-template-columns: auto minmax(0, 480px) auto !important;
     align-items: center;
     margin-bottom: 2rem;
     gap: 1.5rem;
@@ -425,6 +428,7 @@ body.sidebar-minimized .sidebar-profile {
     display: flex;
     align-items: center;
     gap: 0.75rem;
+    min-width: 0;
 }
 
 /* Quick Actions Dropdown Button */
@@ -534,10 +538,11 @@ body.sidebar-minimized .sidebar-profile {
 }
 
 .navbar-search-wrapper {
-    width: 480px;
-    max-width: 100%;
+    width: 100%;
+    max-width: 480px;
     position: relative;
     margin: 0 auto;
+    min-width: 0;
 }
 
 .navbar-search-input {
@@ -578,6 +583,7 @@ body.sidebar-minimized .sidebar-profile {
     align-items: center;
     justify-content: flex-end;
     gap: 0.75rem;
+    min-width: 0;
 }
 
 .navbar-action-btn {
@@ -621,6 +627,7 @@ body.sidebar-minimized .sidebar-profile {
 /* Custom Dropdown Notifications */
 .dropdown-menu-notification {
     width: 320px;
+    max-width: calc(100vw - 2rem);
     border-radius: var(--radius-xl) !important;
     border: 1px solid var(--border-light) !important;
     box-shadow: var(--shadow-lg) !important;
@@ -1735,6 +1742,7 @@ span.flatpickr-weekday {
 --------------------------------------------------------------------- */
 .login-wrapper {
     min-height: 100vh;
+    min-height: 100dvh;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -3181,6 +3189,330 @@ span.flatpickr-weekday {
 
 .text-lime {
     color: var(--brand-lime) !important;
+}
+
+/* =====================================================================
+   25. Responsive Enhancements (móvil, tablet y escritorio)
+   Ajustes finales para que el layout se adapte a los tres tamaños.
+   ===================================================================== */
+
+/* El contenido principal ocupa el alto disponible y el footer queda al fondo. */
+.app-main {
+    flex: 1 0 auto;
+    min-width: 0;
+}
+
+/* Las tablas de Tabulator nunca deben superar su contenedor. */
+#usuarios-table,
+#roles-table {
+    width: 100%;
+    max-width: 100%;
+}
+
+/* ---------------------------------------------------------------------
+   Escritorio: el overlay del sidebar no debe existir.
+--------------------------------------------------------------------- */
+@media (min-width: 1201px) {
+    .sidebar-overlay {
+        display: none;
+    }
+}
+
+/* ---------------------------------------------------------------------
+   Tablet y móvil (≤1200px)
+--------------------------------------------------------------------- */
+@media (max-width: 1200px) {
+    /* El botón de minimizar solo tiene sentido en escritorio. */
+    .btn-desktop-toggle {
+        display: none !important;
+    }
+
+    /* Si el sidebar se minimizó en escritorio, en móvil debe abrir completo. */
+    body.sidebar-minimized {
+        --sidebar-width: 280px;
+    }
+
+    .main-wrapper {
+        margin-left: 0;
+        padding: 1.25rem;
+    }
+
+    .navbar-custom {
+        margin-top: -1.25rem;
+        margin-left: -1.25rem;
+        margin-right: -1.25rem;
+        margin-bottom: 1.5rem;
+        padding: 1rem 1.25rem;
+        gap: 0.75rem;
+    }
+
+    /* Empuja las acciones a la derecha cuando el navbar se envuelve. */
+    .navbar-actions {
+        margin-left: auto;
+    }
+
+    .navbar-search-wrapper {
+        order: 3;
+        width: 100%;
+        max-width: 100%;
+        margin-top: 0.25rem;
+    }
+}
+
+/* ---------------------------------------------------------------------
+   Portátiles (≤1500px): la tabla completa no cabe junto al sidebar.
+   Se ocultan las dos columnas de auditoría menos consultadas.
+--------------------------------------------------------------------- */
+@media (max-width: 1500px) {
+    #areas-table th:nth-child(5), #areas-table td:nth-child(5),
+    #areas-table th:nth-child(6), #areas-table td:nth-child(6),
+    #categorias-table th:nth-child(5), #categorias-table td:nth-child(5),
+    #categorias-table th:nth-child(6), #categorias-table td:nth-child(6),
+    #subcategorias-table th:nth-child(5), #subcategorias-table td:nth-child(5),
+    #subcategorias-table th:nth-child(6), #subcategorias-table td:nth-child(6) {
+        display: none;
+    }
+
+    #areas-table th,
+    #areas-table td,
+    #categorias-table th,
+    #categorias-table td,
+    #subcategorias-table th,
+    #subcategorias-table td {
+        padding: 0.85rem 1rem;
+    }
+}
+
+/* ---------------------------------------------------------------------
+   Tablet (≤992px)
+--------------------------------------------------------------------- */
+@media (max-width: 992px) {
+    /* En tablet se ocultan las columnas secundarias para evitar el scroll
+       horizontal y dejar visibles el nombre y las acciones. */
+    #areas-table th:nth-child(4), #areas-table td:nth-child(4),
+    #areas-table th:nth-child(5), #areas-table td:nth-child(5),
+    #areas-table th:nth-child(6), #areas-table td:nth-child(6),
+    #categorias-table th:nth-child(4), #categorias-table td:nth-child(4),
+    #categorias-table th:nth-child(5), #categorias-table td:nth-child(5),
+    #categorias-table th:nth-child(6), #categorias-table td:nth-child(6),
+    #subcategorias-table th:nth-child(4), #subcategorias-table td:nth-child(4),
+    #subcategorias-table th:nth-child(5), #subcategorias-table td:nth-child(5),
+    #subcategorias-table th:nth-child(6), #subcategorias-table td:nth-child(6) {
+        display: none;
+    }
+
+    #areas-table th,
+    #areas-table td,
+    #categorias-table th,
+    #categorias-table td,
+    #subcategorias-table th,
+    #subcategorias-table td {
+        padding: 0.85rem 1rem;
+        white-space: normal;
+    }
+}
+
+/* ---------------------------------------------------------------------
+   Móvil y tablet pequeña (≤768px)
+--------------------------------------------------------------------- */
+@media (max-width: 768px) {
+    #areas-table th,
+    #areas-table td,
+    #categorias-table th,
+    #categorias-table td,
+    #subcategorias-table th,
+    #subcategorias-table td {
+        padding: 0.75rem 0.85rem;
+        white-space: normal;
+    }
+
+    #areas-table td:nth-child(2),
+    #categorias-table td:nth-child(2),
+    #subcategorias-table td:nth-child(2) {
+        min-width: 130px;
+    }
+
+    /* La barra de búsqueda ocupa toda la fila. */
+    .table-header-control {
+        padding: 1rem;
+    }
+
+    .table-search-box {
+        max-width: 100%;
+        flex-basis: 100%;
+    }
+
+    /* Los botones de formularios y acciones nunca se salen de la tarjeta. */
+    .d-flex.justify-content-end.gap-2,
+    .modal-footer {
+        flex-wrap: wrap;
+    }
+
+    .page-header > .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* Enlaces del footer: se acomodan en varias líneas. */
+    .footer-links {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.5rem 1rem;
+    }
+}
+
+/* ---------------------------------------------------------------------
+   Móvil (≤576px)
+--------------------------------------------------------------------- */
+@media (max-width: 576px) {
+    .main-wrapper {
+        padding: 1rem;
+    }
+
+    .navbar-custom {
+        margin-top: -1rem;
+        margin-left: -1rem;
+        margin-right: -1rem;
+        padding: 0.85rem 1rem;
+        gap: 0.5rem;
+    }
+
+    /* Menos controles en la primera fila del navbar. */
+    .btn-quick-action span {
+        display: none;
+    }
+
+    .btn-quick-action {
+        padding: 0.5rem 0.75rem;
+    }
+
+    #btn-fullscreen {
+        display: none;
+    }
+
+    .navbar-action-btn,
+    .sidebar-toggle-btn {
+        width: 38px;
+        height: 38px;
+    }
+
+    .navbar-search-input {
+        padding: 0.55rem 2.5rem 0.55rem 1rem;
+        font-size: 0.82rem;
+    }
+
+    /* En pantallas muy pequeñas también se oculta la fecha. */
+    #areas-table th:nth-child(3), #areas-table td:nth-child(3),
+    #categorias-table th:nth-child(3), #categorias-table td:nth-child(3),
+    #subcategorias-table th:nth-child(3), #subcategorias-table td:nth-child(3) {
+        display: none;
+    }
+
+    #areas-table th,
+    #areas-table td,
+    #categorias-table th,
+    #categorias-table td,
+    #subcategorias-table th,
+    #subcategorias-table td {
+        padding: 0.6rem 0.5rem;
+        font-size: 0.8rem;
+    }
+
+    #areas-table td:nth-child(2),
+    #categorias-table td:nth-child(2),
+    #subcategorias-table td:nth-child(2) {
+        min-width: 0;
+        word-break: break-word;
+    }
+
+    #areas-table th:first-child,
+    #areas-table td:first-child,
+    #categorias-table th:first-child,
+    #categorias-table td:first-child,
+    #subcategorias-table th:first-child,
+    #subcategorias-table td:first-child {
+        width: 44px !important;
+    }
+
+    #areas-table th:last-child,
+    #areas-table td:last-child:not([colspan]),
+    #categorias-table th:last-child,
+    #categorias-table td:last-child:not([colspan]),
+    #subcategorias-table th:last-child,
+    #subcategorias-table td:last-child:not([colspan]) {
+        width: 102px !important;
+    }
+
+    .table-btn-action {
+        width: 26px;
+        height: 26px;
+        font-size: 0.75rem;
+    }
+
+    /* Botones de acción a todo el ancho, apilados. */
+    .d-flex.justify-content-end.gap-2 > .btn,
+    .d-flex.justify-content-end.gap-2 > .btn-group,
+    .page-header > .btn {
+        flex: 1 1 100%;
+        width: 100%;
+    }
+
+    .modal-footer > .btn {
+        flex: 1 1 auto;
+    }
+
+    /* Login: menos padding y alineado arriba para que siempre sea visible. */
+    .login-wrapper {
+        align-items: flex-start;
+        padding: 1.5rem 1rem;
+    }
+
+    .login-card {
+        padding: 1.75rem 1.25rem;
+        border-radius: var(--radius-xl);
+    }
+
+    .login-title {
+        font-size: 1.35rem;
+    }
+
+    .page-title {
+        font-size: 1.35rem;
+    }
+
+    .page-subtitle {
+        font-size: 0.85rem;
+    }
+
+    /* Paginación de Tabulator: permitir que se acomode en varias líneas. */
+    .tabulator .tabulator-footer {
+        white-space: normal;
+        text-align: center;
+    }
+
+    .tabulator .tabulator-footer .tabulator-page-size {
+        margin-bottom: 0.5rem;
+    }
+}
+
+/* ---------------------------------------------------------------------
+   Pantallas de poca altura (móvil en horizontal)
+--------------------------------------------------------------------- */
+@media (max-height: 640px) {
+    .login-wrapper {
+        align-items: flex-start;
+        padding-top: 1.25rem;
+    }
+}
+
+/* ---------------------------------------------------------------------
+   Teléfonos muy estrechos: el sidebar deja ver el overlay para cerrarlo.
+--------------------------------------------------------------------- */
+@media (max-width: 400px) {
+    .sidebar-wrapper {
+        width: min(280px, 86vw);
+    }
 }
 
 

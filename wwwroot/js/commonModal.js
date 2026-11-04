@@ -18,8 +18,24 @@ class ModalFormHandler {
             const formData = new FormData(this.form);
             const data = Object.fromEntries(formData.entries());
 
-            // Convertir campos numéricos si existen (ej. idRol)
-            if (data.idRol) data.idRol = parseInt(data.idRol);
+            // Convertir a número los campos numéricos (ej. IdRol), sin importar
+            // si el atributo name viene en mayúsculas o minúsculas
+            Object.keys(data).forEach((key) => {
+                const field = this.form.elements[key];
+
+                // Una fecha vacía ("") no se puede convertir a DateTime en el
+                // servidor, así que simplemente no se envía.
+                if (field && field.type === "date" && data[key] === "") {
+                    delete data[key];
+                    return;
+                }
+
+                const esNumerico = (field && field.type === "number") || key.toLowerCase() === "idrol";
+                if (esNumerico && data[key] !== "") {
+                    const numero = Number(data[key]);
+                    if (!Number.isNaN(numero)) data[key] = numero;
+                }
+            });
 
             this.submitData(data);
         });
@@ -33,27 +49,38 @@ class ModalFormHandler {
             },
             body: JSON.stringify(data)
         })
-            .then(response => response.json())
+            .then(async (response) => {
+                // El servidor puede devolver HTML en un error 500; evitamos que
+                // response.json() falle y así mostramos el mensaje real.
+                const texto = await response.text();
+                let result = {};
+                try {
+                    result = texto ? JSON.parse(texto) : {};
+                } catch {
+                    result = { success: response.ok, message: texto };
+                }
+
+                if (!response.ok || result.success === false) {
+                    throw new Error(result.message || ("Error HTTP " + response.status));
+                }
+                return result;
+            })
             .then(result => {
-                if (result.success) {
-                    // Cerrar modal usando Bootstrap 5
-                    const modalInstance = bootstrap.Modal.getInstance(this.modalElement) || new bootstrap.Modal(this.modalElement);
-                    modalInstance.hide();
+                // Cerrar modal usando Bootstrap 5
+                const modalInstance = bootstrap.Modal.getInstance(this.modalElement) || new bootstrap.Modal(this.modalElement);
+                modalInstance.hide();
 
-                    // Limpiar formulario
-                    this.form.reset();
+                // Limpiar formulario
+                this.form.reset();
 
-                    // Ejecutar callback (por ejemplo, recargar la tabla)
-                    if (typeof this.onSuccessCallback === 'function') {
-                        this.onSuccessCallback(result);
-                    }
-                } else {
-                    alert("Error: " + result.message);
+                // Ejecutar callback (por ejemplo, recargar la tabla)
+                if (typeof this.onSuccessCallback === 'function') {
+                    this.onSuccessCallback(result);
                 }
             })
             .catch(error => {
-                console.error("Error de red:", error);
-                alert("Ocurrió un error al procesar la solicitud.");
+                console.error("Error al procesar la solicitud:", error);
+                alert("Error: " + error.message);
             });
     }
 }

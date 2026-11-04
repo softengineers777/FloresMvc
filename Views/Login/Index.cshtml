@@ -1,3 +1,8 @@
+@{
+    // El login es una pantalla independiente: no debe cargar el layout
+    // (sidebar, navbar, etc.) antes de autenticarse.
+    Layout = null;
+}
 <!DOCTYPE html>
 <html lang="es">
 
@@ -31,7 +36,7 @@
             <!-- Brand Identity -->
             <a href="#" class="login-brand text-decoration-none">
                 <i class="bi bi-asterisk"></i>
-                <span>Flores Admin</span>
+                <span>Flores Vida</span>
             </a>
 
             <p class="login-subtitle">Por favor ingresa tus credenciales para acceder</p>
@@ -54,7 +59,7 @@
                     <label for="email" class="login-form-label">Correo Electrónico</label>
                     <div class="login-input-group">
                         <i class="bi bi-envelope input-icon"></i>
-                        <input type="email" name="email" id="email" class="login-input" placeholder="name@company.com" required>
+                        <input type="email" name="email" id="email" class="login-input" placeholder="Correo@Compañia.com" required autofocus>
                     </div>
                 </div>
 
@@ -75,7 +80,7 @@
                 <!-- Options -->
                 <div class="login-options">
                     <label class="custom-control-label">
-                        <input type="checkbox" class="custom-checkbox-input" id="rememberMe">
+                        <input type="checkbox" class="custom-checkbox-input" id="rememberMe" name="rememberMe" value="true">
                         <span>Recordarme</span>
                     </label>
                     <a href="#" class="forgot-password-link">¿Olvidaste tu contraseña?</a>

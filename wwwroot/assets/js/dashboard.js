@@ -36,6 +36,30 @@ document.addEventListener('DOMContentLoaded', function () {
             sidebar.classList.remove('show');
             overlay.classList.remove('show');
         });
+
+        // Al pasar a escritorio (o rotar el dispositivo) el sidebar vuelve
+        // a su estado normal y se retira el fondo oscuro.
+        window.addEventListener('resize', function () {
+            if (window.innerWidth > 1200) {
+                sidebar.classList.remove('show');
+                overlay.classList.remove('show');
+            } else {
+                // En móvil/tablet el sidebar siempre debe mostrarse completo.
+                document.body.classList.remove('sidebar-minimized');
+                var desktopIcon = document.querySelector('#desktop-sidebar-toggle i');
+                if (desktopIcon) {
+                    desktopIcon.className = 'bi bi-chevron-bar-left';
+                }
+            }
+        });
+
+        // Cerrar el menú móvil con la tecla Escape.
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && sidebar.classList.contains('show')) {
+                sidebar.classList.remove('show');
+                overlay.classList.remove('show');
+            }
+        });
     }
 
 
