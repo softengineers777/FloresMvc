@@ -286,16 +286,30 @@ a:hover {
 }
 
 .sidebar-submenu-link {
-    display: block;
-    padding: 0.45rem 0;
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0.5rem 0.65rem;
     color: var(--text-sidebar-muted);
     font-size: 0.875rem;
     font-weight: 500;
-    transition: color 0.2s;
+    border-radius: var(--radius-md);
+    transition: color 0.2s, background-color 0.2s;
+}
+
+.sidebar-submenu-link i {
+    font-size: 1rem;
 }
 
 .sidebar-submenu-link:hover {
     color: #FFFFFF;
+    background-color: rgba(255, 255, 255, 0.03);
+}
+
+.sidebar-submenu-link.active {
+    color: var(--brand-lime);
+    background-color: rgba(255, 255, 255, 0.05);
+    font-weight: 600;
 }
 
 /* Bottom Profile Card in Sidebar */
@@ -3210,6 +3224,107 @@ span.flatpickr-weekday {
 }
 
 /* ---------------------------------------------------------------------
+   Tablas CRUD: reparto fijo de columnas. Así un nombre largo no ensancha
+   la tabla ni genera desplazamiento horizontal: el nombre se ajusta en
+   varias líneas y las columnas de auditoría se recortan con puntos
+   suspensivos.
+--------------------------------------------------------------------- */
+:is(#areas-table, #categorias-table, #subcategorias-table, #fincas-table) {
+    table-layout: fixed;
+}
+
+:is(#areas-table, #categorias-table, #subcategorias-table, #fincas-table) th:nth-child(1),
+:is(#areas-table, #categorias-table, #subcategorias-table, #fincas-table) td:nth-child(1) {
+    width: 64px !important;
+}
+
+:is(#areas-table, #categorias-table, #subcategorias-table, #fincas-table) th:nth-child(3),
+:is(#areas-table, #categorias-table, #subcategorias-table, #fincas-table) td:nth-child(3),
+:is(#areas-table, #categorias-table, #subcategorias-table, #fincas-table) th:nth-child(5),
+:is(#areas-table, #categorias-table, #subcategorias-table, #fincas-table) td:nth-child(5),
+:is(#areas-table, #categorias-table, #subcategorias-table, #fincas-table) th:nth-child(6),
+:is(#areas-table, #categorias-table, #subcategorias-table, #fincas-table) td:nth-child(6) {
+    width: 170px !important;
+}
+
+:is(#areas-table, #categorias-table, #subcategorias-table, #fincas-table) th:nth-child(4),
+:is(#areas-table, #categorias-table, #subcategorias-table, #fincas-table) td:nth-child(4) {
+    width: 150px !important;
+}
+
+:is(#areas-table, #categorias-table, #subcategorias-table, #fincas-table) th:nth-child(7),
+:is(#areas-table, #categorias-table, #subcategorias-table, #fincas-table) td:nth-child(7) {
+    width: 140px !important;
+}
+
+/* El nombre ocupa el espacio restante y puede partirse en varias líneas. */
+:is(#areas-table, #categorias-table, #subcategorias-table, #fincas-table) td:nth-child(2) {
+    white-space: normal;
+    overflow-wrap: anywhere;
+}
+
+/* Auditoría: si el texto es muy largo se recorta con puntos suspensivos. */
+:is(#areas-table, #categorias-table, #subcategorias-table, #fincas-table) td:nth-child(4),
+:is(#areas-table, #categorias-table, #subcategorias-table, #fincas-table) td:nth-child(5),
+:is(#areas-table, #categorias-table, #subcategorias-table, #fincas-table) td:nth-child(6) {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    overflow-wrap: anywhere;
+}
+
+/* ---------------------------------------------------------------------
+   Remisiones: listado con columnas fijas y textos que se ajustan.
+--------------------------------------------------------------------- */
+#remisiones-table {
+    table-layout: fixed;
+}
+
+#remisiones-table th:nth-child(1),
+#remisiones-table td:nth-child(1) { width: 64px !important; }
+
+#remisiones-table th:nth-child(2),
+#remisiones-table td:nth-child(2) { width: 140px !important; }
+
+#remisiones-table th:nth-child(4),
+#remisiones-table td:nth-child(4),
+#remisiones-table th:nth-child(5),
+#remisiones-table td:nth-child(5) { width: 140px !important; }
+
+#remisiones-table th:nth-child(6),
+#remisiones-table td:nth-child(6) { width: 110px !important; }
+
+#remisiones-table th:nth-child(7),
+#remisiones-table td:nth-child(7) { width: 90px !important; }
+
+#remisiones-table th:nth-child(8),
+#remisiones-table td:nth-child(8) { width: 80px !important; }
+
+#remisiones-table th:nth-child(9),
+#remisiones-table td:nth-child(9) { width: 140px !important; }
+
+#remisiones-table td:nth-child(2),
+#remisiones-table td:nth-child(3) {
+    white-space: normal;
+    overflow-wrap: anywhere;
+}
+
+#remisiones-table td:nth-child(4),
+#remisiones-table td:nth-child(5) {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    overflow-wrap: anywhere;
+}
+
+/* La tabla de insumos del formulario nunca debe desbordarse. */
+#detalles-table {
+    width: 100%;
+}
+
+#detalles-table input {
+    min-width: 0;
+}
+
+/* ---------------------------------------------------------------------
    Escritorio: el overlay del sidebar no debe existir.
 --------------------------------------------------------------------- */
 @media (min-width: 1201px) {
@@ -3269,7 +3384,11 @@ span.flatpickr-weekday {
     #categorias-table th:nth-child(5), #categorias-table td:nth-child(5),
     #categorias-table th:nth-child(6), #categorias-table td:nth-child(6),
     #subcategorias-table th:nth-child(5), #subcategorias-table td:nth-child(5),
-    #subcategorias-table th:nth-child(6), #subcategorias-table td:nth-child(6) {
+    #subcategorias-table th:nth-child(6), #subcategorias-table td:nth-child(6),
+    #fincas-table th:nth-child(5), #fincas-table td:nth-child(5),
+    #fincas-table th:nth-child(6), #fincas-table td:nth-child(6),
+    #remisiones-table th:nth-child(4), #remisiones-table td:nth-child(4),
+    #remisiones-table th:nth-child(5), #remisiones-table td:nth-child(5) {
         display: none;
     }
 
@@ -3278,7 +3397,11 @@ span.flatpickr-weekday {
     #categorias-table th,
     #categorias-table td,
     #subcategorias-table th,
-    #subcategorias-table td {
+    #subcategorias-table td,
+    #fincas-table th,
+    #fincas-table td,
+    #remisiones-table th,
+    #remisiones-table td {
         padding: 0.85rem 1rem;
     }
 }
@@ -3297,7 +3420,13 @@ span.flatpickr-weekday {
     #categorias-table th:nth-child(6), #categorias-table td:nth-child(6),
     #subcategorias-table th:nth-child(4), #subcategorias-table td:nth-child(4),
     #subcategorias-table th:nth-child(5), #subcategorias-table td:nth-child(5),
-    #subcategorias-table th:nth-child(6), #subcategorias-table td:nth-child(6) {
+    #subcategorias-table th:nth-child(6), #subcategorias-table td:nth-child(6),
+    #fincas-table th:nth-child(4), #fincas-table td:nth-child(4),
+    #fincas-table th:nth-child(5), #fincas-table td:nth-child(5),
+    #fincas-table th:nth-child(6), #fincas-table td:nth-child(6),
+    #remisiones-table th:nth-child(6), #remisiones-table td:nth-child(6),
+    #remisiones-table th:nth-child(7), #remisiones-table td:nth-child(7),
+    #remisiones-table th:nth-child(8), #remisiones-table td:nth-child(8) {
         display: none;
     }
 
@@ -3306,7 +3435,11 @@ span.flatpickr-weekday {
     #categorias-table th,
     #categorias-table td,
     #subcategorias-table th,
-    #subcategorias-table td {
+    #subcategorias-table td,
+    #fincas-table th,
+    #fincas-table td,
+    #remisiones-table th,
+    #remisiones-table td {
         padding: 0.85rem 1rem;
         white-space: normal;
     }
@@ -3321,14 +3454,20 @@ span.flatpickr-weekday {
     #categorias-table th,
     #categorias-table td,
     #subcategorias-table th,
-    #subcategorias-table td {
+    #subcategorias-table td,
+    #fincas-table th,
+    #fincas-table td,
+    #remisiones-table th,
+    #remisiones-table td {
         padding: 0.75rem 0.85rem;
         white-space: normal;
     }
 
     #areas-table td:nth-child(2),
     #categorias-table td:nth-child(2),
-    #subcategorias-table td:nth-child(2) {
+    #subcategorias-table td:nth-child(2),
+    #fincas-table td:nth-child(2),
+    #remisiones-table td:nth-child(3) {
         min-width: 130px;
     }
 
@@ -3405,7 +3544,9 @@ span.flatpickr-weekday {
     /* En pantallas muy pequeñas también se oculta la fecha. */
     #areas-table th:nth-child(3), #areas-table td:nth-child(3),
     #categorias-table th:nth-child(3), #categorias-table td:nth-child(3),
-    #subcategorias-table th:nth-child(3), #subcategorias-table td:nth-child(3) {
+    #subcategorias-table th:nth-child(3), #subcategorias-table td:nth-child(3),
+    #fincas-table th:nth-child(3), #fincas-table td:nth-child(3),
+    #remisiones-table th:nth-child(2), #remisiones-table td:nth-child(2) {
         display: none;
     }
 
@@ -3414,14 +3555,20 @@ span.flatpickr-weekday {
     #categorias-table th,
     #categorias-table td,
     #subcategorias-table th,
-    #subcategorias-table td {
+    #subcategorias-table td,
+    #fincas-table th,
+    #fincas-table td,
+    #remisiones-table th,
+    #remisiones-table td {
         padding: 0.6rem 0.5rem;
         font-size: 0.8rem;
     }
 
     #areas-table td:nth-child(2),
     #categorias-table td:nth-child(2),
-    #subcategorias-table td:nth-child(2) {
+    #subcategorias-table td:nth-child(2),
+    #fincas-table td:nth-child(2),
+    #remisiones-table td:nth-child(3) {
         min-width: 0;
         word-break: break-word;
     }
@@ -3431,7 +3578,11 @@ span.flatpickr-weekday {
     #categorias-table th:first-child,
     #categorias-table td:first-child,
     #subcategorias-table th:first-child,
-    #subcategorias-table td:first-child {
+    #subcategorias-table td:first-child,
+    #fincas-table th:first-child,
+    #fincas-table td:first-child,
+    #remisiones-table th:first-child,
+    #remisiones-table td:first-child {
         width: 44px !important;
     }
 
@@ -3440,7 +3591,11 @@ span.flatpickr-weekday {
     #categorias-table th:last-child,
     #categorias-table td:last-child:not([colspan]),
     #subcategorias-table th:last-child,
-    #subcategorias-table td:last-child:not([colspan]) {
+    #subcategorias-table td:last-child:not([colspan]),
+    #fincas-table th:last-child,
+    #fincas-table td:last-child:not([colspan]),
+    #remisiones-table th:last-child,
+    #remisiones-table td:last-child:not([colspan]) {
         width: 102px !important;
     }
 
@@ -3517,3 +3672,190 @@ span.flatpickr-weekday {
 
 
 
+
+/* ---------------------------------------------------------------------
+   Pie de paginación de las tablas planas (Areas, Categorias,
+   SubCategorias, Fincas y Remisiones).
+--------------------------------------------------------------------- */
+.table-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.75rem 1rem;
+    padding: 0.9rem 1.25rem;
+    border-top: 1px solid rgba(11, 19, 15, 0.06);
+    background-color: #FFFFFF;
+}
+
+.table-pagination-size {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.table-pagination-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-muted-green);
+    white-space: nowrap;
+}
+
+.table-pagination-select {
+    width: auto;
+    min-width: 70px;
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+    border-radius: 10px;
+    font-size: 0.8rem;
+}
+
+.table-pagination-info {
+    flex: 1 1 auto;
+    font-size: 0.8rem;
+    color: var(--text-muted-green);
+    text-align: center;
+}
+
+.table-pagination-pages {
+    margin-left: auto;
+}
+
+.table-pagination-pages .pagination {
+    --bs-pagination-color: var(--brand-forest-medium);
+    --bs-pagination-hover-color: var(--brand-forest-dark);
+    --bs-pagination-hover-bg: rgba(180, 241, 5, 0.12);
+    --bs-pagination-hover-border-color: transparent;
+    --bs-pagination-focus-color: var(--brand-forest-dark);
+    --bs-pagination-focus-bg: rgba(180, 241, 5, 0.18);
+    --bs-pagination-focus-box-shadow: none;
+    --bs-pagination-active-color: #FFFFFF;
+    --bs-pagination-active-bg: var(--brand-forest-medium);
+    --bs-pagination-active-border-color: var(--brand-forest-medium);
+    --bs-pagination-disabled-color: #B4BDB8;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.2rem;
+}
+
+.table-pagination-pages .page-link {
+    min-width: 34px;
+    padding: 0.35rem 0.6rem;
+    border: 1px solid rgba(11, 19, 15, 0.08);
+    border-radius: 9px !important;
+    font-size: 0.8rem;
+    font-weight: 600;
+    line-height: 1.2;
+    text-align: center;
+}
+
+.table-pagination-pages .page-item.active .page-link {
+    box-shadow: 0 4px 10px rgba(7, 47, 31, 0.18);
+}
+
+.table-pagination-pages .page-item.disabled .page-link {
+    background-color: #F8FAF9;
+    border-color: rgba(11, 19, 15, 0.05);
+}
+
+@media (max-width: 768px) {
+    .table-pagination {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.65rem;
+        padding: 0.85rem 0.9rem;
+    }
+
+    .table-pagination-size {
+        justify-content: center;
+    }
+
+    .table-pagination-info {
+        order: 3;
+        font-size: 0.78rem;
+    }
+
+    .table-pagination-pages {
+        display: flex;
+        justify-content: center;
+        margin-left: 0;
+    }
+}
+
+@media (max-width: 400px) {
+    .table-pagination-pages .page-link {
+        min-width: 30px;
+        padding: 0.3rem 0.45rem;
+        font-size: 0.75rem;
+    }
+}
+
+/* ---------------------------------------------------------------------
+   Remisiones: Tabulator dentro de la tarjeta del listado.
+--------------------------------------------------------------------- */
+#remisiones-table {
+    width: 100%;
+}
+
+#remisiones-table .tabulator {
+    border: none;
+    background-color: transparent;
+}
+
+#remisiones-table .tabulator-header {
+    background-color: #F8FAF9;
+    border-bottom: 1px solid rgba(11, 19, 15, 0.08);
+}
+
+#remisiones-table .tabulator-header .tabulator-col {
+    background-color: #F8FAF9;
+    border-right: none;
+}
+
+#remisiones-table .tabulator-row .tabulator-cell {
+    white-space: normal;
+    overflow-wrap: anywhere;
+}
+
+#remisiones-table .tabulator-footer {
+    background-color: #FFFFFF;
+    border-top: 1px solid rgba(11, 19, 15, 0.06);
+    padding: 0.75rem 1rem;
+    white-space: normal;
+}
+
+#remisiones-table .tabulator-footer .tabulator-page-counter {
+    color: var(--text-muted-green);
+    font-size: 0.8rem;
+}
+
+#remisiones-table .tabulator-footer .tabulator-page {
+    border-radius: 9px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+#remisiones-table .tabulator-footer .tabulator-page.active {
+    background-color: var(--brand-forest-medium);
+    border-color: var(--brand-forest-medium);
+    color: #FFFFFF;
+}
+
+#remisiones-table .tabulator-footer .tabulator-page-size {
+    border-radius: 9px;
+}
+
+@media (max-width: 576px) {
+    #remisiones-table .tabulator-footer {
+        text-align: center;
+    }
+
+    #remisiones-table .tabulator-footer .tabulator-page-counter {
+        display: block;
+        margin-bottom: 0.5rem;
+    }
+}

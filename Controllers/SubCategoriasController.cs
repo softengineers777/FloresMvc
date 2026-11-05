@@ -2,6 +2,7 @@ using System;
 using System.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
+using FloresMvc.Extensions;
 using FloresMvc.Models;
 using System.Threading.Tasks;
 
@@ -53,7 +54,7 @@ namespace FloresMvc.Controllers
             {
                 subcategorias.fecha_Creacion = DateTime.Now;
                 subcategorias.DateOwner = DateTime.Now;
-                subcategorias.Owner = "Admin";
+                subcategorias.Owner = User.ObtenerNombreUsuario();
                 _context.Add(subcategorias);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -95,7 +96,7 @@ namespace FloresMvc.Controllers
                 try
                 {
                     subcategoriaDb.NomSubcategoria = subcategorias.NomSubcategoria;
-                    subcategoriaDb.LastModify = "Admin";
+                    subcategoriaDb.LastModify = User.ObtenerNombreUsuario();
                     subcategoriaDb.LastDate = DateTime.Now;
                     await _context.SaveChangesAsync();
                 }

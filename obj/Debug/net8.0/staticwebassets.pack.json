@@ -65,6 +65,14 @@
       "PackagePath": "staticwebassets\\assets\\js\\dashboard.js"
     },
     {
+      "Id": "C:\\Users\\jhon.bolivar\\OneDrive - GR Chia S.A.S\\Documentos\\Desarrollo\\FloresMvc\\wwwroot\\assets\\js\\remisiones.js",
+      "PackagePath": "staticwebassets\\assets\\js\\remisiones.js"
+    },
+    {
+      "Id": "C:\\Users\\jhon.bolivar\\OneDrive - GR Chia S.A.S\\Documentos\\Desarrollo\\FloresMvc\\wwwroot\\assets\\js\\table-pagination.js",
+      "PackagePath": "staticwebassets\\assets\\js\\table-pagination.js"
+    },
+    {
       "Id": "C:\\Users\\jhon.bolivar\\OneDrive - GR Chia S.A.S\\Documentos\\Desarrollo\\FloresMvc\\wwwroot\\assets\\libs\\apexcharts\\apexcharts.css",
       "PackagePath": "staticwebassets\\assets\\libs\\apexcharts\\apexcharts.css"
     },
@@ -107,6 +115,10 @@
     {
       "Id": "C:\\Users\\jhon.bolivar\\OneDrive - GR Chia S.A.S\\Documentos\\Desarrollo\\FloresMvc\\wwwroot\\favicon.ico",
       "PackagePath": "staticwebassets\\favicon.ico"
+    },
+    {
+      "Id": "C:\\Users\\jhon.bolivar\\OneDrive - GR Chia S.A.S\\Documentos\\Desarrollo\\FloresMvc\\wwwroot\\js\\TablaRemisiones.js",
+      "PackagePath": "staticwebassets\\js\\TablaRemisiones.js"
     },
     {
       "Id": "C:\\Users\\jhon.bolivar\\OneDrive - GR Chia S.A.S\\Documentos\\Desarrollo\\FloresMvc\\wwwroot\\js\\TablaRoles.js",

@@ -27,6 +27,8 @@ namespace FloresMvc.Models
         public DbSet<Categorias> Categorias { get; set; }
         public DbSet<SubCategorias> SubCategorias { get; set; }
         public DbSet<Inventario> Inventario { get; set; }
+        public DbSet<Remisiones> Remisiones { get; set; }
+        public DbSet<RemisionesDTO> RemisionesDTO { get; set; }
 
         protected override void  OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -72,9 +74,16 @@ namespace FloresMvc.Models
             });
             modelBuilder.Entity<Fincas>(entity =>
             {
+               // La tabla y sus columnas están en minúscula en PostgreSQL.
+               entity.ToTable("fincas");
                entity.HasKey(f=>f.IdFinca);
-               entity.Property(f=>f.NomFinca); 
-               entity.Property(p=>p.fecha_Creacion);
+               entity.Property(f=>f.IdFinca).HasColumnName("idfincas");
+               entity.Property(f=>f.NomFinca).HasColumnName("nomfinca");
+               entity.Property(f=>f.fecha_Creacion).HasColumnName("fecha_creacion").HasColumnType("timestamp without time zone");
+               entity.Property(f=>f.Owner).HasColumnName("owner");
+               entity.Property(f=>f.DateOwner).HasColumnName("dateowner").HasColumnType("timestamp without time zone");
+               entity.Property(f=>f.LastModify).HasColumnName("lastmodify");
+               entity.Property(f=>f.LastDate).HasColumnName("lastdate").HasColumnType("timestamp without time zone");
             });
             modelBuilder.Entity<Areas>(entity =>
             {
@@ -107,15 +116,27 @@ namespace FloresMvc.Models
             {
                entity.HasKey(c=> c.IdCategoria);
                entity.Property(c=> c.Nomcategoria);
-               entity.Property(p=>p.fecha_Creacion);
+               entity.Property(c=> c.fecha_Creacion).HasColumnType("date");
+               entity.Property(c=> c.Owner).HasColumnName("Owner");
+               entity.Property(c=> c.DateOwner).HasColumnName("DateOwner").HasColumnType("timestamp without time zone");
+               entity.Property(c=> c.LastModify).HasColumnName("LastModify");
+               entity.Property(c=> c.LastDate).HasColumnName("LastDate").HasColumnType("timestamp without time zone");
 
             });
             modelBuilder.Entity<SubCategorias>(entity =>
             {
-               entity.HasKey(c=> c.IdSubcategoria);
-               entity.Property(c=> c.NomSubcategoria); 
-               entity.Property(p=>p.fecha_Creacion);
-
+               entity.ToTable("SubCategorias");
+               entity.HasKey(c => c.IdSubcategoria);
+               entity.Property(c => c.IdSubcategoria).HasColumnName("IdSubcategoria");
+               entity.Property(c => c.NomSubcategoria).HasColumnName("NomSubcategoria");
+               // Las columnas de fecha son "timestamp without time zone".
+               // Sin este mapeo Npgsql las trata como "timestamp with time zone"
+               // y rechaza DateTime.Now (Kind=Local).
+               entity.Property(c => c.fecha_Creacion).HasColumnName("fecha_Creacion").HasColumnType("timestamp without time zone");
+               entity.Property(c => c.Owner).HasColumnName("Owner");
+               entity.Property(c => c.DateOwner).HasColumnName("DateOwner").HasColumnType("timestamp without time zone");
+               entity.Property(c => c.LastModify).HasColumnName("LastModify");
+               entity.Property(c => c.LastDate).HasColumnName("LastDate").HasColumnType("timestamp without time zone");
             });
             modelBuilder.Entity<Inventario>(entity =>
             {
@@ -125,6 +146,62 @@ namespace FloresMvc.Models
                entity.Property(i=> i.Cantidad);
                entity.Property(i=> i.Precio);
                entity.Property(i=> i.fecha_Creacion);
+            });
+
+            modelBuilder.Entity<Remisiones>(entity =>
+            {
+               // La tabla y sus columnas se crearon con identificadores
+               // capitalizados, por eso se mapean explícitamente.
+               entity.ToTable("Remisiones");
+               entity.HasKey(r => r.IdRemision);
+               entity.Property(r => r.IdRemision).HasColumnName("IdRemision");
+               entity.Property(r => r.NumeroRemision).HasColumnName("NumeroRemision").HasMaxLength(50).IsRequired();
+               entity.Property(r => r.Nombre).HasColumnName("Nombre").HasMaxLength(50).IsRequired();
+               entity.Property(r => r.Apellido).HasColumnName("Apellido").HasMaxLength(50).IsRequired();
+               entity.Property(r => r.Direccion).HasColumnName("Direccion").HasMaxLength(255).IsRequired();
+               entity.Property(r => r.IdArea).HasColumnName("IdArea");
+               entity.Property(r => r.IdFinca).HasColumnName("IdFincas");
+               entity.Property(r => r.fecha_Creacion).HasColumnName("fecha_Creacion").HasColumnType("timestamp without time zone");
+               entity.Property(r => r.PlacaVehiculo).HasColumnName("PlacaVehiculo").HasMaxLength(20).IsRequired();
+               entity.Property(r => r.DespachadoPor).HasColumnName("DespachadoPor").HasMaxLength(100);
+               entity.Property(r => r.TransportadoPor).HasColumnName("TransportadoPor").HasMaxLength(100);
+               entity.Property(r => r.RecibidoPor).HasColumnName("RecibidoPor").HasMaxLength(100);
+               entity.Property(r => r.PesoTotal).HasColumnName("PesoTotal");
+               entity.Property(r => r.Observaciones).HasColumnName("Observaciones").HasMaxLength(255);
+               entity.Property(r => r.Owner).HasColumnName("Owner").HasMaxLength(30);
+               entity.Property(r => r.DateOwner).HasColumnName("DateOwner").HasColumnType("timestamp without time zone");
+               entity.Property(r => r.LastModify).HasColumnName("LastModify").HasMaxLength(30);
+               entity.Property(r => r.LastDate).HasColumnName("LastDate").HasColumnType("timestamp without time zone");
+
+               entity.HasOne(r => r.Area)
+                     .WithMany()
+                     .HasForeignKey(r => r.IdArea)
+                     .OnDelete(DeleteBehavior.Restrict);
+
+               entity.HasOne(r => r.Finca)
+                     .WithMany()
+                     .HasForeignKey(r => r.IdFinca)
+                     .OnDelete(DeleteBehavior.Restrict);
+            });
+
+            modelBuilder.Entity<RemisionesDTO>(entity =>
+            {
+               entity.ToTable("RemisionesDTO");
+               entity.HasKey(d => d.IdDetalle);
+               entity.Property(d => d.IdDetalle).HasColumnName("IdDetalle");
+               entity.Property(d => d.IdRemision).HasColumnName("IdRemision");
+               entity.Property(d => d.referencia).HasColumnName("referencia").HasMaxLength(100).IsRequired();
+               entity.Property(d => d.Cantidad).HasColumnName("Cantidad");
+               entity.Property(d => d.Descripcion).HasColumnName("Descripcion").HasMaxLength(255).IsRequired();
+               entity.Property(d => d.Owner).HasColumnName("Owner").HasMaxLength(30);
+               entity.Property(d => d.DateOwner).HasColumnName("DateOwner").HasColumnType("timestamp without time zone");
+               entity.Property(d => d.LastModify).HasColumnName("LastModify").HasMaxLength(30);
+               entity.Property(d => d.LastDate).HasColumnName("LastDate").HasColumnType("timestamp without time zone");
+
+               entity.HasOne(d => d.Remision)
+                     .WithMany(r => r.Detalles)
+                     .HasForeignKey(d => d.IdRemision)
+                     .OnDelete(DeleteBehavior.Cascade);
             });
 
         }

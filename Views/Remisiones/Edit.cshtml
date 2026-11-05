@@ -1,0 +1,33 @@
+@model FloresMvc.Models.RemisionViewModel
+@{
+    ViewData["Title"] = "Editar Remisión";
+}
+
+<div class="page-header d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+    <div>
+        <h1 class="page-title">Editar Remisión</h1>
+        <p class="page-subtitle mb-0">Actualiza los datos de la remisión y sus insumos.</p>
+    </div>
+    <a asp-action="Index" class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left me-1"></i> Volver al listado
+    </a>
+</div>
+
+<form asp-action="Edit" asp-route-id="@Model.IdRemision" method="post">
+    <input type="hidden" asp-for="IdRemision" />
+    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+    <partial name="_FormFields" model="Model" />
+
+    <div class="d-flex justify-content-end gap-2 mt-4">
+        <a asp-action="Index" class="btn btn-outline-secondary">Cancelar</a>
+        <button type="submit" class="btn btn-primary">
+            <i class="bi bi-save me-1"></i> Guardar Cambios
+        </button>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/assets/js/remisiones.js"></script>
+}

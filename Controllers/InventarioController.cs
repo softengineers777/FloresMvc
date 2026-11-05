@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using FloresMvc.Extensions;
 using FloresMvc.Models;
 
 namespace FloresMvc.Controllers
@@ -53,12 +54,12 @@ namespace FloresMvc.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(
-            [Bind("IdInventario,Nombre,Descripcion,Cantidad,Precio,fecha_Creacion,Owner,DateOwner,LastModify,LastDate")] Inventario inventario)
+            [Bind("IdInventario,Nombre,Descripcion,Cantidad,Precio")] Inventario inventario)
         {
             if (ModelState.IsValid)
             {
                 inventario.fecha_Creacion = DateTime.Now;
-                inventario.Owner = "Admin";
+                inventario.Owner = User.ObtenerNombreUsuario();
                 inventario.DateOwner = DateTime.Now;
 
                 _context.Add(inventario);
@@ -92,7 +93,7 @@ namespace FloresMvc.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id,
-            [Bind("IdInventario,Nombre,Descripcion,Cantidad,Precio,fecha_Creacion,Owner,DateOwner,LastModify,LastDate")] Inventario inventario)
+            [Bind("IdInventario,Nombre,Descripcion,Cantidad,Precio")] Inventario inventario)
         {
             if (id != inventario.IdInventario)
             {
@@ -101,12 +102,23 @@ namespace FloresMvc.Controllers
 
             if (ModelState.IsValid)
             {
+                var inventarioDb = await _context.Inventario.FindAsync(id);
+                if (inventarioDb == null)
+                {
+                    return NotFound();
+                }
+
                 try
                 {
-                    inventario.LastModify = "Admin";
-                    inventario.LastDate = DateTime.Now;
+                    // Solo se actualizan los campos editables: la auditoría de
+                    // creación (fecha_Creacion, Owner, DateOwner) se conserva.
+                    inventarioDb.Nombre = inventario.Nombre;
+                    inventarioDb.Descripcion = inventario.Descripcion;
+                    inventarioDb.Cantidad = inventario.Cantidad;
+                    inventarioDb.Precio = inventario.Precio;
+                    inventarioDb.LastModify = User.ObtenerNombreUsuario();
+                    inventarioDb.LastDate = DateTime.Now;
 
-                    _context.Update(inventario);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)

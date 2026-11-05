@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using FloresMvc.Controllers;
 using System.Data;
 using System.ComponentModel.DataAnnotations;
+using FloresMvc.Extensions;
 using FloresMvc.Models;
 using FloresMvc.Services;
 using System.Runtime.CompilerServices;
@@ -196,7 +197,7 @@ namespace FloresMvc.Controllers
                 fecha_creacion = dto.fecha_creacion.HasValue
                     ? NormalizarAUtc(dto.fecha_creacion.Value)
                     : DateTime.UtcNow,
-                Owner = "Admin",
+                Owner = User.ObtenerNombreUsuario(),
                 DateOwner = DateTime.UtcNow,
                 LastModify = null,
                 LastDate = null
@@ -219,7 +220,7 @@ namespace FloresMvc.Controllers
                     // La columna es timestamp without time zone: Kind=Unspecified.
                     ultimo_acceso = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified),
                     activo = true,
-                    Owner = "Admin",
+                    Owner = User.ObtenerNombreUsuario(),
                     DateOwner = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified),
                     LastModify = null,
                     LastDate = null
@@ -255,6 +256,8 @@ namespace FloresMvc.Controllers
         {
             if (ModelState.IsValid)
             {
+                usuarios.Owner = User.ObtenerNombreUsuario();
+                usuarios.DateOwner = DateTime.Now;
                 _context.Add(usuarios);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -286,9 +289,22 @@ namespace FloresMvc.Controllers
             }
             if (ModelState.IsValid)
             {
+                var usuarioDb = await _context.Usuarios.FindAsync(id);
+                if (usuarioDb == null)
+                {
+                    return NotFound();
+                }
+
                 try
                 {
-                    _context.Update(usuarios);
+                    // Se conservan los datos de creación y solo se registra
+                    // quién hizo la última modificación.
+                    usuarioDb.IdRol = usuarios.IdRol;
+                    usuarioDb.Nombre = usuarios.Nombre;
+                    usuarioDb.Apellido = usuarios.Apellido;
+                    usuarioDb.LastModify = User.ObtenerNombreUsuario();
+                    usuarioDb.LastDate = DateTime.Now;
+
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)

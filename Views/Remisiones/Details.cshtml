@@ -1,0 +1,131 @@
+@model FloresMvc.Models.Remisiones
+@{
+    ViewData["Title"] = "Detalle de la Remisión";
+    var detalles = Model.Detalles?.ToList() ?? new List<FloresMvc.Models.RemisionesDTO>();
+}
+
+<div class="page-header d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+    <div>
+        <h1 class="page-title">Detalle de la Remisión</h1>
+        <p class="page-subtitle mb-0">Información completa de la remisión seleccionada.</p>
+    </div>
+    <a asp-action="Index" class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left me-1"></i> Volver al listado
+    </a>
+</div>
+
+<div class="card border-0 shadow-sm mb-4">
+    <div class="card-header bg-transparent border-0 pt-3 px-4">
+        <h5 class="mb-0">
+            <i class="bi bi-truck text-success me-1"></i>
+            Remisión @Model.NumeroRemision
+        </h5>
+    </div>
+    <div class="card-body px-4 pb-4">
+        <dl class="row mb-0">
+            <dt class="col-sm-3 text-muted">Consecutivo</dt>
+            <dd class="col-sm-9">@Model.IdRemision</dd>
+
+            <dt class="col-sm-3 text-muted">Número de remisión</dt>
+            <dd class="col-sm-9">@Model.NumeroRemision</dd>
+
+            <dt class="col-sm-3 text-muted">Solicitante</dt>
+            <dd class="col-sm-9">@($"{Model.Nombre} {Model.Apellido}".Trim())</dd>
+
+            <dt class="col-sm-3 text-muted">Dirección</dt>
+            <dd class="col-sm-9">@Model.Direccion</dd>
+
+            <dt class="col-sm-3 text-muted">Área</dt>
+            <dd class="col-sm-9">@(Model.Area?.NomArea ?? "—")</dd>
+
+            <dt class="col-sm-3 text-muted">Finca</dt>
+            <dd class="col-sm-9">@(Model.Finca?.NomFinca ?? "—")</dd>
+
+            <dt class="col-sm-3 text-muted">Fecha de creación</dt>
+            <dd class="col-sm-9">
+                @(Model.fecha_Creacion == default ? "—" : Model.fecha_Creacion.ToString("dd/MM/yyyy HH:mm"))
+            </dd>
+
+            <dt class="col-sm-3 text-muted">Placa del vehículo</dt>
+            <dd class="col-sm-9">@Model.PlacaVehiculo</dd>
+
+            <dt class="col-sm-3 text-muted">Despachado por</dt>
+            <dd class="col-sm-9">@(string.IsNullOrWhiteSpace(Model.DespachadoPor) ? "—" : Model.DespachadoPor)</dd>
+
+            <dt class="col-sm-3 text-muted">Transportado por</dt>
+            <dd class="col-sm-9">@(string.IsNullOrWhiteSpace(Model.TransportadoPor) ? "—" : Model.TransportadoPor)</dd>
+
+            <dt class="col-sm-3 text-muted">Recibido por</dt>
+            <dd class="col-sm-9">@(string.IsNullOrWhiteSpace(Model.RecibidoPor) ? "—" : Model.RecibidoPor)</dd>
+
+            <dt class="col-sm-3 text-muted">Peso total</dt>
+            <dd class="col-sm-9">@Model.PesoTotal.ToString("N2")</dd>
+
+            <dt class="col-sm-3 text-muted">Observaciones</dt>
+            <dd class="col-sm-9">@(string.IsNullOrWhiteSpace(Model.Observaciones) ? "—" : Model.Observaciones)</dd>
+
+            <dt class="col-sm-3 text-muted">Creado por</dt>
+            <dd class="col-sm-9">@(string.IsNullOrWhiteSpace(Model.Owner) ? "—" : Model.Owner)</dd>
+
+            <dt class="col-sm-3 text-muted">Última modificación</dt>
+            <dd class="col-sm-9">@(string.IsNullOrWhiteSpace(Model.LastModify) ? "—" : Model.LastModify)</dd>
+
+            <dt class="col-sm-3 text-muted">Fecha de modificación</dt>
+            <dd class="col-sm-9">
+                @(Model.LastDate.HasValue ? Model.LastDate.Value.ToString("dd/MM/yyyy HH:mm") : "—")
+            </dd>
+        </dl>
+    </div>
+</div>
+
+<div class="card border-0 shadow-sm">
+    <div class="card-header bg-transparent border-0 pt-3 px-4">
+        <h5 class="mb-0"><i class="bi bi-box-seam text-success me-1"></i> Insumos (@detalles.Count)</h5>
+    </div>
+    <div class="card-body px-4 pb-4">
+        <div class="table-responsive">
+            <table class="table table-sm align-middle mb-0" id="detalles-table">
+                <thead>
+                    <tr>
+                        <th style="width: 64px;">N.º</th>
+                        <th>Referencia</th>
+                        <th class="text-end" style="width: 130px;">Cantidad</th>
+                        <th>Descripción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (detalles.Count == 0)
+                    {
+                        <tr>
+                            <td colspan="4" class="text-center py-4 text-muted">Esta remisión no tiene insumos registrados.</td>
+                        </tr>
+                    }
+                    else
+                    {
+                        foreach (var detalle in detalles)
+                        {
+                            <tr>
+                                <td>@detalle.IdDetalle</td>
+                                <td>@detalle.referencia</td>
+                                <td class="text-end">@detalle.Cantidad.ToString("N2")</td>
+                                <td>@detalle.Descripcion</td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <hr class="my-4" />
+
+        <div class="d-flex justify-content-end gap-2">
+            <a asp-action="Index" class="btn btn-outline-secondary">Volver</a>
+            <a asp-action="Edit" asp-route-id="@Model.IdRemision" class="btn btn-primary">
+                <i class="bi bi-pencil me-1"></i> Editar
+            </a>
+            <a asp-action="Delete" asp-route-id="@Model.IdRemision" class="btn btn-outline-danger">
+                <i class="bi bi-trash me-1"></i> Eliminar
+            </a>
+        </div>
+    </div>
+</div>

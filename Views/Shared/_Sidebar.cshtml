@@ -2,6 +2,39 @@
 @{
     var nombreSidebar = User.Identity?.Name ?? "Usuario";
     var emailSidebar = User.FindFirst(ClaimTypes.Email)?.Value ?? "";
+    var controladorActual = ViewContext.RouteData.Values["controller"]?.ToString() ?? "";
+    bool EsControlador(string nombre) => string.Equals(controladorActual, nombre, StringComparison.OrdinalIgnoreCase);
+   
+    //***************Inicio Menu Administracion*****************************
+    //Este Menu es  el administrador del  sistema tener contemplano el tema  de los permisos
+
+    var enAdministracion = EsControlador("Roles") || EsControlador("Usuarios");
+    var administracionExpandido = enAdministracion ? "true" : "false";
+    var submenuAdministracionAbierto = enAdministracion ? "show" : "";
+    var rolesActivo = EsControlador ("Roles") ? "active" : "";
+    var usuariosActivo = EsControlador ("Usuarios") ? "active" : "";
+
+    //Este Menu es  el administrador del  sistema tener contemplano el tema  de los permisos
+    //***************Fin Menu Administracion*****************************
+
+
+   //***************Inicio Menu Remisiones*****************************
+    var enRemisiones = EsControlador("Remisiones");
+    var mantenimientoExpandido = enRemisiones ? "true" : "false";
+    var submenuMantenimientoAbierto = enRemisiones ? "show" : "";
+    var remisionesActivo = enRemisiones ? "active" : "";
+    //***************Fin Menu Remisiones*****************************
+
+    //***************Inicio Menu Tablas Parametricas*****************************
+    var enParametricas = EsControlador("Categorias") || EsControlador("SubCategorias")
+        || EsControlador("Areas") || EsControlador("Fincas");
+    var parametricasExpandido = enParametricas ? "true" : "false";
+    var submenuParametricasAbierto = enParametricas ? "show" : "";
+    var categoriasActivo = EsControlador("Categorias") ? "active" : "";
+    var subCategoriasActivo = EsControlador("SubCategorias") ? "active" : "";
+    var areasActivo = EsControlador("Areas") ? "active" : "";
+    var fincasActivo = EsControlador("Fincas") ? "active" : "";
+    //***************Fin Menu Tablas Parametricas*****************************
 }
 <!-- ==========================================
          START: Sidebar Component
@@ -34,36 +67,86 @@
             <div class="sidebar-menu-title">Components</div>
             <ul class="sidebar-menu-list">
                 <li class="sidebar-menu-item">
-                    <li class="sidebar-menu-item">
-                        <a href="/Usuarios/Index" class="sidebar-menu-link" id="menu-usuarios" title="Usuarios">
-                            <i class="bi bi-table"></i>
-                            <span>Usuarios</span>
-                        </a>
-                    </li>
-                </li>
-                <li class="sidebar-menu-item">
-                    <a href="/Roles/Index" class="sidebar-menu-link" id="menu-roles" title="Roles">
+                    <a class="sidebar-menu-link" data-bs-toggle="collapse" href="#submenu-administracion" role="button"
+                       aria-expanded="@administracionExpandido" aria-controls="submenu-administracion"
+                       title="Tablas Administracion">
                         <i class="bi bi-input-cursor-text"></i>
-                        <span>Roles</span>
+                        <span>Tablas Administracion</span>
+                        <i class="bi bi-chevron-down dropdown-caret"></i>
                     </a>
+                    <ul class="sidebar-submenu collapse @submenuAdministracionAbierto" id="submenu-administracion">
+                        <li class="sidebar-menu-item">
+                            <a href="/Roles/Index" class="sidebar-submenu-link @rolesActivo" id="menu-roles" title="Roles">
+                                <i class="bi bi-input-cursor-text"></i>
+                                <span>Roles</span>
+                            </a>
+                        </li>
+                        <li class="sidebar-menu-item">
+                            <a href="/Usuarios/Index" class="sidebar-submenu-link @usuariosActivo" id="menu-usuarios" title="Usuarios">
+                                <i class="bi bi-table"></i>
+                                <span>Usuarios</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                
+               
+                <li class="sidebar-menu-item">
+                    <a class="sidebar-menu-link" data-bs-toggle="collapse" href="#submenu-parametricas" role="button"
+                       aria-expanded="@parametricasExpandido" aria-controls="submenu-parametricas"
+                       title="Tablas Paramétricas">
+                        <i class="bi bi-grid-3x3-gap-fill"></i>
+                        <span>Tablas Paramétricas</span>
+                        <i class="bi bi-chevron-down dropdown-caret"></i>
+                    </a>
+                    <ul class="sidebar-submenu collapse @submenuParametricasAbierto" id="submenu-parametricas">
+                        <li>
+                            <a href="/Categorias/Index" class="sidebar-submenu-link @categoriasActivo"
+                               id="menu-categorias" title="Categorías">
+                                <i class="bi bi-tags-fill"></i>
+                                <span>Categorías</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/SubCategorias/Index" class="sidebar-submenu-link @subCategoriasActivo"
+                               id="menu-subcategorias" title="SubCategorías">
+                                <i class="bi bi-diagram-3-fill"></i>
+                                <span>SubCategorías</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/Areas/Index" class="sidebar-submenu-link @areasActivo" id="menu-areas"
+                               title="Áreas">
+                                <i class="bi bi-geo-alt-fill"></i>
+                                <span>Áreas</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/Fincas/Index" class="sidebar-submenu-link @fincasActivo" id="menu-fincas"
+                               title="Fincas">
+                                <i class="bi bi-house-door-fill"></i>
+                                <span>Fincas</span>
+                            </a>
+                        </li>AJR22J
+                    </ul>
                 </li>
                 <li class="sidebar-menu-item">
-                    <a href="/Categorias/Index" class="sidebar-menu-link" id="menu-categorias" title="Categorías">
-                        <i class="bi bi-tags-fill"></i>
-                        <span>Categorías</span>
+                    <a class="sidebar-menu-link" data-bs-toggle="collapse" href="#submenu-mantenimiento" role="button"
+                       aria-expanded="@mantenimientoExpandido" aria-controls="submenu-mantenimiento"
+                       title="Mantenimiento">
+                        <i class="bi bi-tools"></i>
+                        <span>Mantenimiento Mountain</span>
+                        <i class="bi bi-chevron-down dropdown-caret"></i>
                     </a>
-                </li>
-                <li class="sidebar-menu-item">
-                    <a href="/SubCategorias/Index" class="sidebar-menu-link" id="menu-subcategorias" title="SubCategorías">
-                        <i class="bi bi-diagram-3-fill"></i>
-                        <span>SubCategorías</span>
-                    </a>
-                </li>
-                <li class="sidebar-menu-item">
-                    <a href="/Areas/Index" class="sidebar-menu-link" id="menu-areas" title="Áreas">
-                        <i class="bi bi-geo-alt-fill"></i>
-                        <span>Áreas</span>
-                    </a>
+                    <ul class="sidebar-submenu collapse @submenuMantenimientoAbierto" id="submenu-mantenimiento">
+                        <li>
+                            <a href="/Remisiones/Index" class="sidebar-submenu-link @remisionesActivo"
+                               id="menu-remisiones" title="Remisiones">
+                                <i class="bi bi-truck"></i>
+                                <span>Remisiones</span>
+                            </a>
+                        </li>
+                    </ul>
                 </li>
                 <li class="sidebar-menu-item">
                     <a href="ui-buttons.html" class="sidebar-menu-link" id="menu-uibuttons" title="Buttons">

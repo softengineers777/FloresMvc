@@ -1,0 +1,170 @@
+@model FloresMvc.Models.RemisionViewModel
+
+<div class="card border-0 shadow-sm mb-4">
+    <div class="card-header bg-transparent border-0 pt-3 px-4">
+        <h5 class="mb-0"><i class="bi bi-truck text-success me-1"></i> Datos de la remisión</h5>
+    </div>
+    <div class="card-body px-4 pb-4">
+        <div class="row g-3">
+            <div class="col-md-4">
+                <label asp-for="NumeroRemision" class="form-label fw-semibold"></label>
+                <input asp-for="NumeroRemision" class="form-control" placeholder="Ej. REM-0001" />
+                <span asp-validation-for="NumeroRemision" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-4">
+                <label asp-for="Nombre" class="form-label fw-semibold"></label>
+                <input asp-for="Nombre" class="form-control" />
+                <span asp-validation-for="Nombre" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-4">
+                <label asp-for="Apellido" class="form-label fw-semibold"></label>
+                <input asp-for="Apellido" class="form-control" />
+                <span asp-validation-for="Apellido" class="text-danger"></span>
+            </div>
+
+            <div class="col-12">
+                <label asp-for="Direccion" class="form-label fw-semibold"></label>
+                <input asp-for="Direccion" class="form-control" placeholder="Dirección de entrega" />
+                <span asp-validation-for="Direccion" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-6">
+                <label asp-for="IdArea" class="form-label fw-semibold"></label>
+                <select asp-for="IdArea" asp-items="Model.Areas" class="form-select">
+                    <option value="">-- Selecciona un área --</option>
+                </select>
+                <span asp-validation-for="IdArea" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-6">
+                <label asp-for="IdFinca" class="form-label fw-semibold"></label>
+                <select asp-for="IdFinca" asp-items="Model.Fincas" class="form-select">
+                    <option value="">-- Selecciona una finca --</option>
+                </select>
+                <span asp-validation-for="IdFinca" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-4">
+                <label asp-for="PlacaVehiculo" class="form-label fw-semibold"></label>
+                <input asp-for="PlacaVehiculo" class="form-control" placeholder="Ej. ABC123" />
+                <span asp-validation-for="PlacaVehiculo" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-4">
+                <label asp-for="PesoTotal" class="form-label fw-semibold"></label>
+                <input asp-for="PesoTotal" type="number" step="0.01" min="0" class="form-control" />
+                <span asp-validation-for="PesoTotal" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-4">
+                <label asp-for="DespachadoPor" class="form-label fw-semibold"></label>
+                <input asp-for="DespachadoPor" class="form-control" />
+                <span asp-validation-for="DespachadoPor" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-4">
+                <label asp-for="TransportadoPor" class="form-label fw-semibold"></label>
+                <input asp-for="TransportadoPor" class="form-control" />
+                <span asp-validation-for="TransportadoPor" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-4">
+                <label asp-for="RecibidoPor" class="form-label fw-semibold"></label>
+                <input asp-for="RecibidoPor" class="form-control" />
+                <span asp-validation-for="RecibidoPor" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-4">
+                <label class="form-label fw-semibold">Fecha de creación</label>
+                <div class="form-control-plaintext">
+                    @(Model.fecha_Creacion == default ? "Se asigna automáticamente" : Model.fecha_Creacion.ToString("dd/MM/yyyy HH:mm"))
+                </div>
+            </div>
+
+            <div class="col-12">
+                <label asp-for="Observaciones" class="form-label fw-semibold"></label>
+                <textarea asp-for="Observaciones" class="form-control" rows="2" placeholder="Observaciones de la remisión"></textarea>
+                <span asp-validation-for="Observaciones" class="text-danger"></span>
+            </div>
+        </div>
+
+        @if (Model.IdRemision > 0)
+        {
+            <hr class="my-4" />
+            <div class="row g-3 small text-muted">
+                <div class="col-md-3">
+                    <div class="fw-semibold">Creado por</div>
+                    <div>@(string.IsNullOrWhiteSpace(Model.Owner) ? "—" : Model.Owner)</div>
+                </div>
+                <div class="col-md-3">
+                    <div class="fw-semibold">Fecha de creación</div>
+                    <div>@(Model.DateOwner == default ? "—" : Model.DateOwner.ToString("dd/MM/yyyy HH:mm"))</div>
+                </div>
+                <div class="col-md-3">
+                    <div class="fw-semibold">Última modificación</div>
+                    <div>@(string.IsNullOrWhiteSpace(Model.LastModify) ? "—" : Model.LastModify)</div>
+                </div>
+                <div class="col-md-3">
+                    <div class="fw-semibold">Fecha de modificación</div>
+                    <div>@(Model.LastDate.HasValue ? Model.LastDate.Value.ToString("dd/MM/yyyy HH:mm") : "—")</div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<div class="card border-0 shadow-sm">
+    <div class="card-header bg-transparent border-0 pt-3 px-4 d-flex flex-wrap justify-content-between align-items-center gap-2">
+        <h5 class="mb-0"><i class="bi bi-box-seam text-success me-1"></i> Insumos de la remisión</h5>
+        <button type="button" id="add-detalle" class="btn btn-sm btn-outline-primary">
+            <i class="bi bi-plus-circle me-1"></i> Agregar insumo
+        </button>
+    </div>
+    <div class="card-body px-4 pb-4">
+        <div class="alert alert-light border small text-muted">
+            <i class="bi bi-info-circle me-1"></i>
+            Captura al menos un insumo. Las filas completamente vacías se ignoran.
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-sm align-middle mb-0" id="detalles-table">
+                <thead>
+                    <tr>
+                        <th style="min-width: 150px;">Referencia</th>
+                        <th style="width: 130px;">Cantidad</th>
+                        <th style="min-width: 220px;">Descripción</th>
+                        <th style="width: 60px;" class="text-center">Quitar</th>
+                    </tr>
+                </thead>
+                <tbody id="detalles-body">
+                    @for (var i = 0; i < Model.Detalles.Count; i++)
+                    {
+                        <tr class="detalle-row">
+                            <td>
+                                <input type="hidden" asp-for="Detalles[i].IdDetalle" />
+                                <input asp-for="Detalles[i].Referencia" class="form-control form-control-sm" placeholder="Ej. REF-001" />
+                                <span asp-validation-for="Detalles[i].Referencia" class="text-danger small"></span>
+                            </td>
+                            <td>
+                                <input asp-for="Detalles[i].Cantidad" type="number" step="0.01" min="0.01" class="form-control form-control-sm text-end" />
+                                <span asp-validation-for="Detalles[i].Cantidad" class="text-danger small"></span>
+                            </td>
+                            <td>
+                                <input asp-for="Detalles[i].Descripcion" class="form-control form-control-sm" placeholder="Descripción del insumo" />
+                                <span asp-validation-for="Detalles[i].Descripcion" class="text-danger small"></span>
+                            </td>
+                            <td class="text-center">
+                                <button type="button" class="table-btn-action delete remove-detalle" title="Quitar insumo">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="text-danger small">@Html.ValidationMessage("Detalles")</div>
+    </div>
+</div>

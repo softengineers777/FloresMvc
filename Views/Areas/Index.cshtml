@@ -28,7 +28,7 @@
     </div>
 
     <div class="table-responsive">
-        <table class="table-custom" id="areas-table">
+        <table class="table-custom" id="areas-table" data-paginate data-page-size="10">
             <thead>
                 <tr>
                     <th style="width: 90px;">N.º</th>
@@ -83,21 +83,5 @@
 </div>
 
 @section Scripts {
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const input = document.getElementById("areas-search");
-            const rows = document.querySelectorAll("#areas-table tbody tr");
-
-            if (!input) return;
-
-            input.addEventListener("keyup", function () {
-                const filtro = this.value.toLowerCase().trim();
-
-                rows.forEach(function (row) {
-                    const texto = row.textContent.toLowerCase();
-                    row.style.display = texto.includes(filtro) ? "" : "none";
-                });
-            });
-        });
-    </script>
+    <script src="~/assets/js/table-pagination.js"></script>
 }

@@ -1,0 +1,87 @@
+@model IEnumerable<FloresMvc.Models.Fincas>
+@{
+    ViewData["Title"] = "Fincas";
+    var fincas = Model?.ToList() ?? new List<FloresMvc.Models.Fincas>();
+}
+
+<div class="page-header d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+    <div>
+        <h1 class="page-title">Fincas</h1>
+        <p class="page-subtitle mb-0">Administra las fincas registradas en FloresVida.</p>
+    </div>
+    <a asp-action="Create" class="btn btn-primary">
+        <i class="bi bi-plus-circle me-1"></i> Nueva Finca
+    </a>
+</div>
+
+<div class="table-card-custom">
+    <div class="table-header-control">
+        <div class="table-search-box">
+            <i class="bi bi-search table-search-icon"></i>
+            <input type="text" id="fincas-search" class="table-search-input" placeholder="Buscar finca...">
+        </div>
+        <div class="table-filter-group">
+            <span class="badge bg-light text-dark">
+                <i class="bi bi-collection me-1"></i> @fincas.Count registro(s)
+            </span>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table-custom" id="fincas-table" data-paginate data-page-size="10">
+            <thead>
+                <tr>
+                    <th style="width: 90px;">N.º</th>
+                    <th>Nombre de la Finca</th>
+                    <th>Fecha de Creación</th>
+                    <th>Creado por</th>
+                    <th>Última Modificación</th>
+                    <th>Fecha de Modificación</th>
+                    <th class="text-center" style="width: 140px;">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (fincas.Count == 0)
+                {
+                    <tr>
+                        <td colspan="7" class="text-center py-5 text-muted">
+                            <i class="bi bi-inbox d-block mb-2" style="font-size: 2rem;"></i>
+                            No hay fincas registradas todavía.
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    foreach (var finca in fincas)
+                    {
+                        <tr>
+                            <td class="table-order-id">@finca.IdFinca</td>
+                            <td class="table-product-name">@finca.NomFinca</td>
+                            <td>@(finca.fecha_Creacion == default ? "—" : finca.fecha_Creacion.ToString("dd/MM/yyyy HH:mm"))</td>
+                            <td>@(string.IsNullOrWhiteSpace(finca.Owner) ? "—" : finca.Owner)</td>
+                            <td>@(string.IsNullOrWhiteSpace(finca.LastModify) ? "—" : finca.LastModify)</td>
+                            <td>@(finca.LastDate.HasValue ? finca.LastDate.Value.ToString("dd/MM/yyyy HH:mm") : "—")</td>
+                            <td>
+                                <div class="d-flex justify-content-center gap-1">
+                                    <a asp-action="Details" asp-route-id="@finca.IdFinca" class="table-btn-action" title="Ver detalle">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                    <a asp-action="Edit" asp-route-id="@finca.IdFinca" class="table-btn-action" title="Editar">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <a asp-action="Delete" asp-route-id="@finca.IdFinca" class="table-btn-action delete" title="Eliminar">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/assets/js/table-pagination.js"></script>
+}

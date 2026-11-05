@@ -3,6 +3,7 @@ using System.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using FloresMvc.Controllers;
+using FloresMvc.Extensions;
 using FloresMvc.Models;
 using System.Threading.Tasks;
 
@@ -50,7 +51,7 @@ namespace FloresMvc.Controllers
             {
                 categorias.fecha_Creacion = DateTime.Now;
                 categorias.DateOwner = DateTime.Now;
-                categorias.Owner = "Admin";
+                categorias.Owner = User.ObtenerNombreUsuario();
                 _context.Add(categorias);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -90,7 +91,7 @@ namespace FloresMvc.Controllers
                 try
                 {
                     categoriaDb.Nomcategoria = categorias.Nomcategoria;
-                    categoriaDb.LastModify = "Admin";
+                    categoriaDb.LastModify = User.ObtenerNombreUsuario();
                     categoriaDb.LastDate = DateTime.Now;
                     await _context.SaveChangesAsync();
                 }

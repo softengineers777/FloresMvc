@@ -3,6 +3,7 @@ using System.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using FloresMvc.Controllers;
+using FloresMvc.Extensions;
 using FloresMvc.Models;
 
 namespace FloresMvc.Controllers
@@ -45,7 +46,7 @@ namespace FloresMvc.Controllers
             }
 
             rolDb.Nombre = rolModificado.Nombre.Trim();
-            rolDb.LastModify = "Admin";
+            rolDb.LastModify = User.ObtenerNombreUsuario();
             rolDb.LastDate = DateTime.Now;
 
             await _context.SaveChangesAsync();
@@ -84,7 +85,7 @@ namespace FloresMvc.Controllers
             if (ModelState.IsValid)
             {
                 roles.fecha_Creacion = DateTime.UtcNow;
-                roles.Owner = "Admin";
+                roles.Owner = User.ObtenerNombreUsuario();
                 roles.DateOwner = DateTime.Now;
                 _context.Add(roles);
                 await _context.SaveChangesAsync();
@@ -107,7 +108,7 @@ namespace FloresMvc.Controllers
 
             rol.Nombre = rol.Nombre.Trim();
             rol.fecha_Creacion = DateTime.UtcNow;
-            rol.Owner = "Admin";
+            rol.Owner = User.ObtenerNombreUsuario();
             rol.DateOwner = DateTime.Now;
             rol.LastModify = null;
             rol.LastDate = null;
@@ -157,7 +158,7 @@ namespace FloresMvc.Controllers
                     }
 
                     rolDb.Nombre = roles.Nombre;
-                    rolDb.LastModify = "Admin";
+                    rolDb.LastModify = User.ObtenerNombreUsuario();
                     rolDb.LastDate = DateTime.Now;
 
                     await _context.SaveChangesAsync();
