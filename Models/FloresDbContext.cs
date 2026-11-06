@@ -29,6 +29,9 @@ namespace FloresMvc.Models
         public DbSet<Inventario> Inventario { get; set; }
         public DbSet<Remisiones> Remisiones { get; set; }
         public DbSet<RemisionesDTO> RemisionesDTO { get; set; }
+        public DbSet<ModeloDisciplinario> ModeloDisciplinario { get; set; }
+
+
 
         protected override void  OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -202,6 +205,20 @@ namespace FloresMvc.Models
                      .WithMany(r => r.Detalles)
                      .HasForeignKey(d => d.IdRemision)
                      .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            modelBuilder.Entity<ModeloDisciplinario>( entity =>
+            {
+               entity.ToTable("ModeloDisciplinario");
+               entity.HasKey(md=>md.IdModelo);
+               entity.Property(md=> md.IdArea);
+               entity.Property(md=>md.fecha_creacion);
+               entity.Property(md=> md.fecha_creacion);
+               entity.Property(md=>md.asunto);
+               entity.Property(md=>md.cargo);
+               entity.Property(md=>md.Proceso);
+               entity.Property(md=>md.Situacion);
+               entity.Property(md=>md.Firma);
             });
 
         }

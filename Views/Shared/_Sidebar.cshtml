@@ -35,6 +35,15 @@
     var areasActivo = EsControlador("Areas") ? "active" : "";
     var fincasActivo = EsControlador("Fincas") ? "active" : "";
     //***************Fin Menu Tablas Parametricas*****************************
+
+    //***************Inicio Menu Gestion Humana (GH)*****************************
+    var enGestionH = EsControlador("ModeloDisciplinario") || EsControlador("CitacionDescargas") || EsControlador("ActaDescargos");
+    var ghExpandido = enGestionH ? "true" : "false";
+    var submenuGhAbierto = enGestionH ? "show" : "";
+    var subModeloDisActivo = EsControlador("ModeloDisciplinario") ? "active" : "";
+    var subCitActivo = EsControlador("CitacionDescargas") ? "active" : "";
+    var subActaActivo = EsControlador("ActaDescargos") ? "active" : "";
+    //***************Fin Menu Gestion Humana (GH)*****************************
 }
 <!-- ==========================================
          START: Sidebar Component
@@ -144,6 +153,38 @@
                                id="menu-remisiones" title="Remisiones">
                                 <i class="bi bi-truck"></i>
                                 <span>Remisiones</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="sidebar-menu-item">
+                    <a class="sidebar-menu-link" data-bs-toggle="collapse" href="#submenu-gestion-humana" role="button"
+                       aria-expanded="@ghExpandido" aria-controls="submenu-gestion-humana"
+                       title="Gestión Humana">
+                        <i class="bi bi-people-fill"></i>
+                        <span>Gestión Humana</span>
+                        <i class="bi bi-chevron-down dropdown-caret"></i>
+                    </a>
+                    <ul class="sidebar-submenu collapse @submenuGhAbierto" id="submenu-gestion-humana">
+                        <li>
+                            <a href="/ModeloDisciplinario/Index" class="sidebar-submenu-link @subModeloDisActivo"
+                               id="menu-modelo-disciplinario" title="Modelo Disciplinario">
+                                <i class="bi bi-journal-check"></i>
+                                <span>Modelo Disciplinario</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/CitacionDescargas/Index" class="sidebar-submenu-link @subCitActivo"
+                               id="menu-citacion-descargas" title="Citación Descargos">
+                                <i class="bi bi-file-earmark-text"></i>
+                                <span>Citación Descargos</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/ActaDescargos/Index" class="sidebar-submenu-link @subActaActivo"
+                               id="menu-acta-descargos" title="Acta Descargos">
+                                <i class="bi bi-file-earmark-check"></i>
+                                <span>Acta Descargos</span>
                             </a>
                         </li>
                     </ul>
