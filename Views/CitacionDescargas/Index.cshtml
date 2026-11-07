@@ -1,0 +1,109 @@
+@model IEnumerable<FloresMvc.Models.CitacionDescargos>
+@{
+    ViewData["Title"] = "Citación a Descargos";
+    var items = Model?.ToList() ?? new List<FloresMvc.Models.CitacionDescargos>();
+    var cargos = ViewBag.Cargos as IDictionary<int, string> ?? new Dictionary<int, string>();
+    var areas = ViewBag.Areas as IDictionary<int, string> ?? new Dictionary<int, string>();
+    string NombreCargo(int id) => cargos.TryGetValue(id, out var n) ? n : id.ToString();
+    string NombreArea(int id) => areas.TryGetValue(id, out var n) ? n : id.ToString();
+}
+
+<div class="page-header d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+    <div>
+        <h1 class="page-title">Citación a Descargos</h1>
+        <p class="page-subtitle mb-0">Administra las citaciones a descargos registradas en Gestión Humana.</p>
+    </div>
+    <a asp-action="Create" class="btn btn-primary">
+        <i class="bi bi-plus-circle me-1"></i> Nueva Citación
+    </a>
+</div>
+
+@if (TempData["Success"] is string successMsg)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="bi bi-check-circle me-1"></i> @successMsg
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+    </div>
+}
+
+<div class="table-card-custom">
+    <div class="table-header-control">
+        <div class="table-search-box">
+            <i class="bi bi-search table-search-icon"></i>
+            <input type="text" id="cd-search" class="table-search-input" placeholder="Buscar citación...">
+        </div>
+        <div class="table-filter-group">
+            <span class="badge bg-light text-dark">
+                <i class="bi bi-collection me-1"></i> @items.Count registro(s)
+            </span>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table-custom" id="cd-table" data-paginate data-page-size="10">
+            <thead>
+                <tr>
+                    <th style="width: 90px;">N.º</th>
+                    <th>Trabajador</th>
+                    <th>Cargo</th>
+                    <th>Área</th>
+                    <th>Proceso</th>
+                    <th>Fecha diligencia</th>
+                    <th>Fecha hechos</th>
+                    <th>Creado por</th>
+                    <th>Fecha creación</th>
+                    <th>Modificado por</th>
+                    <th>Última modificación</th>
+                    <th class="text-center" style="width: 140px;">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (items.Count == 0)
+                {
+                    <tr>
+                        <td colspan="12" class="text-center py-5 text-muted">
+                            <i class="bi bi-inbox d-block mb-2" style="font-size: 2rem;"></i>
+                            No hay citaciones registradas todavía.
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    foreach (var item in items)
+                    {
+                        <tr>
+                            <td class="table-order-id">@item.IdCitacion</td>
+                            <td class="table-product-name">@item.NomTrabajador</td>
+                            <td>@NombreCargo(item.IdCargo)</td>
+                            <td>@NombreArea(item.IdArea)</td>
+                            <td>@item.Proceso</td>
+                            <td>@(item.fecha_Diligencia.HasValue ? item.fecha_Diligencia.Value.ToString("dd/MM/yyyy") : "—")</td>
+                            <td>@(item.FechaHechos.HasValue ? item.FechaHechos.Value.ToString("dd/MM/yyyy") : "—")</td>
+                            <td>@(string.IsNullOrWhiteSpace(item.Owner) ? "—" : item.Owner)</td>
+                            <td>@(item.fecha_Creacion == default ? "—" : item.fecha_Creacion.ToString("dd/MM/yyyy HH:mm"))</td>
+                            <td>@(string.IsNullOrWhiteSpace(item.LastModify) ? "—" : item.LastModify)</td>
+                            <td>@(item.LastDate.HasValue ? item.LastDate.Value.ToString("dd/MM/yyyy HH:mm") : "—")</td>
+                            <td>
+                                <div class="d-flex justify-content-center gap-1">
+                                    <a asp-action="Details" asp-route-id="@item.IdCitacion" class="table-btn-action" title="Ver detalle">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                    <a asp-action="Edit" asp-route-id="@item.IdCitacion" class="table-btn-action" title="Editar">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <a asp-action="Delete" asp-route-id="@item.IdCitacion" class="table-btn-action delete" title="Eliminar">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/assets/js/table-pagination.js"></script>
+}

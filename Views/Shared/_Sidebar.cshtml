@@ -27,13 +27,16 @@
 
     //***************Inicio Menu Tablas Parametricas*****************************
     var enParametricas = EsControlador("Categorias") || EsControlador("SubCategorias")
-        || EsControlador("Areas") || EsControlador("Fincas");
+        || EsControlador("Areas") || EsControlador("Fincas") || EsControlador("Cargo")
+        || EsControlador("Sucursal");
     var parametricasExpandido = enParametricas ? "true" : "false";
     var submenuParametricasAbierto = enParametricas ? "show" : "";
     var categoriasActivo = EsControlador("Categorias") ? "active" : "";
     var subCategoriasActivo = EsControlador("SubCategorias") ? "active" : "";
     var areasActivo = EsControlador("Areas") ? "active" : "";
     var fincasActivo = EsControlador("Fincas") ? "active" : "";
+    var cargoActivo = EsControlador("Cargo") ? "active" : "";
+    var sucursalActivo = EsControlador("Sucursal") ? "active" : "";
     //***************Fin Menu Tablas Parametricas*****************************
 
     //***************Inicio Menu Gestion Humana (GH)*****************************
@@ -136,7 +139,21 @@
                                 <i class="bi bi-house-door-fill"></i>
                                 <span>Fincas</span>
                             </a>
-                        </li>AJR22J
+                        </li>
+                        <li>
+                            <a href="/Cargo/Index" class="sidebar-submenu-link @cargoActivo" id="menu-cargo"
+                               title="Cargos">
+                                <i class="bi bi-briefcase-fill"></i>
+                                <span>Cargos</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/Sucursal/Index" class="sidebar-submenu-link @sucursalActivo" id="menu-sucursal"
+                               title="Sucursales">
+                                <i class="bi bi-building-fill"></i>
+                                <span>Sucursales</span>
+                            </a>
+                        </li>
                     </ul>
                 </li>
                 <li class="sidebar-menu-item">
@@ -168,9 +185,9 @@
                     <ul class="sidebar-submenu collapse @submenuGhAbierto" id="submenu-gestion-humana">
                         <li>
                             <a href="/ModeloDisciplinario/Index" class="sidebar-submenu-link @subModeloDisActivo"
-                               id="menu-modelo-disciplinario" title="Modelo Disciplinario">
+                               id="menu-modelo-disciplinario" title="Manejo Disciplinario">
                                 <i class="bi bi-journal-check"></i>
-                                <span>Modelo Disciplinario</span>
+                                <span>Manejo Disciplinario</span>
                             </a>
                         </li>
                         <li>

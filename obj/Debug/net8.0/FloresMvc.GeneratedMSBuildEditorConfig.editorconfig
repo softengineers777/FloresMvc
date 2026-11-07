@@ -38,6 +38,26 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXJlYXNcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/jhon.bolivar/OneDrive - GR Chia S.A.S/Documentos/Desarrollo/FloresMvc/Views/Cargo/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2FyZ29cQ3JlYXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/jhon.bolivar/OneDrive - GR Chia S.A.S/Documentos/Desarrollo/FloresMvc/Views/Cargo/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2FyZ29cRGVsZXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/jhon.bolivar/OneDrive - GR Chia S.A.S/Documentos/Desarrollo/FloresMvc/Views/Cargo/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2FyZ29cRGV0YWlscy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/jhon.bolivar/OneDrive - GR Chia S.A.S/Documentos/Desarrollo/FloresMvc/Views/Cargo/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2FyZ29cRWRpdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/jhon.bolivar/OneDrive - GR Chia S.A.S/Documentos/Desarrollo/FloresMvc/Views/Cargo/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2FyZ29cSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/jhon.bolivar/OneDrive - GR Chia S.A.S/Documentos/Desarrollo/FloresMvc/Views/Categorias/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2F0ZWdvcmlhc1xDcmVhdGUuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
@@ -56,6 +76,26 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/jhon.bolivar/OneDrive - GR Chia S.A.S/Documentos/Desarrollo/FloresMvc/Views/Categorias/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2F0ZWdvcmlhc1xJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/jhon.bolivar/OneDrive - GR Chia S.A.S/Documentos/Desarrollo/FloresMvc/Views/CitacionDescargas/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2l0YWNpb25EZXNjYXJnYXNcQ3JlYXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/jhon.bolivar/OneDrive - GR Chia S.A.S/Documentos/Desarrollo/FloresMvc/Views/CitacionDescargas/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2l0YWNpb25EZXNjYXJnYXNcRGVsZXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/jhon.bolivar/OneDrive - GR Chia S.A.S/Documentos/Desarrollo/FloresMvc/Views/CitacionDescargas/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2l0YWNpb25EZXNjYXJnYXNcRGV0YWlscy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/jhon.bolivar/OneDrive - GR Chia S.A.S/Documentos/Desarrollo/FloresMvc/Views/CitacionDescargas/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2l0YWNpb25EZXNjYXJnYXNcRWRpdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/jhon.bolivar/OneDrive - GR Chia S.A.S/Documentos/Desarrollo/FloresMvc/Views/CitacionDescargas/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2l0YWNpb25EZXNjYXJnYXNcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/jhon.bolivar/OneDrive - GR Chia S.A.S/Documentos/Desarrollo/FloresMvc/Views/Fincas/Create.cshtml]
@@ -92,6 +132,26 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/jhon.bolivar/OneDrive - GR Chia S.A.S/Documentos/Desarrollo/FloresMvc/Views/Login/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTG9naW5cSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/jhon.bolivar/OneDrive - GR Chia S.A.S/Documentos/Desarrollo/FloresMvc/Views/ModeloDisciplinario/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTW9kZWxvRGlzY2lwbGluYXJpb1xDcmVhdGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/jhon.bolivar/OneDrive - GR Chia S.A.S/Documentos/Desarrollo/FloresMvc/Views/ModeloDisciplinario/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTW9kZWxvRGlzY2lwbGluYXJpb1xEZWxldGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/jhon.bolivar/OneDrive - GR Chia S.A.S/Documentos/Desarrollo/FloresMvc/Views/ModeloDisciplinario/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTW9kZWxvRGlzY2lwbGluYXJpb1xEZXRhaWxzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/jhon.bolivar/OneDrive - GR Chia S.A.S/Documentos/Desarrollo/FloresMvc/Views/ModeloDisciplinario/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTW9kZWxvRGlzY2lwbGluYXJpb1xFZGl0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/jhon.bolivar/OneDrive - GR Chia S.A.S/Documentos/Desarrollo/FloresMvc/Views/ModeloDisciplinario/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTW9kZWxvRGlzY2lwbGluYXJpb1xJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/jhon.bolivar/OneDrive - GR Chia S.A.S/Documentos/Desarrollo/FloresMvc/Views/Remisiones/Create.cshtml]
@@ -188,6 +248,26 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/jhon.bolivar/OneDrive - GR Chia S.A.S/Documentos/Desarrollo/FloresMvc/Views/SubCategorias/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3ViQ2F0ZWdvcmlhc1xJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/jhon.bolivar/OneDrive - GR Chia S.A.S/Documentos/Desarrollo/FloresMvc/Views/Sucursal/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3VjdXJzYWxcQ3JlYXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/jhon.bolivar/OneDrive - GR Chia S.A.S/Documentos/Desarrollo/FloresMvc/Views/Sucursal/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3VjdXJzYWxcRGVsZXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/jhon.bolivar/OneDrive - GR Chia S.A.S/Documentos/Desarrollo/FloresMvc/Views/Sucursal/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3VjdXJzYWxcRGV0YWlscy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/jhon.bolivar/OneDrive - GR Chia S.A.S/Documentos/Desarrollo/FloresMvc/Views/Sucursal/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3VjdXJzYWxcRWRpdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/jhon.bolivar/OneDrive - GR Chia S.A.S/Documentos/Desarrollo/FloresMvc/Views/Sucursal/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3VjdXJzYWxcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/jhon.bolivar/OneDrive - GR Chia S.A.S/Documentos/Desarrollo/FloresMvc/Views/Usuarios.cshtml]

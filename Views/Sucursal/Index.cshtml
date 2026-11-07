@@ -1,0 +1,87 @@
+@model IEnumerable<FloresMvc.Models.Sucursal>
+@{
+    ViewData["Title"] = "Sucursales";
+    var sucursales = Model?.ToList() ?? new List<FloresMvc.Models.Sucursal>();
+}
+
+<div class="page-header d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+    <div>
+        <h1 class="page-title">Sucursales</h1>
+        <p class="page-subtitle mb-0">Administra las sucursales registradas en FloresVida.</p>
+    </div>
+    <a asp-action="Create" class="btn btn-primary">
+        <i class="bi bi-plus-circle me-1"></i> Nueva Sucursal
+    </a>
+</div>
+
+<div class="table-card-custom">
+    <div class="table-header-control">
+        <div class="table-search-box">
+            <i class="bi bi-search table-search-icon"></i>
+            <input type="text" id="sucursales-search" class="table-search-input" placeholder="Buscar sucursal...">
+        </div>
+        <div class="table-filter-group">
+            <span class="badge bg-light text-dark">
+                <i class="bi bi-collection me-1"></i> @sucursales.Count registro(s)
+            </span>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table-custom" id="sucursales-table" data-paginate data-page-size="10">
+            <thead>
+                <tr>
+                    <th style="width: 90px;">N.º</th>
+                    <th>Nombre de la Sucursal</th>
+                    <th>Fecha de Creación</th>
+                    <th>Creado por</th>
+                    <th>Última Modificación</th>
+                    <th>Fecha de Modificación</th>
+                    <th class="text-center" style="width: 140px;">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (sucursales.Count == 0)
+                {
+                    <tr>
+                        <td colspan="7" class="text-center py-5 text-muted">
+                            <i class="bi bi-inbox d-block mb-2" style="font-size: 2rem;"></i>
+                            No hay sucursales registradas todavía.
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    foreach (var sucursal in sucursales)
+                    {
+                        <tr>
+                            <td class="table-order-id">@sucursal.IdSucursal</td>
+                            <td class="table-product-name">@sucursal.NombreSuc</td>
+                            <td>@(sucursal.fecha_Creacion == default ? "—" : sucursal.fecha_Creacion.ToString("dd/MM/yyyy HH:mm"))</td>
+                            <td>@(string.IsNullOrWhiteSpace(sucursal.Owner) ? "—" : sucursal.Owner)</td>
+                            <td>@(string.IsNullOrWhiteSpace(sucursal.LastModify) ? "—" : sucursal.LastModify)</td>
+                            <td>@(sucursal.LastDate.HasValue ? sucursal.LastDate.Value.ToString("dd/MM/yyyy HH:mm") : "—")</td>
+                            <td>
+                                <div class="d-flex justify-content-center gap-1">
+                                    <a asp-action="Details" asp-route-id="@sucursal.IdSucursal" class="table-btn-action" title="Ver detalle">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                    <a asp-action="Edit" asp-route-id="@sucursal.IdSucursal" class="table-btn-action" title="Editar">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <a asp-action="Delete" asp-route-id="@sucursal.IdSucursal" class="table-btn-action delete" title="Eliminar">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/assets/js/table-pagination.js"></script>
+}

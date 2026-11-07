@@ -1,0 +1,147 @@
+@model FloresMvc.Models.ModeloDisciplinario
+@{
+    ViewData["Title"] = "Nuevo Modelo Disciplinario";
+}
+
+<div class="page-header d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+    <div>
+        <h1 class="page-title">Nuevo Modelo Disciplinario</h1>
+        <p class="page-subtitle mb-0">Registra un nuevo proceso de manejo disciplinario.</p>
+    </div>
+    <a asp-action="Index" class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left me-1"></i> Volver al listado
+    </a>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-lg-10 col-xl-9">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body p-4">
+                <form asp-action="Create" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label asp-for="IdArea" class="form-label fw-semibold"></label>
+                            <select asp-for="IdArea" class="form-select" asp-items="ViewBag.Areas">
+                                <option value="">-- Seleccione un área --</option>
+                            </select>
+                            <span asp-validation-for="IdArea" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="cargo" class="form-label fw-semibold"></label>
+                            <select asp-for="cargo" class="form-select" asp-items="ViewBag.Cargos">
+                                <option value="">-- Seleccione un cargo --</option>
+                            </select>
+                            <span asp-validation-for="cargo" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label asp-for="NomTrabajador" class="form-label fw-semibold"></label>
+                            <input asp-for="NomTrabajador" class="form-control" placeholder="Nombre completo del trabajador" autofocus />
+                            <span asp-validation-for="NomTrabajador" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="para" class="form-label fw-semibold"></label>
+                            <input asp-for="para" class="form-control" placeholder="Destinatario" />
+                            <span asp-validation-for="para" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-12">
+                            <label asp-for="asunto" class="form-label fw-semibold"></label>
+                            <input asp-for="asunto" class="form-control" placeholder="Asunto del proceso disciplinario" />
+                            <span asp-validation-for="asunto" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label asp-for="Proceso" class="form-label fw-semibold"></label>
+                            <input asp-for="Proceso" class="form-control" placeholder="Proceso relacionado" />
+                            <span asp-validation-for="Proceso" class="text-danger"></span>
+                        </div>
+                        <div class="col-12">
+                            <label asp-for="Firma" class="form-label fw-semibold"></label>
+                            <input type="hidden" asp-for="Firma" id="Firma" />
+                            <div class="border rounded bg-white p-2" style="max-width: 520px;">
+                                <canvas id="firma-pad" class="w-100" height="180" style="touch-action: none; display: block;"></canvas>
+                            </div>
+                            <div class="mt-2 d-flex gap-2">
+                                <button type="button" class="btn btn-outline-secondary btn-sm" id="firma-clear">
+                                    <i class="bi bi-eraser me-1"></i> Limpiar firma
+                                </button>
+                            </div>
+                            <div class="form-text">Dibuje la firma en el recuadro.</div>
+                            <span asp-validation-for="Firma" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-12">
+                            <label asp-for="Situacion" class="form-label fw-semibold"></label>
+                            <textarea asp-for="Situacion" class="form-control" rows="5" placeholder="Describa la situación o los hechos..."></textarea>
+                            <span asp-validation-for="Situacion" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-light border small text-muted my-4">
+                        <i class="bi bi-info-circle me-1"></i>
+                        La fecha de creación y el usuario que crea el registro se asignan automáticamente.
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2">
+                        <a asp-action="Index" class="btn btn-outline-secondary">Cancelar</a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-save me-1"></i> Guardar Registro
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.1.7/dist/signature_pad.umd.min.js"></script>
+    <script>
+        (function () {
+            var canvas = document.getElementById('firma-pad');
+            var input = document.getElementById('Firma');
+            var clearBtn = document.getElementById('firma-clear');
+            if (!canvas || !input || typeof SignaturePad === 'undefined') return;
+
+            function resizeCanvas() {
+                var ratio = Math.max(window.devicePixelRatio || 1, 1);
+                var data = signaturePad && !signaturePad.isEmpty() ? signaturePad.toData() : null;
+                canvas.width = canvas.offsetWidth * ratio;
+                canvas.height = 180 * ratio;
+                canvas.getContext('2d').scale(ratio, ratio);
+                if (signaturePad) {
+                    signaturePad.clear();
+                    if (data) signaturePad.fromData(data);
+                }
+            }
+
+            var signaturePad = new SignaturePad(canvas, {
+                backgroundColor: 'rgb(255, 255, 255)',
+                penColor: 'rgb(20, 20, 20)'
+            });
+
+            window.addEventListener('resize', resizeCanvas);
+            resizeCanvas();
+
+            if (clearBtn) {
+                clearBtn.addEventListener('click', function () {
+                    signaturePad.clear();
+                    input.value = '';
+                });
+            }
+
+            var form = canvas.closest('form');
+            if (form) {
+                form.addEventListener('submit', function () {
+                    if (!signaturePad.isEmpty()) {
+                        input.value = signaturePad.toDataURL('image/png');
+                    }
+                });
+            }
+        })();
+    </script>
+}

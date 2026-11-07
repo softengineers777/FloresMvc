@@ -1,0 +1,115 @@
+@model FloresMvc.Models.CitacionDescargos
+@{
+    ViewData["Title"] = "Editar Citación a Descargos";
+    var horaValue = Model?.HoraDiligencia.HasValue == true ? Model.HoraDiligencia.Value.ToString("HH:mm") : "";
+}
+
+<div class="page-header d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+    <div>
+        <h1 class="page-title">Editar Citación a Descargos</h1>
+        <p class="page-subtitle mb-0">Actualiza la información de la citación seleccionada.</p>
+    </div>
+    <a asp-action="Index" class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left me-1"></i> Volver al listado
+    </a>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-lg-10 col-xl-9">
+        <div class="card border-0 shadow-sm">
+            <div class="card-body p-4">
+                <form asp-action="Edit" method="post">
+                    <input type="hidden" asp-for="IdCitacion" />
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label asp-for="Ciudad" class="form-label fw-semibold"></label>
+                            <input asp-for="Ciudad" class="form-control" autofocus />
+                            <span asp-validation-for="Ciudad" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="NomTrabajador" class="form-label fw-semibold"></label>
+                            <input asp-for="NomTrabajador" class="form-control" maxlength="20" />
+                            <span asp-validation-for="NomTrabajador" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label asp-for="IdCargo" class="form-label fw-semibold"></label>
+                            <select asp-for="IdCargo" class="form-select" asp-items="ViewBag.Cargos">
+                                <option value="">-- Seleccione un cargo --</option>
+                            </select>
+                            <span asp-validation-for="IdCargo" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="IdArea" class="form-label fw-semibold"></label>
+                            <select asp-for="IdArea" class="form-select" asp-items="ViewBag.Areas">
+                                <option value="">-- Seleccione un área --</option>
+                            </select>
+                            <span asp-validation-for="IdArea" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label asp-for="Proceso" class="form-label fw-semibold"></label>
+                            <input asp-for="Proceso" class="form-control" maxlength="20" />
+                            <span asp-validation-for="Proceso" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="CcRecibido" class="form-label fw-semibold"></label>
+                            <input asp-for="CcRecibido" class="form-control" maxlength="20" />
+                            <span asp-validation-for="CcRecibido" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label asp-for="fecha_Diligencia" class="form-label fw-semibold"></label>
+                            <input asp-for="fecha_Diligencia" class="form-control" type="datetime-local" asp-format="{0:yyyy-MM-ddTHH:mm}" />
+                            <span asp-validation-for="fecha_Diligencia" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <label asp-for="HoraDiligencia" class="form-label fw-semibold"></label>
+                            <input type="time" name="HoraDiligenciaHora" class="form-control" value="@horaValue" />
+                            <span asp-validation-for="HoraDiligencia" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <label asp-for="FechaHechos" class="form-label fw-semibold"></label>
+                            <input asp-for="FechaHechos" class="form-control" type="date" asp-format="{0:yyyy-MM-dd}" />
+                            <span asp-validation-for="FechaHechos" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <hr class="my-4" />
+                    <h6 class="text-muted mb-3"><i class="bi bi-clock-history me-1"></i> Información de auditoría</h6>
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-3">
+                            <label class="form-label text-muted small mb-1">Fecha de creación</label>
+                            <div class="form-control-plaintext">@(Model.fecha_Creacion == default ? "—" : Model.fecha_Creacion.ToString("dd/MM/yyyy HH:mm"))</div>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label text-muted small mb-1">Creado por</label>
+                            <div class="form-control-plaintext">@(string.IsNullOrWhiteSpace(Model.Owner) ? "—" : Model.Owner)</div>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label text-muted small mb-1">Última modificación</label>
+                            <div class="form-control-plaintext">@(Model.LastDate.HasValue ? Model.LastDate.Value.ToString("dd/MM/yyyy HH:mm") : "—")</div>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label text-muted small mb-1">Modificado por</label>
+                            <div class="form-control-plaintext">@(string.IsNullOrWhiteSpace(Model.LastModify) ? "—" : Model.LastModify)</div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2">
+                        <a asp-action="Index" class="btn btn-outline-secondary">Cancelar</a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-save me-1"></i> Guardar Cambios
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
