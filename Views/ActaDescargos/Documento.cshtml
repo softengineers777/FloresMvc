@@ -1,0 +1,136 @@
+@model FloresMvc.Models.ActaDescargos
+@{
+    Layout = null;
+    var nombreCargo = ViewBag.NombreCargo as string ?? Model.IdCargo.ToString();
+    var nombreArea = ViewBag.NombreArea as string ?? Model.IdArea.ToString();
+    var preguntas = Model.Preguntas?.OrderBy(p => p.Orden).ThenBy(p => p.IdPregunta).ToList() ?? new List<FloresMvc.Models.ActaDescargosPreguntas>();
+    string FmtDate(DateTime? d) => d.HasValue ? d.Value.ToString("dd/MM/yyyy") : "—";
+    string FmtDateTime(DateTime? d) => d.HasValue ? d.Value.ToString("dd/MM/yyyy HH:mm") : "—";
+    string Testigos(bool? b) => b.HasValue ? (b.Value ? "Sí" : "No") : "—";
+}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Acta de Descargos N.º @Model.IdActa</title>
+    <style>
+        :root { --ink: #111; --muted: #555; --line: #d7d7d7; }
+        * { box-sizing: border-box; }
+        body { margin: 0; font-family: Arial, Helvetica, sans-serif; color: var(--ink); background: #f3f4f6; }
+        .toolbar { position: sticky; top: 0; z-index: 10; display: flex; gap: 10px; justify-content: center; padding: 12px; background: #fff; border-bottom: 1px solid var(--line); }
+        .btn { display: inline-block; padding: 10px 16px; border-radius: 6px; border: 1px solid #1f6feb; background: #1f6feb; color: #fff; text-decoration: none; font-size: 14px; cursor: pointer; }
+        .btn.secondary { background: #fff; color: #333; border-color: #bbb; }
+        .page { width: 210mm; min-height: 297mm; margin: 18px auto; padding: 16mm 15mm; background: #fff; box-shadow: 0 2px 12px rgba(0,0,0,.08); }
+        h1 { margin: 0 0 4px; text-align: center; font-size: 20px; letter-spacing: .3px; text-transform: uppercase; }
+        .subtitle { margin: 0 0 14px; text-align: center; color: var(--muted); font-size: 13px; }
+        .box { border: 1px solid var(--line); border-radius: 6px; padding: 10px 12px; margin-bottom: 12px; }
+        .box h2 { margin: 0 0 8px; font-size: 12px; text-transform: uppercase; color: #222; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 16px; }
+        .field { font-size: 12.5px; }
+        .label { display: block; color: var(--muted); font-size: 10.5px; text-transform: uppercase; margin-bottom: 1px; }
+        .value { min-height: 16px; white-space: pre-wrap; }
+        .full { grid-column: 1 / -1; }
+        .qa { margin: 0; padding-left: 18px; font-size: 12.5px; }
+        .qa li { margin-bottom: 10px; }
+        .q { font-weight: 600; }
+        .a { margin-top: 3px; white-space: pre-wrap; }
+        .signs { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin-top: 28px; }
+        .sign { text-align: center; font-size: 12px; }
+        .sign-mark { min-height: 52px; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 4px; color: #444; }
+        .sign-line { border-top: 1px solid #333; margin: 0 8px; }
+        .sign-caption { padding-top: 6px; }
+        .footer { margin-top: 14px; font-size: 10.5px; color: var(--muted); text-align: right; }
+        @@media print {
+            body { background: #fff; }
+            .toolbar { display: none !important; }
+            .page { width: auto; min-height: 0; margin: 0; padding: 10mm 8mm; box-shadow: none; }
+            .box { break-inside: avoid; }
+        }
+    </style>
+</head>
+<body>
+    <div class="toolbar">
+        <button type="button" class="btn" onclick="window.print()">Imprimir / Guardar como PDF</button>
+        <a class="btn secondary" href="@Url.Action("Details", "ActaDescargos", new { id = Model.IdActa })">Volver al detalle</a>
+        <a class="btn secondary" href="@Url.Action("Index", "ActaDescargos")">Listado</a>
+    </div>
+
+    <main class="page">
+        <h1>Acta de Descargos</h1>
+        <p class="subtitle">Gestión Humana — Registro N.º @Model.IdActa</p>
+
+        <section class="box">
+            <h2>Información general</h2>
+            <div class="grid">
+                <div class="field"><span class="label">Ciudad</span><div class="value">@(string.IsNullOrWhiteSpace(Model.Ciudad) ? "—" : Model.Ciudad)</div></div>
+                <div class="field"><span class="label">Fecha de creación</span><div class="value">@(Model.fecha_Creacion == default ? "—" : Model.fecha_Creacion.ToString("dd/MM/yyyy HH:mm"))</div></div>
+                <div class="field"><span class="label">Fecha informe disciplinario</span><div class="value">@FmtDate(Model.FechaInformeDisciplinario)</div></div>
+                <div class="field"><span class="label">Fecha diligencia</span><div class="value">@FmtDateTime(Model.FechaDiligencia)</div></div>
+                <div class="field"><span class="label">Hora inicio</span><div class="value">@(string.IsNullOrWhiteSpace(Model.HoraInicio) ? "—" : Model.HoraInicio)</div></div>
+                <div class="field"><span class="label">Hora fin</span><div class="value">@(string.IsNullOrWhiteSpace(Model.HoraFin) ? "—" : Model.HoraFin)</div></div>
+            </div>
+        </section>
+
+        <section class="box">
+            <h2>Datos del trabajador</h2>
+            <div class="grid">
+                <div class="field"><span class="label">Nombre</span><div class="value">@Model.NombreTrabajador</div></div>
+                <div class="field"><span class="label">C.C.</span><div class="value">@Model.CcTrabajador</div></div>
+                <div class="field"><span class="label">Cargo</span><div class="value">@nombreCargo</div></div>
+                <div class="field"><span class="label">Área</span><div class="value">@nombreArea</div></div>
+                <div class="field"><span class="label">Proceso</span><div class="value">@Model.Proceso</div></div>
+                <div class="field"><span class="label">Fecha de ingreso</span><div class="value">@FmtDate(Model.FechaIngreso)</div></div>
+                <div class="field"><span class="label">Dirección</span><div class="value">@(string.IsNullOrWhiteSpace(Model.DireccionResidencia) ? "—" : Model.DireccionResidencia)</div></div>
+                <div class="field"><span class="label">Teléfono</span><div class="value">@(string.IsNullOrWhiteSpace(Model.Telefono) ? "—" : Model.Telefono)</div></div>
+                <div class="field"><span class="label">Asistido por testigos</span><div class="value">@Testigos(Model.AsistidoTestigos)</div></div>
+                <div class="field"><span class="label">Nombre testigo</span><div class="value">@(string.IsNullOrWhiteSpace(Model.NombreTestigo) ? "—" : Model.NombreTestigo)</div></div>
+            </div>
+        </section>
+
+        <section class="box">
+            <h2>Preguntas y respuestas</h2>
+            @if (preguntas.Count == 0)
+            {
+                <div class="value">—</div>
+            }
+            else
+            {
+                <ol class="qa">
+                    @foreach (var p in preguntas)
+                    {
+                        <li>
+                            <div class="q">@p.Pregunta</div>
+                            <div class="a"><strong>R:</strong> @p.Respuesta</div>
+                        </li>
+                    }
+                </ol>
+            }
+        </section>
+
+        <section class="box">
+            <h2>Concepto Gestión Humana y sanción</h2>
+            <div class="grid">
+                <div class="field"><span class="label">Días de sanción</span><div class="value">@(Model.DiasSancion?.ToString() ?? "—")</div></div>
+                <div class="field"><span class="label">Fecha inicio sanción</span><div class="value">@FmtDate(Model.FechaInicioSancion)</div></div>
+                <div class="field full"><span class="label">Concepto</span><div class="value">@(string.IsNullOrWhiteSpace(Model.ConceptoGestionHumana) ? "—" : Model.ConceptoGestionHumana)</div></div>
+            </div>
+        </section>
+
+        <div class="signs">
+            <div class="sign">
+                <div class="sign-mark">@(string.IsNullOrWhiteSpace(Model.Owner) ? "" : Model.Owner)</div>
+                <div class="sign-line"></div>
+                <div class="sign-caption">Firma Gestión Humana / Responsable</div>
+            </div>
+            <div class="sign">
+                <div class="sign-mark">@Model.CcTrabajador</div>
+                <div class="sign-line"></div>
+                <div class="sign-caption">Firma del trabajador</div>
+            </div>
+        </div>
+
+        <div class="footer">Generado desde FloresMvc — @DateTime.Now.ToString("dd/MM/yyyy HH:mm")</div>
+    </main>
+</body>
+</html>

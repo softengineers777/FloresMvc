@@ -55,6 +55,26 @@ namespace FloresMvc.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> Documento(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var modelo = await _context.ModeloDisciplinario
+                .AsNoTracking()
+                .FirstOrDefaultAsync(md => md.IdModelo == id);
+            if (modelo == null)
+            {
+                return NotFound();
+            }
+
+            await CargarNombresAsync(modelo.IdArea, modelo.cargo);
+            return View(modelo);
+        }
+
+        [HttpGet]
         public async Task<IActionResult> Create()
         {
             await CargarListasAsync();

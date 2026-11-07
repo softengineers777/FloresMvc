@@ -1,0 +1,131 @@
+@model FloresMvc.Models.CitacionDescargos
+@{
+    Layout = null;
+    var nombreCargo = ViewBag.NombreCargo as string ?? Model.IdCargo.ToString();
+    var nombreArea = ViewBag.NombreArea as string ?? Model.IdArea.ToString();
+    var fechaDiligencia = Model.fecha_Diligencia?.ToString("dd/MM/yyyy");
+    var horaDiligencia = Model.HoraDiligencia?.ToString("HH:mm");
+    var fechaHechos = Model.FechaHechos?.ToString("dd/MM/yyyy");
+}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Citación a Descargos N.º @Model.IdCitacion</title>
+    <style>
+        :root { --ink: #111; --muted: #555; --line: #d7d7d7; }
+        * { box-sizing: border-box; }
+        body { margin: 0; font-family: Arial, Helvetica, sans-serif; color: var(--ink); background: #f3f4f6; }
+        .toolbar { position: sticky; top: 0; z-index: 10; display: flex; gap: 10px; justify-content: center; padding: 12px; background: #fff; border-bottom: 1px solid var(--line); }
+        .btn { display: inline-block; padding: 10px 16px; border-radius: 6px; border: 1px solid #1f6feb; background: #1f6feb; color: #fff; text-decoration: none; font-size: 14px; cursor: pointer; }
+        .btn.secondary { background: #fff; color: #333; border-color: #bbb; }
+        .page { width: 210mm; min-height: 297mm; margin: 18px auto; padding: 18mm 16mm; background: #fff; box-shadow: 0 2px 12px rgba(0,0,0,.08); }
+        h1 { margin: 0 0 4px; text-align: center; font-size: 20px; letter-spacing: .3px; text-transform: uppercase; }
+        .subtitle { margin: 0 0 18px; text-align: center; color: var(--muted); font-size: 13px; }
+        .meta { display: flex; justify-content: space-between; gap: 12px; margin-bottom: 18px; font-size: 13px; }
+        .box { border: 1px solid var(--line); border-radius: 6px; padding: 12px 14px; margin-bottom: 14px; }
+        .box h2 { margin: 0 0 10px; font-size: 13px; text-transform: uppercase; color: #222; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 18px; }
+        .field { font-size: 13px; }
+        .label { display: block; color: var(--muted); font-size: 11px; text-transform: uppercase; margin-bottom: 2px; }
+        .value { min-height: 18px; }
+        .full { grid-column: 1 / -1; }
+        .body-text { font-size: 13px; line-height: 1.55; text-align: justify; margin: 8px 0 0; }
+        .signs { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin-top: 34px; }
+        .sign { text-align: center; font-size: 12px; }
+        .sign-mark { min-height: 56px; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 4px; color: #444; }
+        .sign-line { border-top: 1px solid #333; margin: 0 8px; }
+        .sign-caption { padding-top: 6px; }
+        .footer { margin-top: 18px; font-size: 11px; color: var(--muted); text-align: right; }
+        @@media print {
+            body { background: #fff; }
+            .toolbar { display: none !important; }
+            .page { width: auto; min-height: 0; margin: 0; padding: 12mm 10mm; box-shadow: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="toolbar">
+        <button type="button" class="btn" onclick="window.print()">
+            Imprimir / Guardar como PDF
+        </button>
+        <a class="btn secondary" href="@Url.Action("Details", "CitacionDescargas", new { id = Model.IdCitacion })">Volver al detalle</a>
+        <a class="btn secondary" href="@Url.Action("Index", "CitacionDescargas")">Listado</a>
+    </div>
+
+    <main class="page">
+        <h1>Citación a Descargos</h1>
+        <p class="subtitle">Gestión Humana — Registro N.º @Model.IdCitacion</p>
+
+        <div class="meta">
+            <div><span class="label">Ciudad</span><div class="value">@(string.IsNullOrWhiteSpace(Model.Ciudad) ? "—" : Model.Ciudad)</div></div>
+            <div><span class="label">Fecha de creación</span><div class="value">@(Model.fecha_Creacion == default ? "—" : Model.fecha_Creacion.ToString("dd/MM/yyyy HH:mm"))</div></div>
+        </div>
+
+        <section class="box">
+            <h2>Datos del trabajador</h2>
+            <div class="grid">
+                <div class="field full">
+                    <span class="label">Nombre del trabajador</span>
+                    <div class="value">@Model.NomTrabajador</div>
+                </div>
+                <div class="field">
+                    <span class="label">Cargo</span>
+                    <div class="value">@nombreCargo</div>
+                </div>
+                <div class="field">
+                    <span class="label">Área</span>
+                    <div class="value">@nombreArea</div>
+                </div>
+                <div class="field">
+                    <span class="label">Proceso</span>
+                    <div class="value">@Model.Proceso</div>
+                </div>
+                <div class="field">
+                    <span class="label">C.C. Recibido</span>
+                    <div class="value">@Model.CcRecibido</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="box">
+            <h2>Información de la diligencia</h2>
+            <div class="grid">
+                <div class="field">
+                    <span class="label">Fecha de diligencia</span>
+                    <div class="value">@(fechaDiligencia ?? "—")</div>
+                </div>
+                <div class="field">
+                    <span class="label">Hora de diligencia</span>
+                    <div class="value">@(horaDiligencia ?? "—")</div>
+                </div>
+                <div class="field full">
+                    <span class="label">Fecha de los hechos</span>
+                    <div class="value">@(fechaHechos ?? "—")</div>
+                </div>
+            </div>
+            <p class="body-text">
+                Por medio del presente documento se cita al trabajador para que rinda sus descargos
+                relacionados con los hechos indicados, en la fecha y hora señaladas para la diligencia.
+                El trabajador podrá presentar las pruebas y explicaciones que considere pertinentes.
+            </p>
+        </section>
+
+        <div class="signs">
+            <div class="sign">
+                <div class="sign-mark">@(string.IsNullOrWhiteSpace(Model.Owner) ? "" : Model.Owner)</div>
+                <div class="sign-line"></div>
+                <div class="sign-caption">Firma de quien cita</div>
+            </div>
+            <div class="sign">
+                <div class="sign-mark">@Model.CcRecibido</div>
+                <div class="sign-line"></div>
+                <div class="sign-caption">Firma del trabajador / C.C. recibido</div>
+            </div>
+        </div>
+
+        <div class="footer">Generado desde FloresMvc — @DateTime.Now.ToString("dd/MM/yyyy HH:mm")</div>
+    </main>
+</body>
+</html>

@@ -31,6 +31,8 @@ namespace FloresMvc.Models
       public DbSet<RemisionesDTO> RemisionesDTO { get; set; }
       public DbSet<ModeloDisciplinario> ModeloDisciplinario { get; set; }
       public DbSet<CitacionDescargos> CitacionDescargos { get; set; }
+      public DbSet<ActaDescargos> ActaDescargos { get; set; }
+      public DbSet<ActaDescargosPreguntas> ActaDescargosPreguntas { get; set; }
       public DbSet<Cargo> Cargo { get; set; }
       public DbSet<Sucursal>Sucursal {get; set;}
 
@@ -275,6 +277,56 @@ namespace FloresMvc.Models
             entity.Property(c => c.DateOwner).HasColumnName("DateOwner").HasColumnType("timestamp without time zone");
             entity.Property(c => c.LastModify).HasColumnName("LastModify").HasMaxLength(30);
             entity.Property(c => c.LastDate).HasColumnName("LastDate").HasColumnType("timestamp without time zone");
+         });
+
+         modelBuilder.Entity<ActaDescargos>(entity =>
+         {
+            entity.ToTable("ActaDescargos");
+            entity.HasKey(a => a.IdActa);
+            entity.Property(a => a.IdActa).HasColumnName("IdActa");
+            entity.Property(a => a.Ciudad).HasColumnName("Ciudad").HasMaxLength(100);
+            entity.Property(a => a.fecha_Creacion).HasColumnName("fecha_Creacion").HasColumnType("timestamp without time zone");
+            entity.Property(a => a.FechaInformeDisciplinario).HasColumnName("FechaInformeDisciplinario").HasColumnType("date");
+            entity.Property(a => a.NombreTrabajador).HasColumnName("NombreTrabajador").HasMaxLength(150).IsRequired();
+            entity.Property(a => a.CcTrabajador).HasColumnName("CcTrabajador").HasMaxLength(50).IsRequired();
+            entity.Property(a => a.DireccionResidencia).HasColumnName("DireccionResidencia").HasMaxLength(200);
+            entity.Property(a => a.Telefono).HasColumnName("Telefono").HasMaxLength(50);
+            entity.Property(a => a.IdCargo).HasColumnName("IdCargo");
+            entity.Property(a => a.IdArea).HasColumnName("IdArea");
+            entity.Property(a => a.Proceso).HasColumnName("Proceso").HasMaxLength(100).IsRequired();
+            entity.Property(a => a.FechaIngreso).HasColumnName("FechaIngreso").HasColumnType("date");
+            entity.Property(a => a.AsistidoTestigos).HasColumnName("AsistidoTestigos");
+            entity.Property(a => a.NombreTestigo).HasColumnName("NombreTestigo").HasMaxLength(150);
+            entity.Property(a => a.HoraInicio).HasColumnName("HoraInicio").HasMaxLength(20);
+            entity.Property(a => a.HoraFin).HasColumnName("HoraFin").HasMaxLength(20);
+            entity.Property(a => a.FechaDiligencia).HasColumnName("FechaDiligencia").HasColumnType("timestamp without time zone");
+            entity.Property(a => a.ConceptoGestionHumana).HasColumnName("ConceptoGestionHumana").HasColumnType("text");
+            entity.Property(a => a.DiasSancion).HasColumnName("DiasSancion");
+            entity.Property(a => a.FechaInicioSancion).HasColumnName("FechaInicioSancion").HasColumnType("date");
+            entity.Property(a => a.Owner).HasColumnName("Owner").HasMaxLength(30);
+            entity.Property(a => a.DateOwner).HasColumnName("DateOwner").HasColumnType("timestamp without time zone");
+            entity.Property(a => a.LastModify).HasColumnName("LastModify").HasMaxLength(30);
+            entity.Property(a => a.LastDate).HasColumnName("LastDate").HasColumnType("timestamp without time zone");
+         });
+
+         modelBuilder.Entity<ActaDescargosPreguntas>(entity =>
+         {
+            entity.ToTable("ActaDescargosPreguntas");
+            entity.HasKey(p => p.IdPregunta);
+            entity.Property(p => p.IdPregunta).HasColumnName("IdPregunta");
+            entity.Property(p => p.IdActa).HasColumnName("IdActa");
+            entity.Property(p => p.Orden).HasColumnName("Orden");
+            entity.Property(p => p.Pregunta).HasColumnName("Pregunta").HasColumnType("text").IsRequired();
+            entity.Property(p => p.Respuesta).HasColumnName("Respuesta").HasColumnType("text").IsRequired();
+            entity.Property(p => p.Owner).HasColumnName("Owner").HasMaxLength(30);
+            entity.Property(p => p.DateOwner).HasColumnName("DateOwner").HasColumnType("timestamp without time zone");
+            entity.Property(p => p.LastModify).HasColumnName("LastModify").HasMaxLength(30);
+            entity.Property(p => p.LastDate).HasColumnName("LastDate").HasColumnType("timestamp without time zone");
+
+            entity.HasOne(p => p.Acta)
+                  .WithMany(a => a.Preguntas)
+                  .HasForeignKey(p => p.IdActa)
+                  .OnDelete(DeleteBehavior.Cascade);
          });
 
       }

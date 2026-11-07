@@ -1,0 +1,183 @@
+@model FloresMvc.Models.ActaDescargosViewModel
+
+<div class="card border-0 shadow-sm mb-4">
+    <div class="card-header bg-transparent border-0 pt-3 px-4">
+        <h5 class="mb-0"><i class="bi bi-file-earmark-check text-success me-1"></i> Datos del acta</h5>
+    </div>
+    <div class="card-body px-4 pb-4">
+        <div class="row g-3">
+            <div class="col-md-4">
+                <label asp-for="Ciudad" class="form-label fw-semibold"></label>
+                <input asp-for="Ciudad" class="form-control" />
+                <span asp-validation-for="Ciudad" class="text-danger"></span>
+            </div>
+            <div class="col-md-4">
+                <label asp-for="FechaInformeDisciplinario" class="form-label fw-semibold"></label>
+                <input asp-for="FechaInformeDisciplinario" class="form-control" type="date" asp-format="{0:yyyy-MM-dd}" />
+                <span asp-validation-for="FechaInformeDisciplinario" class="text-danger"></span>
+            </div>
+            <div class="col-md-4">
+                <label asp-for="FechaDiligencia" class="form-label fw-semibold"></label>
+                <input asp-for="FechaDiligencia" class="form-control" type="datetime-local" asp-format="{0:yyyy-MM-ddTHH:mm}" />
+                <span asp-validation-for="FechaDiligencia" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-6">
+                <label asp-for="NombreTrabajador" class="form-label fw-semibold"></label>
+                <input asp-for="NombreTrabajador" class="form-control" />
+                <span asp-validation-for="NombreTrabajador" class="text-danger"></span>
+            </div>
+            <div class="col-md-3">
+                <label asp-for="CcTrabajador" class="form-label fw-semibold"></label>
+                <input asp-for="CcTrabajador" class="form-control" />
+                <span asp-validation-for="CcTrabajador" class="text-danger"></span>
+            </div>
+            <div class="col-md-3">
+                <label asp-for="Telefono" class="form-label fw-semibold"></label>
+                <input asp-for="Telefono" class="form-control" />
+                <span asp-validation-for="Telefono" class="text-danger"></span>
+            </div>
+
+            <div class="col-12">
+                <label asp-for="DireccionResidencia" class="form-label fw-semibold"></label>
+                <input asp-for="DireccionResidencia" class="form-control" />
+                <span asp-validation-for="DireccionResidencia" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-4">
+                <label asp-for="IdCargo" class="form-label fw-semibold"></label>
+                <select asp-for="IdCargo" asp-items="Model.Cargos" class="form-select">
+                    <option value="">-- Seleccione un cargo --</option>
+                </select>
+                <span asp-validation-for="IdCargo" class="text-danger"></span>
+            </div>
+            <div class="col-md-4">
+                <label asp-for="IdArea" class="form-label fw-semibold"></label>
+                <select asp-for="IdArea" asp-items="Model.Areas" class="form-select">
+                    <option value="">-- Seleccione un área --</option>
+                </select>
+                <span asp-validation-for="IdArea" class="text-danger"></span>
+            </div>
+            <div class="col-md-4">
+                <label asp-for="Proceso" class="form-label fw-semibold"></label>
+                <input asp-for="Proceso" class="form-control" />
+                <span asp-validation-for="Proceso" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-4">
+                <label asp-for="FechaIngreso" class="form-label fw-semibold"></label>
+                <input asp-for="FechaIngreso" class="form-control" type="date" asp-format="{0:yyyy-MM-dd}" />
+                <span asp-validation-for="FechaIngreso" class="text-danger"></span>
+            </div>
+            <div class="col-md-4">
+                <label asp-for="HoraInicio" class="form-label fw-semibold"></label>
+                <input asp-for="HoraInicio" class="form-control" type="time" />
+                <span asp-validation-for="HoraInicio" class="text-danger"></span>
+            </div>
+            <div class="col-md-4">
+                <label asp-for="HoraFin" class="form-label fw-semibold"></label>
+                <input asp-for="HoraFin" class="form-control" type="time" />
+                <span asp-validation-for="HoraFin" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-4">
+                <label asp-for="AsistidoTestigos" class="form-label fw-semibold"></label>
+                <select asp-for="AsistidoTestigos" class="form-select">
+                    <option value="">-- Seleccione --</option>
+                    <option value="true">Sí</option>
+                    <option value="false">No</option>
+                </select>
+                <span asp-validation-for="AsistidoTestigos" class="text-danger"></span>
+            </div>
+            <div class="col-md-8">
+                <label asp-for="NombreTestigo" class="form-label fw-semibold"></label>
+                <input asp-for="NombreTestigo" class="form-control" />
+                <span asp-validation-for="NombreTestigo" class="text-danger"></span>
+            </div>
+
+            <div class="col-md-4">
+                <label asp-for="DiasSancion" class="form-label fw-semibold"></label>
+                <input asp-for="DiasSancion" class="form-control" type="number" min="0" />
+                <span asp-validation-for="DiasSancion" class="text-danger"></span>
+            </div>
+            <div class="col-md-4">
+                <label asp-for="FechaInicioSancion" class="form-label fw-semibold"></label>
+                <input asp-for="FechaInicioSancion" class="form-control" type="date" asp-format="{0:yyyy-MM-dd}" />
+                <span asp-validation-for="FechaInicioSancion" class="text-danger"></span>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label fw-semibold">Fecha de creación</label>
+                <div class="form-control-plaintext">@(Model.fecha_Creacion == default ? "Se asigna automáticamente" : Model.fecha_Creacion.ToString("dd/MM/yyyy HH:mm"))</div>
+            </div>
+
+            <div class="col-12">
+                <label asp-for="ConceptoGestionHumana" class="form-label fw-semibold"></label>
+                <textarea asp-for="ConceptoGestionHumana" class="form-control" rows="4"></textarea>
+                <span asp-validation-for="ConceptoGestionHumana" class="text-danger"></span>
+            </div>
+        </div>
+
+        @if (Model.IdActa > 0)
+        {
+            <hr class="my-4" />
+            <div class="row g-3 small text-muted">
+                <div class="col-md-3"><div class="fw-semibold">Creado por</div><div>@(string.IsNullOrWhiteSpace(Model.Owner) ? "—" : Model.Owner)</div></div>
+                <div class="col-md-3"><div class="fw-semibold">Fecha de creación</div><div>@(Model.DateOwner.HasValue ? Model.DateOwner.Value.ToString("dd/MM/yyyy HH:mm") : "—")</div></div>
+                <div class="col-md-3"><div class="fw-semibold">Última modificación</div><div>@(string.IsNullOrWhiteSpace(Model.LastModify) ? "—" : Model.LastModify)</div></div>
+                <div class="col-md-3"><div class="fw-semibold">Fecha de modificación</div><div>@(Model.LastDate.HasValue ? Model.LastDate.Value.ToString("dd/MM/yyyy HH:mm") : "—")</div></div>
+            </div>
+        }
+    </div>
+</div>
+
+<div class="card border-0 shadow-sm">
+    <div class="card-header bg-transparent border-0 pt-3 px-4 d-flex flex-wrap justify-content-between align-items-center gap-2">
+        <h5 class="mb-0"><i class="bi bi-chat-left-text text-success me-1"></i> Preguntas y respuestas</h5>
+        <button type="button" id="add-pregunta" class="btn btn-sm btn-outline-primary">
+            <i class="bi bi-plus-circle me-1"></i> Agregar pregunta
+        </button>
+    </div>
+    <div class="card-body px-4 pb-4">
+        <div class="alert alert-light border small text-muted">
+            <i class="bi bi-info-circle me-1"></i> Registra al menos una pregunta con su respuesta. Las filas completamente vacías se ignoran.
+        </div>
+        <div class="table-responsive">
+            <table class="table table-sm align-middle mb-0" id="preguntas-table">
+                <thead>
+                    <tr>
+                        <th style="width: 90px;">Orden</th>
+                        <th style="min-width: 220px;">Pregunta</th>
+                        <th style="min-width: 260px;">Respuesta</th>
+                        <th style="width: 60px;" class="text-center">Quitar</th>
+                    </tr>
+                </thead>
+                <tbody id="preguntas-body">
+                    @for (var i = 0; i < Model.Preguntas.Count; i++)
+                    {
+                        <tr class="pregunta-row">
+                            <td>
+                                <input type="hidden" asp-for="Preguntas[i].IdPregunta" />
+                                <input asp-for="Preguntas[i].Orden" type="number" min="1" class="form-control form-control-sm text-center" />
+                                <span asp-validation-for="Preguntas[i].Orden" class="text-danger small"></span>
+                            </td>
+                            <td>
+                                <textarea asp-for="Preguntas[i].Pregunta" class="form-control form-control-sm" rows="2" placeholder="Pregunta"></textarea>
+                                <span asp-validation-for="Preguntas[i].Pregunta" class="text-danger small"></span>
+                            </td>
+                            <td>
+                                <textarea asp-for="Preguntas[i].Respuesta" class="form-control form-control-sm" rows="2" placeholder="Respuesta"></textarea>
+                                <span asp-validation-for="Preguntas[i].Respuesta" class="text-danger small"></span>
+                            </td>
+                            <td class="text-center">
+                                <button type="button" class="table-btn-action delete remove-pregunta" title="Quitar pregunta">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="text-danger small">@Html.ValidationMessage("Preguntas")</div>
+    </div>
+</div>

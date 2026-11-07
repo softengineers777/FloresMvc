@@ -18,6 +18,34 @@ build_property.GenerateRazorMetadataSourceChecksumAttributes =
 build_property.MSBuildProjectDirectory = C:\Users\jhon.bolivar\OneDrive - GR Chia S.A.S\Documentos\Desarrollo\FloresMvc
 build_property._RazorSourceGeneratorDebug = 
 
+[C:/Users/jhon.bolivar/OneDrive - GR Chia S.A.S/Documentos/Desarrollo/FloresMvc/Views/ActaDescargos/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWN0YURlc2Nhcmdvc1xDcmVhdGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/jhon.bolivar/OneDrive - GR Chia S.A.S/Documentos/Desarrollo/FloresMvc/Views/ActaDescargos/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWN0YURlc2Nhcmdvc1xEZWxldGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/jhon.bolivar/OneDrive - GR Chia S.A.S/Documentos/Desarrollo/FloresMvc/Views/ActaDescargos/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWN0YURlc2Nhcmdvc1xEZXRhaWxzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/jhon.bolivar/OneDrive - GR Chia S.A.S/Documentos/Desarrollo/FloresMvc/Views/ActaDescargos/Documento.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWN0YURlc2Nhcmdvc1xEb2N1bWVudG8uY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/jhon.bolivar/OneDrive - GR Chia S.A.S/Documentos/Desarrollo/FloresMvc/Views/ActaDescargos/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWN0YURlc2Nhcmdvc1xFZGl0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/jhon.bolivar/OneDrive - GR Chia S.A.S/Documentos/Desarrollo/FloresMvc/Views/ActaDescargos/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWN0YURlc2Nhcmdvc1xJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/jhon.bolivar/OneDrive - GR Chia S.A.S/Documentos/Desarrollo/FloresMvc/Views/ActaDescargos/_FormFields.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWN0YURlc2Nhcmdvc1xfRm9ybUZpZWxkcy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/jhon.bolivar/OneDrive - GR Chia S.A.S/Documentos/Desarrollo/FloresMvc/Views/Areas/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXJlYXNcQ3JlYXRlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
@@ -90,6 +118,10 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2l0YWNpb25EZXNjYXJnYXNcRGV0YWlscy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/jhon.bolivar/OneDrive - GR Chia S.A.S/Documentos/Desarrollo/FloresMvc/Views/CitacionDescargas/Documento.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2l0YWNpb25EZXNjYXJnYXNcRG9jdW1lbnRvLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/jhon.bolivar/OneDrive - GR Chia S.A.S/Documentos/Desarrollo/FloresMvc/Views/CitacionDescargas/Edit.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2l0YWNpb25EZXNjYXJnYXNcRWRpdC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
@@ -144,6 +176,10 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/jhon.bolivar/OneDrive - GR Chia S.A.S/Documentos/Desarrollo/FloresMvc/Views/ModeloDisciplinario/Details.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTW9kZWxvRGlzY2lwbGluYXJpb1xEZXRhaWxzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/jhon.bolivar/OneDrive - GR Chia S.A.S/Documentos/Desarrollo/FloresMvc/Views/ModeloDisciplinario/Documento.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTW9kZWxvRGlzY2lwbGluYXJpb1xEb2N1bWVudG8uY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/jhon.bolivar/OneDrive - GR Chia S.A.S/Documentos/Desarrollo/FloresMvc/Views/ModeloDisciplinario/Edit.cshtml]

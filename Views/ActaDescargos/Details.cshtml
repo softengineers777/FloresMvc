@@ -1,0 +1,81 @@
+@model FloresMvc.Models.ActaDescargos
+@{
+    ViewData["Title"] = "Detalle del Acta de Descargos";
+    var nombreCargo = ViewBag.NombreCargo as string ?? Model.IdCargo.ToString();
+    var nombreArea = ViewBag.NombreArea as string ?? Model.IdArea.ToString();
+    var preguntas = Model.Preguntas?.OrderBy(p => p.Orden).ThenBy(p => p.IdPregunta).ToList() ?? new List<FloresMvc.Models.ActaDescargosPreguntas>();
+    string FmtDate(DateTime? d) => d.HasValue ? d.Value.ToString("dd/MM/yyyy") : "—";
+    string FmtDateTime(DateTime? d) => d.HasValue ? d.Value.ToString("dd/MM/yyyy HH:mm") : "—";
+    string Testigos(bool? b) => b.HasValue ? (b.Value ? "Sí" : "No") : "—";
+}
+
+<div class="page-header d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+    <div>
+        <h1 class="page-title">Detalle del Acta de Descargos</h1>
+        <p class="page-subtitle mb-0">Información completa del acta seleccionada.</p>
+    </div>
+    <a asp-action="Index" class="btn btn-outline-secondary"><i class="bi bi-arrow-left me-1"></i> Volver al listado</a>
+</div>
+
+<div class="card border-0 shadow-sm mb-4">
+    <div class="card-header bg-transparent border-0 pt-3 px-4">
+        <h5 class="mb-0"><i class="bi bi-file-earmark-check text-primary me-1"></i> @Model.NombreTrabajador — Acta N.º @Model.IdActa</h5>
+    </div>
+    <div class="card-body px-4 pb-4">
+        <dl class="row mb-0">
+            <dt class="col-sm-3 text-muted">Ciudad</dt><dd class="col-sm-3">@(string.IsNullOrWhiteSpace(Model.Ciudad) ? "—" : Model.Ciudad)</dd>
+            <dt class="col-sm-3 text-muted">Fecha informe disciplinario</dt><dd class="col-sm-3">@FmtDate(Model.FechaInformeDisciplinario)</dd>
+            <dt class="col-sm-3 text-muted">Nombre del trabajador</dt><dd class="col-sm-3">@Model.NombreTrabajador</dd>
+            <dt class="col-sm-3 text-muted">C.C.</dt><dd class="col-sm-3">@Model.CcTrabajador</dd>
+            <dt class="col-sm-3 text-muted">Dirección</dt><dd class="col-sm-3">@(string.IsNullOrWhiteSpace(Model.DireccionResidencia) ? "—" : Model.DireccionResidencia)</dd>
+            <dt class="col-sm-3 text-muted">Teléfono</dt><dd class="col-sm-3">@(string.IsNullOrWhiteSpace(Model.Telefono) ? "—" : Model.Telefono)</dd>
+            <dt class="col-sm-3 text-muted">Cargo</dt><dd class="col-sm-3">@nombreCargo</dd>
+            <dt class="col-sm-3 text-muted">Área</dt><dd class="col-sm-3">@nombreArea</dd>
+            <dt class="col-sm-3 text-muted">Proceso</dt><dd class="col-sm-3">@Model.Proceso</dd>
+            <dt class="col-sm-3 text-muted">Fecha de ingreso</dt><dd class="col-sm-3">@FmtDate(Model.FechaIngreso)</dd>
+            <dt class="col-sm-3 text-muted">Fecha diligencia</dt><dd class="col-sm-3">@FmtDateTime(Model.FechaDiligencia)</dd>
+            <dt class="col-sm-3 text-muted">Hora inicio / fin</dt><dd class="col-sm-3">@(string.IsNullOrWhiteSpace(Model.HoraInicio) && string.IsNullOrWhiteSpace(Model.HoraFin) ? "—" : $"{Model.HoraInicio ?? "—"} - {Model.HoraFin ?? "—"}")</dd>
+            <dt class="col-sm-3 text-muted">Asistido por testigos</dt><dd class="col-sm-3">@Testigos(Model.AsistidoTestigos)</dd>
+            <dt class="col-sm-3 text-muted">Nombre testigo</dt><dd class="col-sm-3">@(string.IsNullOrWhiteSpace(Model.NombreTestigo) ? "—" : Model.NombreTestigo)</dd>
+            <dt class="col-sm-3 text-muted">Días sanción</dt><dd class="col-sm-3">@(Model.DiasSancion?.ToString() ?? "—")</dd>
+            <dt class="col-sm-3 text-muted">Inicio sanción</dt><dd class="col-sm-3">@FmtDate(Model.FechaInicioSancion)</dd>
+            <dt class="col-sm-3 text-muted">Concepto Gestión Humana</dt><dd class="col-sm-9" style="white-space: pre-wrap;">@(string.IsNullOrWhiteSpace(Model.ConceptoGestionHumana) ? "—" : Model.ConceptoGestionHumana)</dd>
+        </dl>
+
+        <hr class="my-4" />
+        <h6 class="text-muted mb-3"><i class="bi bi-chat-left-text me-1"></i> Preguntas y respuestas</h6>
+        @if (preguntas.Count == 0)
+        {
+            <p class="text-muted mb-0">Sin preguntas registradas.</p>
+        }
+        else
+        {
+            <div class="list-group list-group-flush">
+                @foreach (var p in preguntas)
+                {
+                    <div class="list-group-item px-0">
+                        <div class="fw-semibold">@p.Orden. @p.Pregunta</div>
+                        <div class="mt-1" style="white-space: pre-wrap;">@p.Respuesta</div>
+                    </div>
+                }
+            </div>
+        }
+
+        <hr class="my-4" />
+        <h6 class="text-muted mb-3"><i class="bi bi-clock-history me-1"></i> Auditoría</h6>
+        <dl class="row mb-0">
+            <dt class="col-sm-3 text-muted">Fecha de creación</dt><dd class="col-sm-3">@(Model.fecha_Creacion == default ? "—" : Model.fecha_Creacion.ToString("dd/MM/yyyy HH:mm"))</dd>
+            <dt class="col-sm-3 text-muted">Creado por</dt><dd class="col-sm-3">@(string.IsNullOrWhiteSpace(Model.Owner) ? "—" : Model.Owner)</dd>
+            <dt class="col-sm-3 text-muted">Última modificación</dt><dd class="col-sm-3">@FmtDateTime(Model.LastDate)</dd>
+            <dt class="col-sm-3 text-muted">Modificado por</dt><dd class="col-sm-3">@(string.IsNullOrWhiteSpace(Model.LastModify) ? "—" : Model.LastModify)</dd>
+        </dl>
+
+        <hr class="my-4" />
+        <div class="d-flex justify-content-end gap-2">
+            <a asp-action="Index" class="btn btn-outline-secondary">Volver</a>
+            <a asp-action="Documento" asp-route-id="@Model.IdActa" class="btn btn-outline-primary" target="_blank"><i class="bi bi-file-earmark-pdf me-1"></i> Ver documento / PDF</a>
+            <a asp-action="Edit" asp-route-id="@Model.IdActa" class="btn btn-primary"><i class="bi bi-pencil me-1"></i> Editar</a>
+            <a asp-action="Delete" asp-route-id="@Model.IdActa" class="btn btn-outline-danger"><i class="bi bi-trash me-1"></i> Eliminar</a>
+        </div>
+    </div>
+</div>

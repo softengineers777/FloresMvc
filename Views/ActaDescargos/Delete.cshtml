@@ -1,0 +1,46 @@
+@model FloresMvc.Models.ActaDescargos
+@{
+    ViewData["Title"] = "Eliminar Acta de Descargos";
+    var nombreCargo = ViewBag.NombreCargo as string ?? Model.IdCargo.ToString();
+    var nombreArea = ViewBag.NombreArea as string ?? Model.IdArea.ToString();
+}
+
+<div class="page-header d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+    <div>
+        <h1 class="page-title">Eliminar Acta de Descargos</h1>
+        <p class="page-subtitle mb-0">Confirma la eliminación del registro seleccionado.</p>
+    </div>
+    <a asp-action="Index" class="btn btn-outline-secondary"><i class="bi bi-arrow-left me-1"></i> Volver al listado</a>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card border-0 shadow-sm border-start border-danger border-4">
+            <div class="card-body p-4">
+                <div class="d-flex align-items-start gap-3 mb-4">
+                    <div class="text-danger" style="font-size: 2rem;"><i class="bi bi-exclamation-triangle-fill"></i></div>
+                    <div>
+                        <h5 class="mb-1">¿Estás seguro de eliminar esta acta?</h5>
+                        <p class="text-muted mb-0">Esta acción no se puede deshacer. Se eliminarán también sus preguntas (@(Model.Preguntas?.Count ?? 0)).</p>
+                    </div>
+                </div>
+                <dl class="row mb-4">
+                    <dt class="col-sm-4 text-muted">Consecutivo</dt><dd class="col-sm-8">@Model.IdActa</dd>
+                    <dt class="col-sm-4 text-muted">Trabajador</dt><dd class="col-sm-8 fw-semibold">@Model.NombreTrabajador (@Model.CcTrabajador)</dd>
+                    <dt class="col-sm-4 text-muted">Cargo</dt><dd class="col-sm-8">@nombreCargo</dd>
+                    <dt class="col-sm-4 text-muted">Área</dt><dd class="col-sm-8">@nombreArea</dd>
+                    <dt class="col-sm-4 text-muted">Proceso</dt><dd class="col-sm-8">@Model.Proceso</dd>
+                    <dt class="col-sm-4 text-muted">Creado por</dt><dd class="col-sm-8">@(string.IsNullOrWhiteSpace(Model.Owner) ? "—" : Model.Owner)</dd>
+                    <dt class="col-sm-4 text-muted">Fecha de creación</dt><dd class="col-sm-8">@(Model.fecha_Creacion == default ? "—" : Model.fecha_Creacion.ToString("dd/MM/yyyy HH:mm"))</dd>
+                </dl>
+                <form asp-action="DeleteConfirmed" asp-route-id="@Model.IdActa" method="post">
+                    <input type="hidden" name="id" value="@Model.IdActa" />
+                    <div class="d-flex justify-content-end gap-2">
+                        <a asp-action="Index" class="btn btn-outline-secondary">Cancelar</a>
+                        <button type="submit" class="btn btn-danger"><i class="bi bi-trash me-1"></i> Eliminar Acta</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

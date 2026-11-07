@@ -56,6 +56,26 @@ namespace FloresMvc.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> Documento(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var item = await _context.CitacionDescargos
+                .AsNoTracking()
+                .FirstOrDefaultAsync(c => c.IdCitacion == id);
+            if (item == null)
+            {
+                return NotFound();
+            }
+
+            await CargarNombresAsync(item.IdCargo, item.IdArea);
+            return View(item);
+        }
+
+        [HttpGet]
         public async Task<IActionResult> Create()
         {
             await CargarListasAsync();
