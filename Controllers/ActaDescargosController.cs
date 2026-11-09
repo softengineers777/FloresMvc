@@ -1,12 +1,15 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using ClosedXML.Excel;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using FloresMvc.Extensions;
 using FloresMvc.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace FloresMvc.Controllers
 {
@@ -20,7 +23,7 @@ namespace FloresMvc.Controllers
             _context = context;
             _configuration = configuration;
         }
-
+        [Authorize(Roles = "Administrador")]
         public async Task<IActionResult> Index()
         {
             var items = await _context.ActaDescargos
@@ -34,6 +37,113 @@ namespace FloresMvc.Controllers
                 .ToDictionaryAsync(a => a.IdArea, a => a.NomArea);
 
             return View(items);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ExportarExcel()
+        {
+            var items = await _context.ActaDescargos
+                .AsNoTracking()
+                .OrderByDescending(a => a.IdActa)
+                .ToListAsync();
+
+            var cargos = await _context.Cargo.AsNoTracking()
+                .ToDictionaryAsync(c => c.IdCargo, c => c.NomCargo);
+            var areas = await _context.Areas.AsNoTracking()
+                .ToDictionaryAsync(a => a.IdArea, a => a.NomArea);
+
+            static string TextoSiNo(bool? valor) => valor.HasValue ? (valor.Value ? "Sí" : "No") : string.Empty;
+            string NombreCargo(int id) => cargos.TryGetValue(id, out var n) ? n : id.ToString();
+            string NombreArea(int id) => areas.TryGetValue(id, out var n) ? n : id.ToString();
+
+            using var workbook = new XLWorkbook();
+            var ws = workbook.Worksheets.Add("Actas de Descargos");
+
+            var headers = new[]
+            {
+                "Consecutivo", "Ciudad", "Fecha Creación", "Fecha Informe Disciplinario",
+                "Trabajador", "C.C.", "Dirección Residencia", "Teléfono",
+                "Cargo", "Área", "Proceso", "Fecha Ingreso",
+                "Asistido por Testigos", "Nombre Testigo",
+                "Hora Inicio", "Hora Fin", "Fecha Diligencia",
+                "Concepto Gestión Humana", "Días Sanción", "Fecha Inicio Sanción",
+                "Creado por", "Fecha registro", "Modificado por", "Última modificación"
+            };
+
+            for (var col = 0; col < headers.Length; col++)
+            {
+                var cell = ws.Cell(1, col + 1);
+                cell.Value = headers[col];
+                cell.Style.Font.Bold = true;
+                cell.Style.Fill.BackgroundColor = XLColor.FromHtml("#1F2937");
+                cell.Style.Font.FontColor = XLColor.White;
+                cell.Style.Alignment.WrapText = true;
+            }
+
+            var row = 2;
+            foreach (var a in items)
+            {
+                ws.Cell(row, 1).Value = a.IdActa;
+                ws.Cell(row, 2).Value = a.Ciudad ?? string.Empty;
+                ws.Cell(row, 3).Value = a.fecha_Creacion;
+                ws.Cell(row, 3).Style.DateFormat.Format = "dd/MM/yyyy HH:mm";
+                if (a.FechaInformeDisciplinario.HasValue)
+                {
+                    ws.Cell(row, 4).Value = a.FechaInformeDisciplinario.Value;
+                    ws.Cell(row, 4).Style.DateFormat.Format = "dd/MM/yyyy";
+                }
+                ws.Cell(row, 5).Value = a.NombreTrabajador;
+                ws.Cell(row, 6).Value = a.CcTrabajador;
+                ws.Cell(row, 7).Value = a.DireccionResidencia ?? string.Empty;
+                ws.Cell(row, 8).Value = a.Telefono ?? string.Empty;
+                ws.Cell(row, 9).Value = NombreCargo(a.IdCargo);
+                ws.Cell(row, 10).Value = NombreArea(a.IdArea);
+                ws.Cell(row, 11).Value = a.Proceso;
+                if (a.FechaIngreso.HasValue)
+                {
+                    ws.Cell(row, 12).Value = a.FechaIngreso.Value;
+                    ws.Cell(row, 12).Style.DateFormat.Format = "dd/MM/yyyy";
+                }
+                ws.Cell(row, 13).Value = TextoSiNo(a.AsistidoTestigos);
+                ws.Cell(row, 14).Value = a.NombreTestigo ?? string.Empty;
+                ws.Cell(row, 15).Value = a.HoraInicio ?? string.Empty;
+                ws.Cell(row, 16).Value = a.HoraFin ?? string.Empty;
+                if (a.FechaDiligencia.HasValue)
+                {
+                    ws.Cell(row, 17).Value = a.FechaDiligencia.Value;
+                    ws.Cell(row, 17).Style.DateFormat.Format = "dd/MM/yyyy HH:mm";
+                }
+                ws.Cell(row, 18).Value = a.ConceptoGestionHumana ?? string.Empty;
+                if (a.DiasSancion.HasValue) ws.Cell(row, 19).Value = a.DiasSancion.Value;
+                if (a.FechaInicioSancion.HasValue)
+                {
+                    ws.Cell(row, 20).Value = a.FechaInicioSancion.Value;
+                    ws.Cell(row, 20).Style.DateFormat.Format = "dd/MM/yyyy";
+                }
+                ws.Cell(row, 21).Value = a.Owner ?? string.Empty;
+                if (a.DateOwner.HasValue)
+                {
+                    ws.Cell(row, 22).Value = a.DateOwner.Value;
+                    ws.Cell(row, 22).Style.DateFormat.Format = "dd/MM/yyyy HH:mm";
+                }
+                ws.Cell(row, 23).Value = a.LastModify ?? string.Empty;
+                if (a.LastDate.HasValue)
+                {
+                    ws.Cell(row, 24).Value = a.LastDate.Value;
+                    ws.Cell(row, 24).Style.DateFormat.Format = "dd/MM/yyyy HH:mm";
+                }
+                row++;
+            }
+
+            ws.Columns().AdjustToContents();
+            ws.SheetView.FreezeRows(1);
+            ws.Range(1, 1, 1, headers.Length).SetAutoFilter();
+
+            using var stream = new MemoryStream();
+            workbook.SaveAs(stream);
+            var content = stream.ToArray();
+            var fileName = $"ActasDescargos_{DateTime.Now:yyyyMMdd_HHmm}.xlsx";
+            return File(content, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
         }
 
         public async Task<IActionResult> Details(int? id)

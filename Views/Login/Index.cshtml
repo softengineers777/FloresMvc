@@ -41,6 +41,14 @@
 
             <p class="login-subtitle">Por favor ingresa tus credenciales para acceder</p>
 
+            @if (TempData["Success"] != null)
+            {
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <i class="bi bi-check-circle me-1"></i> @TempData["Success"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+
             <!-- Mensaje de error si la autenticación falla -->
             @if (ViewBag.Error != null)
             {
@@ -83,7 +91,7 @@
                         <input type="checkbox" class="custom-checkbox-input" id="rememberMe" name="rememberMe" value="true">
                         <span>Recordarme</span>
                     </label>
-                    <a href="#" class="forgot-password-link">¿Olvidaste tu contraseña?</a>
+                    <a href="@Url.Action("ForgotPassword", "Login")" class="forgot-password-link">¿Olvidaste tu contraseña?</a>
                 </div>
 
                 <!-- Submit Button -->

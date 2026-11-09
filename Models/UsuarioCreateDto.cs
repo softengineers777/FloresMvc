@@ -12,6 +12,7 @@ namespace FloresMvc.Models
         public string Nombre { get; set; } = string.Empty;
         public string Apellido { get; set; } = string.Empty;
         public string email { get; set; } = string.Empty;
+        public bool? Activo { get; set; }
         public DateTime? fecha_creacion { get; set; }
         public string Password { get; set; } = string.Empty;
         public string? ConfirmPassword { get; set; }

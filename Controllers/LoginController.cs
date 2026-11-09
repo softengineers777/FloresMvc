@@ -1,13 +1,18 @@
 using System;
+using System.Data;
 using System.Security.Claims;
+using System.Security.Cryptography;
+using System.Text;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
-using System.Data;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using FloresMvc.Models;
 using FloresMvc.Services;
-using Microsoft.EntityFrameworkCore;
 
 namespace FloresMvc.Controllers
 {
@@ -16,15 +21,21 @@ namespace FloresMvc.Controllers
         private readonly FloresDbContext _context;
         private readonly IConfiguration _configuration;
         private readonly PasswordService _passwordService;
+        private readonly ILogger<LoginController> _logger;
+        private readonly IWebHostEnvironment _environment;
 
         public LoginController(
             FloresDbContext context,
             IConfiguration configuration,
-            PasswordService passwordService)
+            PasswordService passwordService,
+            ILogger<LoginController> logger,
+            IWebHostEnvironment environment)
         {
             _context = context;
             _configuration = configuration;
             _passwordService = passwordService;
+            _logger = logger;
+            _environment = environment;
         }
 
         [AllowAnonymous]
@@ -119,6 +130,181 @@ namespace FloresMvc.Controllers
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction(nameof(Index));
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult ForgotPassword()
+        {
+            if (User.Identity?.IsAuthenticated == true)
+                return RedirectToAction("Index", "Home");
+
+            return View();
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ForgotPassword(string email)
+        {
+            // Respuesta genérica para no revelar si el correo existe.
+            const string mensajeGenerico = "Si el correo está registrado, recibirás un enlace para restablecer tu contraseña.";
+
+            if (string.IsNullOrWhiteSpace(email))
+            {
+                ViewBag.Error = "Ingresa tu correo electrónico.";
+                return View();
+            }
+
+            var correo = email.Trim().ToLower();
+            var usuario = await _context.Usuarios
+                .AsNoTracking()
+                .FirstOrDefaultAsync(u => u.email.ToLower() == correo);
+
+            if (usuario != null)
+            {
+                var loginRecord = await _context.Login
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(l => l.user_id == usuario.IdUsuarios && l.activo);
+
+                if (loginRecord != null)
+                {
+                    var rawToken = GenerarTokenSeguro();
+                    var tokenHash = HashToken(rawToken);
+                    var ahora = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified);
+
+                    // Invalida tokens anteriores no usados del mismo usuario.
+                    var anteriores = await _context.PasswordResetTokens
+                        .Where(t => t.UserId == usuario.IdUsuarios && t.UsedAt == null)
+                        .ToListAsync();
+                    foreach (var t in anteriores)
+                        t.UsedAt = ahora;
+
+                    _context.PasswordResetTokens.Add(new PasswordResetToken
+                    {
+                        UserId = usuario.IdUsuarios,
+                        TokenHash = tokenHash,
+                        CreatedAt = ahora,
+                        ExpiresAt = ahora.AddHours(1),
+                        UsedAt = null
+                    });
+                    await _context.SaveChangesAsync();
+
+                    var resetUrl = Url.Action("ResetPassword", "Login", new { token = rawToken }, Request.Scheme);
+                    _logger.LogInformation("Enlace de restablecimiento de contraseña para {Email}: {Url}", correo, resetUrl);
+
+                    // TODO: integrar envío real de correo (SMTP/SendGrid/etc.) usando la URL generada.
+                    if (_environment.IsDevelopment() && !string.IsNullOrEmpty(resetUrl))
+                        ViewBag.ResetLink = resetUrl;
+                }
+            }
+
+            ViewBag.Success = mensajeGenerico;
+            return View();
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> ResetPassword(string token)
+        {
+            if (string.IsNullOrWhiteSpace(token))
+            {
+                ViewBag.Error = "El enlace de restablecimiento no es válido.";
+                return View(model: null);
+            }
+
+            var tokenValido = await ObtenerTokenValidoAsync(token);
+            if (tokenValido == null)
+            {
+                ViewBag.Error = "El enlace de restablecimiento no es válido o ya expiró. Solicita uno nuevo.";
+                return View(model: null);
+            }
+
+            ViewBag.Token = token;
+            return View(model: null);
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ResetPassword(string token, string passwordNueva, string confirmarPassword)
+        {
+            ViewBag.Token = token;
+
+            if (string.IsNullOrWhiteSpace(token))
+            {
+                ViewBag.Error = "El enlace de restablecimiento no es válido.";
+                return View();
+            }
+
+            if (string.IsNullOrWhiteSpace(passwordNueva) || string.IsNullOrWhiteSpace(confirmarPassword))
+            {
+                ViewBag.Error = "Por favor completa todos los campos.";
+                return View();
+            }
+
+            if (passwordNueva.Length < 6)
+            {
+                ViewBag.Error = "La nueva contraseña debe tener al menos 6 caracteres.";
+                return View();
+            }
+
+            if (passwordNueva != confirmarPassword)
+            {
+                ViewBag.Error = "La nueva contraseña y su confirmación no coinciden.";
+                return View();
+            }
+
+            var tokenRecord = await ObtenerTokenValidoAsync(token);
+            if (tokenRecord == null)
+            {
+                ViewBag.Error = "El enlace de restablecimiento no es válido o ya expiró. Solicita uno nuevo.";
+                ViewBag.Token = null;
+                return View();
+            }
+
+            var loginRecord = await _context.Login.FirstOrDefaultAsync(l => l.user_id == tokenRecord.UserId);
+            if (loginRecord == null)
+            {
+                ViewBag.Error = "No se encontró la credencial del usuario. Contacta al administrador.";
+                ViewBag.Token = null;
+                return View();
+            }
+
+            var ahora = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified);
+            loginRecord.password_hash = _passwordService.Hash(passwordNueva);
+            loginRecord.LastModify = "ResetToken";
+            loginRecord.LastDate = ahora;
+
+            tokenRecord.UsedAt = ahora;
+
+            await _context.SaveChangesAsync();
+
+            TempData["Success"] = "Tu contraseña fue restablecida correctamente. Ya puedes iniciar sesión.";
+            return RedirectToAction(nameof(Index));
+        }
+
+        private async Task<PasswordResetToken?> ObtenerTokenValidoAsync(string rawToken)
+        {
+            var tokenHash = HashToken(rawToken);
+            var ahora = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified);
+            return await _context.PasswordResetTokens
+                .FirstOrDefaultAsync(t => t.TokenHash == tokenHash && t.UsedAt == null && t.ExpiresAt > ahora);
+        }
+
+        private static string GenerarTokenSeguro()
+        {
+            var bytes = RandomNumberGenerator.GetBytes(32);
+            return Convert.ToBase64String(bytes)
+                .Replace("+", "-")
+                .Replace("/", "_")
+                .TrimEnd('=');
+        }
+
+        private static string HashToken(string rawToken)
+        {
+            var bytes = SHA256.HashData(Encoding.UTF8.GetBytes(rawToken));
+            return Convert.ToHexString(bytes);
         }
 
         [HttpGet]

@@ -13,9 +13,14 @@
         <h1 class="page-title">Acta de Descargos</h1>
         <p class="page-subtitle mb-0">Administra las actas de descargos registradas en Gestión Humana.</p>
     </div>
-    <a asp-action="Create" class="btn btn-primary">
-        <i class="bi bi-plus-circle me-1"></i> Nueva Acta
-    </a>
+    <div class="d-flex flex-wrap gap-2">
+        <a asp-action="ExportarExcel" class="btn btn-outline-success">
+            <i class="bi bi-file-earmark-excel me-1"></i> Descargar Excel
+        </a>
+        <a asp-action="Create" class="btn btn-primary">
+            <i class="bi bi-plus-circle me-1"></i> Nueva Acta
+        </a>
+    </div>
 </div>
 
 @if (TempData["Success"] is string successMsg)

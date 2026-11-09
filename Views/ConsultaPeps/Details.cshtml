@@ -1,0 +1,87 @@
+@model FloresMvc.Models.ConsultaPeps
+@{
+    ViewData["Title"] = "Detalle Consulta PEPS";
+}
+
+<div class="page-header d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+    <div>
+        <h1 class="page-title">Detalle Consulta PEPS</h1>
+        <p class="page-subtitle mb-0">Información completa de la consulta seleccionada.</p>
+    </div>
+    <a asp-action="Index" class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left me-1"></i> Volver al listado
+    </a>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-transparent border-0 pt-3 px-4">
+                <h5 class="mb-0">
+                    <i class="bi bi-search text-success me-1"></i>
+                    Consulta #@Model.IdConsulta
+                </h5>
+            </div>
+            <div class="card-body px-4 pb-4">
+                <dl class="row mb-0">
+                    <dt class="col-sm-4 text-muted">Consecutivo</dt>
+                    <dd class="col-sm-8">@Model.IdConsulta</dd>
+
+                    <dt class="col-sm-4 text-muted">Usuario</dt>
+                    <dd class="col-sm-8">@((ViewBag.NombreUsuario as string) ?? "—")</dd>
+
+                    <dt class="col-sm-4 text-muted">Cédula</dt>
+                    <dd class="col-sm-8">@(string.IsNullOrWhiteSpace(Model.Cedula) ? "—" : Model.Cedula)</dd>
+
+                    <dt class="col-sm-4 text-muted">Cargo</dt>
+                    <dd class="col-sm-8">@((ViewBag.NombreCargo as string) ?? "—")</dd>
+
+                    <dt class="col-sm-4 text-muted">Área</dt>
+                    <dd class="col-sm-8">@((ViewBag.NombreArea as string) ?? "—")</dd>
+
+                    <dt class="col-sm-4 text-muted">¿Usted o un familiar es PEP?</dt>
+                    <dd class="col-sm-8">@(Model.EsPep == true ? "Sí" : Model.EsPep == false ? "No" : "—")</dd>
+
+                    <dt class="col-sm-4 text-muted">Firma</dt>
+                    <dd class="col-sm-8">
+                        @if (!string.IsNullOrWhiteSpace(Model.Firma))
+                        {
+                            <img src="@Model.Firma" alt="Firma" style="max-width: 320px; max-height: 140px; border: 1px solid #dee2e6; border-radius: 4px; background: #fff;" />
+                        }
+                        else
+                        {
+                            <text>—</text>
+                        }
+                    </dd>
+
+                    <dt class="col-sm-4 text-muted">Creado por</dt>
+                    <dd class="col-sm-8">@(string.IsNullOrWhiteSpace(Model.Owner) ? "—" : Model.Owner)</dd>
+
+                    <dt class="col-sm-4 text-muted">Fecha registro</dt>
+                    <dd class="col-sm-8">@(Model.DateOwner.HasValue ? Model.DateOwner.Value.ToString("dd/MM/yyyy HH:mm") : "—")</dd>
+
+                    <dt class="col-sm-4 text-muted">Modificado por</dt>
+                    <dd class="col-sm-8">@(string.IsNullOrWhiteSpace(Model.LastModify) ? "—" : Model.LastModify)</dd>
+
+                    <dt class="col-sm-4 text-muted">Última modificación</dt>
+                    <dd class="col-sm-8">@(Model.LastDate.HasValue ? Model.LastDate.Value.ToString("dd/MM/yyyy HH:mm") : "—")</dd>
+                </dl>
+
+                <hr class="my-4" />
+
+                <div class="d-flex justify-content-end gap-2">
+                    <a asp-action="Index" class="btn btn-outline-secondary">Volver</a>
+                    <a asp-action="Documento" asp-route-id="@Model.IdConsulta" class="btn btn-outline-primary" target="_blank">
+                        <i class="bi bi-file-earmark-pdf me-1"></i> Ver documento / PDF
+                    </a>
+                    <a asp-action="Edit" asp-route-id="@Model.IdConsulta" class="btn btn-primary">
+                        <i class="bi bi-pencil me-1"></i> Editar
+                    </a>
+                    <a asp-action="Delete" asp-route-id="@Model.IdConsulta" class="btn btn-outline-danger">
+                        <i class="bi bi-trash me-1"></i> Eliminar
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

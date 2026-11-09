@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using ClosedXML.Excel;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -25,6 +27,66 @@ namespace FloresMvc.Controllers
         public IActionResult Index()
         {
             return View();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ExportarExcel()
+        {
+            var remisiones = await _context.Remisiones
+                .AsNoTracking()
+                .Include(r => r.Area)
+                .Include(r => r.Finca)
+                .Include(r => r.Detalles)
+                .OrderByDescending(r => r.IdRemision)
+                .ToListAsync();
+
+            using var workbook = new XLWorkbook();
+            var ws = workbook.Worksheets.Add("Remisiones");
+            var headers = new[]
+            {
+                "Consecutivo", "Nº Remisión", "Solicitante", "Dirección", "Área", "Finca", "Fecha",
+                "Placa vehículo", "Despachado por", "Transportado por", "Recibido por",
+                "Peso total", "Insumos (cant.)", "Observaciones", "Creado por", "Fecha registro"
+            };
+            for (var col = 0; col < headers.Length; col++)
+            {
+                var cell = ws.Cell(1, col + 1);
+                cell.Value = headers[col];
+                cell.Style.Font.Bold = true;
+                cell.Style.Fill.BackgroundColor = XLColor.FromHtml("#1F2937");
+                cell.Style.Font.FontColor = XLColor.White;
+            }
+
+            var row = 2;
+            foreach (var r in remisiones)
+            {
+                ws.Cell(row, 1).Value = r.IdRemision;
+                ws.Cell(row, 2).Value = r.NumeroRemision ?? string.Empty;
+                ws.Cell(row, 3).Value = $"{r.Nombre} {r.Apellido}".Trim();
+                ws.Cell(row, 4).Value = r.Direccion ?? string.Empty;
+                ws.Cell(row, 5).Value = r.Area?.NomArea ?? string.Empty;
+                ws.Cell(row, 6).Value = r.Finca?.NomFinca ?? string.Empty;
+                ws.Cell(row, 7).Value = r.fecha_Creacion;
+                ws.Cell(row, 7).Style.DateFormat.Format = "dd/MM/yyyy HH:mm";
+                ws.Cell(row, 8).Value = r.PlacaVehiculo ?? string.Empty;
+                ws.Cell(row, 9).Value = r.DespachadoPor ?? string.Empty;
+                ws.Cell(row, 10).Value = r.TransportadoPor ?? string.Empty;
+                ws.Cell(row, 11).Value = r.RecibidoPor ?? string.Empty;
+                ws.Cell(row, 12).Value = r.PesoTotal;
+                ws.Cell(row, 13).Value = r.Detalles?.Count ?? 0;
+                ws.Cell(row, 14).Value = r.Observaciones ?? string.Empty;
+                ws.Cell(row, 15).Value = r.Owner ?? string.Empty;
+                ws.Cell(row, 16).Value = r.DateOwner;
+                ws.Cell(row, 16).Style.DateFormat.Format = "dd/MM/yyyy HH:mm";
+                row++;
+            }
+
+            ws.Columns().AdjustToContents();
+            ws.SheetView.FreezeRows(1);
+            ws.Range(1, 1, 1, headers.Length).SetAutoFilter();
+            using var stream = new MemoryStream();
+            workbook.SaveAs(stream);
+            return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", $"Remisiones_{DateTime.Now:yyyyMMdd_HHmm}.xlsx");
         }
 
         // GET: Remisiones/GetRemisionesJson

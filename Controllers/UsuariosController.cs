@@ -1,8 +1,10 @@
+using System.Data;
+using System.ComponentModel.DataAnnotations;
+using System.IO;
+using ClosedXML.Excel;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using FloresMvc.Controllers;
-using System.Data;
-using System.ComponentModel.DataAnnotations;
 using FloresMvc.Extensions;
 using FloresMvc.Models;
 using FloresMvc.Services;
@@ -33,12 +35,80 @@ namespace FloresMvc.Controllers
 
         }
 
+        [HttpGet]
+        public async Task<IActionResult> ExportarExcel()
+        {
+            var items = await _context.Usuarios.AsNoTracking().OrderBy(u => u.IdUsuarios).ToListAsync();
+            var roles = await _context.Roles.AsNoTracking().ToDictionaryAsync(r => r.IdRol, r => r.Nombre);
+            string NombreRol(int id) => roles.TryGetValue(id, out var n) ? n : id.ToString();
+
+            using var workbook = new XLWorkbook();
+            var ws = workbook.Worksheets.Add("Usuarios");
+            var headers = new[] { "Consecutivo", "Nombre", "Apellido", "Correo", "Rol", "Estado", "Fecha creación", "Creado por", "Fecha registro", "Modificado por", "Última modificación" };
+            for (var col = 0; col < headers.Length; col++)
+            {
+                var cell = ws.Cell(1, col + 1);
+                cell.Value = headers[col];
+                cell.Style.Font.Bold = true;
+                cell.Style.Fill.BackgroundColor = XLColor.FromHtml("#1F2937");
+                cell.Style.Font.FontColor = XLColor.White;
+            }
+
+            var row = 2;
+            foreach (var u in items)
+            {
+                ws.Cell(row, 1).Value = u.IdUsuarios;
+                ws.Cell(row, 2).Value = u.Nombre ?? string.Empty;
+                ws.Cell(row, 3).Value = u.Apellido ?? string.Empty;
+                ws.Cell(row, 4).Value = u.email ?? string.Empty;
+                ws.Cell(row, 5).Value = NombreRol(u.IdRol);
+                ws.Cell(row, 6).Value = (u.Activo ?? true) ? "Activo" : "Inactivo";
+                ws.Cell(row, 7).Value = u.fecha_creacion;
+                ws.Cell(row, 7).Style.DateFormat.Format = "dd/MM/yyyy HH:mm";
+                ws.Cell(row, 8).Value = u.Owner ?? string.Empty;
+                ws.Cell(row, 9).Value = u.DateOwner;
+                ws.Cell(row, 9).Style.DateFormat.Format = "dd/MM/yyyy HH:mm";
+                ws.Cell(row, 10).Value = u.LastModify ?? string.Empty;
+                if (u.LastDate.HasValue) { ws.Cell(row, 11).Value = u.LastDate.Value; ws.Cell(row, 11).Style.DateFormat.Format = "dd/MM/yyyy HH:mm"; }
+                row++;
+            }
+
+            ws.Columns().AdjustToContents();
+            ws.SheetView.FreezeRows(1);
+            ws.Range(1, 1, 1, headers.Length).SetAutoFilter();
+            using var stream = new MemoryStream();
+            workbook.SaveAs(stream);
+            return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", $"Usuarios_{DateTime.Now:yyyyMMdd_HHmm}.xlsx");
+        }
+
         //EndPoints de  ususarios
         [HttpGet]
         public async Task<IActionResult> GetUsuariosJson()
         {
-            var usuarios = await _context.Usuarios.ToListAsync();
-            return Json(usuarios);
+            var roles = await _context.Roles.AsNoTracking()
+                .ToDictionaryAsync(r => r.IdRol, r => r.Nombre);
+
+            var usuarios = await _context.Usuarios.AsNoTracking()
+                .OrderBy(u => u.IdUsuarios)
+                .ToListAsync();
+
+            var resultado = usuarios.Select(u => new
+            {
+                idUsuarios = u.IdUsuarios,
+                idRol = u.IdRol,
+                rol = roles.TryGetValue(u.IdRol, out var nombreRol) ? nombreRol : $"Rol #{u.IdRol}",
+                nombre = u.Nombre,
+                apellido = u.Apellido,
+                email = u.email,
+                activo = u.Activo ?? true,
+                fecha_creacion = u.fecha_creacion,
+                owner = u.Owner,
+                dateOwner = u.DateOwner,
+                lastModify = u.LastModify,
+                lastDate = u.LastDate
+            });
+
+            return Json(resultado);
         }
         [HttpPost]
         public async Task<IActionResult> ActualizarCelda([FromBody] UsuarioUpdateDto usuarioModificado)
@@ -65,6 +135,18 @@ namespace FloresMvc.Controllers
                 return BadRequest(new { success = false, message = "El correo electrónico no tiene un formato válido." });
             }
 
+            if (usuarioModificado.IdRol <= 0)
+            {
+                return BadRequest(new { success = false, message = "Debe seleccionar un rol válido." });
+            }
+
+            var rol = await _context.Roles.AsNoTracking()
+                .FirstOrDefaultAsync(r => r.IdRol == usuarioModificado.IdRol);
+            if (rol == null)
+            {
+                return BadRequest(new { success = false, message = "El rol seleccionado no existe." });
+            }
+
             var usuarioDb = await _context.Usuarios.FindAsync(usuarioModificado.IdUsuarios);
             if (usuarioDb == null)
             {
@@ -86,21 +168,38 @@ namespace FloresMvc.Controllers
                 });
             }
 
+            var nuevoActivo = usuarioModificado.Activo ?? usuarioDb.Activo;
+
+            usuarioDb.IdRol = usuarioModificado.IdRol;
             usuarioDb.Nombre = usuarioModificado.Nombre.Trim();
             usuarioDb.Apellido = usuarioModificado.Apellido.Trim();
             usuarioDb.email = email;
+            usuarioDb.Activo = nuevoActivo;
+            usuarioDb.LastModify = User.ObtenerNombreUsuario();
+            usuarioDb.LastDate = DateTime.UtcNow;
+
+            // Sincroniza el acceso de login con el estado activo/inactivo del usuario.
+            var credencial = await _context.Login.FirstOrDefaultAsync(l => l.user_id == usuarioDb.IdUsuarios);
+            if (credencial != null)
+            {
+                credencial.activo = nuevoActivo ?? true;
+                credencial.LastModify = User.ObtenerNombreUsuario();
+                credencial.LastDate = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified);
+            }
 
             try
             {
                 // La entidad ya está siendo rastreada por EF, no hace falta Update().
                 await _context.SaveChangesAsync();
             }
-            catch (DbUpdateException)
+            catch (DbUpdateException ex)
             {
+                var detalle = ex.InnerException?.Message ?? ex.Message;
                 return StatusCode(500, new
                 {
                     success = false,
-                    message = "No se pudo guardar el cambio en la base de datos."
+                    message = "No se pudo guardar el cambio en la base de datos.",
+                    detail = detalle
                 });
             }
 
@@ -109,9 +208,14 @@ namespace FloresMvc.Controllers
                 success = true,
                 message = "Actualización correcta.",
                 idUsuarios = usuarioDb.IdUsuarios,
+                idRol = usuarioDb.IdRol,
+                rol = rol.Nombre,
                 nombre = usuarioDb.Nombre,
                 apellido = usuarioDb.Apellido,
-                email = usuarioDb.email
+                email = usuarioDb.email,
+                activo = usuarioDb.Activo ?? true,
+                lastModify = usuarioDb.LastModify,
+                lastDate = usuarioDb.LastDate
             });
         }
         //EndPoints de  ususarios
@@ -187,12 +291,14 @@ namespace FloresMvc.Controllers
                 return BadRequest(new { success = false, message = "Ya existe un usuario con ese correo electrónico." });
             }
 
+            var activo = dto.Activo ?? true;
             var usuario = new Usuarios
             {
                 IdRol = dto.IdRol,
                 Nombre = dto.Nombre.Trim(),
                 Apellido = dto.Apellido.Trim(),
                 email = dto.email.Trim(),
+                Activo = activo,
                 // PostgreSQL (timestamp with time zone) solo acepta fechas en UTC.
                 fecha_creacion = dto.fecha_creacion.HasValue
                     ? NormalizarAUtc(dto.fecha_creacion.Value)
@@ -219,7 +325,7 @@ namespace FloresMvc.Controllers
                     password_hash = _passwordService.Hash(dto.Password),
                     // La columna es timestamp without time zone: Kind=Unspecified.
                     ultimo_acceso = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified),
-                    activo = true,
+                    activo = activo,
                     Owner = User.ObtenerNombreUsuario(),
                     DateOwner = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified),
                     LastModify = null,
@@ -303,7 +409,7 @@ namespace FloresMvc.Controllers
                     usuarioDb.Nombre = usuarios.Nombre;
                     usuarioDb.Apellido = usuarios.Apellido;
                     usuarioDb.LastModify = User.ObtenerNombreUsuario();
-                    usuarioDb.LastDate = DateTime.Now;
+                    usuarioDb.LastDate = DateTime.UtcNow;
 
                     await _context.SaveChangesAsync();
                 }

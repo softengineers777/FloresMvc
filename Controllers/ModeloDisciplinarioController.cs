@@ -1,6 +1,8 @@
 using System;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using ClosedXML.Excel;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -33,6 +35,66 @@ namespace FloresMvc.Controllers
                 .ToDictionaryAsync(c => c.IdCargo, c => c.NomCargo);
 
             return View(items);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ExportarExcel()
+        {
+            var items = await _context.ModeloDisciplinario
+                .AsNoTracking()
+                .OrderByDescending(m => m.IdModelo)
+                .ToListAsync();
+
+            var areas = await _context.Areas.AsNoTracking().ToDictionaryAsync(a => a.IdArea, a => a.NomArea);
+            var cargos = await _context.Cargo.AsNoTracking().ToDictionaryAsync(c => c.IdCargo, c => c.NomCargo);
+            string NombreArea(int id) => areas.TryGetValue(id, out var n) ? n : id.ToString();
+            string NombreCargo(int id) => cargos.TryGetValue(id, out var n) ? n : id.ToString();
+
+            using var workbook = new XLWorkbook();
+            var ws = workbook.Worksheets.Add("Manejo Disciplinario");
+            var headers = new[]
+            {
+                "Consecutivo", "Fecha creación", "Para", "Asunto", "Trabajador",
+                "Área", "Cargo", "Proceso", "Situación", "Firma",
+                "Creado por", "Fecha registro", "Modificado por", "Última modificación"
+            };
+            for (var col = 0; col < headers.Length; col++)
+            {
+                var cell = ws.Cell(1, col + 1);
+                cell.Value = headers[col];
+                cell.Style.Font.Bold = true;
+                cell.Style.Fill.BackgroundColor = XLColor.FromHtml("#1F2937");
+                cell.Style.Font.FontColor = XLColor.White;
+            }
+
+            var row = 2;
+            foreach (var m in items)
+            {
+                ws.Cell(row, 1).Value = m.IdModelo;
+                ws.Cell(row, 2).Value = m.fecha_creacion;
+                ws.Cell(row, 2).Style.DateFormat.Format = "dd/MM/yyyy HH:mm";
+                ws.Cell(row, 3).Value = m.para ?? string.Empty;
+                ws.Cell(row, 4).Value = m.asunto ?? string.Empty;
+                ws.Cell(row, 5).Value = m.NomTrabajador ?? string.Empty;
+                ws.Cell(row, 6).Value = NombreArea(m.IdArea);
+                ws.Cell(row, 7).Value = NombreCargo(m.cargo);
+                ws.Cell(row, 8).Value = m.Proceso ?? string.Empty;
+                ws.Cell(row, 9).Value = m.Situacion ?? string.Empty;
+                ws.Cell(row, 10).Value = m.Firma ?? string.Empty;
+                ws.Cell(row, 11).Value = m.Owner ?? string.Empty;
+                ws.Cell(row, 12).Value = m.DateOwner;
+                ws.Cell(row, 12).Style.DateFormat.Format = "dd/MM/yyyy HH:mm";
+                ws.Cell(row, 13).Value = m.LastModify ?? string.Empty;
+                if (m.LastDate.HasValue) { ws.Cell(row, 14).Value = m.LastDate.Value; ws.Cell(row, 14).Style.DateFormat.Format = "dd/MM/yyyy HH:mm"; }
+                row++;
+            }
+
+            ws.Columns().AdjustToContents();
+            ws.SheetView.FreezeRows(1);
+            ws.Range(1, 1, 1, headers.Length).SetAutoFilter();
+            using var stream = new MemoryStream();
+            workbook.SaveAs(stream);
+            return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", $"ModeloDisciplinario_{DateTime.Now:yyyyMMdd_HHmm}.xlsx");
         }
 
         public async Task<IActionResult> Details(int? id)

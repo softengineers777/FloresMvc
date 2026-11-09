@@ -35,6 +35,10 @@ namespace FloresMvc.Models
       public DbSet<ActaDescargosPreguntas> ActaDescargosPreguntas { get; set; }
       public DbSet<Cargo> Cargo { get; set; }
       public DbSet<Sucursal>Sucursal {get; set;}
+      public DbSet<Colaborador>Colaborador {get; set;}
+      public DbSet<ConsultaPeps> ConsultaPeps { get; set; }
+      public DbSet<PasswordResetToken> PasswordResetTokens { get; set; }
+
 
 
 
@@ -48,6 +52,7 @@ namespace FloresMvc.Models
             entity.Property(u => u.Nombre);
             entity.Property(u => u.Apellido);
             entity.Property(u => u.email);
+            entity.Property(u => u.Activo).HasColumnName("Activo").HasDefaultValue(true);
             entity.Property(u => u.fecha_creacion);
          });
 
@@ -327,6 +332,48 @@ namespace FloresMvc.Models
                   .WithMany(a => a.Preguntas)
                   .HasForeignKey(p => p.IdActa)
                   .OnDelete(DeleteBehavior.Cascade);
+         });
+
+         modelBuilder.Entity<Colaborador>(entity =>
+         {
+            entity.ToTable("Colaborador");
+            entity.HasKey(cb=> cb.IdColaborador);
+            entity.Property(cb=>cb.IdCargo);
+            entity.Property(cb=>cb.Nombre);
+            entity.Property(cb=>cb.Apellido);
+            entity.Property(cb=>cb.CodigoEmp);
+            entity.Property(cb=>cb.Cedula);
+         });
+
+         modelBuilder.Entity<ConsultaPeps>(entity =>
+         {
+            entity.ToTable("ConsultaPeps");
+            entity.HasKey(c => c.IdConsulta);
+            entity.Property(c => c.IdConsulta).HasColumnName("IdConsulta");
+            entity.Property(c => c.IdUsuario).HasColumnName("IdUsuario");
+            entity.Property(c => c.Cedula).HasColumnName("Cedula").HasMaxLength(50).IsRequired();
+            entity.Property(c => c.IdCargo).HasColumnName("IdCargo");
+            entity.Property(c => c.IdArea).HasColumnName("IdArea");
+            entity.Property(c => c.EsPep).HasColumnName("EsPep");
+            entity.Property(c => c.Firma).HasColumnName("Firma").HasColumnType("text").IsRequired(false);
+            entity.Property(c => c.Owner).HasColumnName("Owner").HasMaxLength(30);
+            entity.Property(c => c.DateOwner).HasColumnName("DateOwner").HasColumnType("timestamp without time zone");
+            entity.Property(c => c.LastModify).HasColumnName("LastModify").HasMaxLength(30);
+            entity.Property(c => c.LastDate).HasColumnName("LastDate").HasColumnType("timestamp without time zone");
+         });
+
+         modelBuilder.Entity<PasswordResetToken>(entity =>
+         {
+            entity.ToTable("PasswordResetTokens");
+            entity.HasKey(t => t.IdToken);
+            entity.Property(t => t.IdToken).HasColumnName("IdToken");
+            entity.Property(t => t.UserId).HasColumnName("UserId");
+            entity.Property(t => t.TokenHash).HasColumnName("TokenHash").HasMaxLength(128).IsRequired();
+            entity.Property(t => t.ExpiresAt).HasColumnName("ExpiresAt").HasColumnType("timestamp without time zone");
+            entity.Property(t => t.UsedAt).HasColumnName("UsedAt").HasColumnType("timestamp without time zone");
+            entity.Property(t => t.CreatedAt).HasColumnName("CreatedAt").HasColumnType("timestamp without time zone");
+            entity.HasIndex(t => t.TokenHash);
+            entity.HasIndex(t => t.UserId);
          });
 
       }

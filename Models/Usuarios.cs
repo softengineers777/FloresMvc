@@ -19,6 +19,10 @@ namespace FloresMvc.Models
         [Required]
         [Display(Name = "Correo Electronico")]
         public required string email { get; set; }
+
+        [Display(Name = "Activo")]
+        public bool? Activo { get; set; } = true;
+
         [Display(Name = "Fecha_Creacion")]
         public DateTime fecha_creacion { get; set; }
         public string? Owner { get; set; }          // Quién lo creó

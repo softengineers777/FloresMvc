@@ -14,9 +14,14 @@
         <h1 class="page-title">Manejo Disciplinario</h1>
         <p class="page-subtitle mb-0">Administra los modelos disciplinarios registrados en Gestión Humana.</p>
     </div>
-    <a asp-action="Create" class="btn btn-primary">
-        <i class="bi bi-plus-circle me-1"></i> Nuevo Registro
-    </a>
+    <div class="d-flex flex-wrap gap-2">
+        <a asp-action="ExportarExcel" class="btn btn-outline-success">
+            <i class="bi bi-file-earmark-excel me-1"></i> Descargar Excel
+        </a>
+        <a asp-action="Create" class="btn btn-primary">
+            <i class="bi bi-plus-circle me-1"></i> Nuevo Registro
+        </a>
+    </div>
 </div>
 
 @if (TempData["Success"] is string successMsg)

@@ -1,7 +1,9 @@
 using System;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using ClosedXML.Excel;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -34,6 +36,69 @@ namespace FloresMvc.Controllers
                 .ToDictionaryAsync(a => a.IdArea, a => a.NomArea);
 
             return View(items);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ExportarExcel()
+        {
+            var items = await _context.CitacionDescargos
+                .AsNoTracking()
+                .OrderByDescending(c => c.IdCitacion)
+                .ToListAsync();
+
+            var cargos = await _context.Cargo.AsNoTracking()
+                .ToDictionaryAsync(c => c.IdCargo, c => c.NomCargo);
+            var areas = await _context.Areas.AsNoTracking()
+                .ToDictionaryAsync(a => a.IdArea, a => a.NomArea);
+
+            string NombreCargo(int id) => cargos.TryGetValue(id, out var n) ? n : id.ToString();
+            string NombreArea(int id) => areas.TryGetValue(id, out var n) ? n : id.ToString();
+
+            using var workbook = new XLWorkbook();
+            var ws = workbook.Worksheets.Add("Citación a Descargos");
+            var headers = new[]
+            {
+                "Consecutivo", "Ciudad", "Fecha Creación", "Trabajador", "C.C. Recibido",
+                "Cargo", "Área", "Proceso", "Fecha Diligencia", "Hora Diligencia", "Fecha Hechos",
+                "Creado por", "Fecha registro", "Modificado por", "Última modificación"
+            };
+            for (var col = 0; col < headers.Length; col++)
+            {
+                var cell = ws.Cell(1, col + 1);
+                cell.Value = headers[col];
+                cell.Style.Font.Bold = true;
+                cell.Style.Fill.BackgroundColor = XLColor.FromHtml("#1F2937");
+                cell.Style.Font.FontColor = XLColor.White;
+            }
+
+            var row = 2;
+            foreach (var c in items)
+            {
+                ws.Cell(row, 1).Value = c.IdCitacion;
+                ws.Cell(row, 2).Value = c.Ciudad ?? string.Empty;
+                ws.Cell(row, 3).Value = c.fecha_Creacion;
+                ws.Cell(row, 3).Style.DateFormat.Format = "dd/MM/yyyy HH:mm";
+                ws.Cell(row, 4).Value = c.NomTrabajador;
+                ws.Cell(row, 5).Value = c.CcRecibido;
+                ws.Cell(row, 6).Value = NombreCargo(c.IdCargo);
+                ws.Cell(row, 7).Value = NombreArea(c.IdArea);
+                ws.Cell(row, 8).Value = c.Proceso;
+                if (c.fecha_Diligencia.HasValue) { ws.Cell(row, 9).Value = c.fecha_Diligencia.Value; ws.Cell(row, 9).Style.DateFormat.Format = "dd/MM/yyyy"; }
+                if (c.HoraDiligencia.HasValue) { ws.Cell(row, 10).Value = c.HoraDiligencia.Value; ws.Cell(row, 10).Style.DateFormat.Format = "HH:mm"; }
+                if (c.FechaHechos.HasValue) { ws.Cell(row, 11).Value = c.FechaHechos.Value; ws.Cell(row, 11).Style.DateFormat.Format = "dd/MM/yyyy"; }
+                ws.Cell(row, 12).Value = c.Owner ?? string.Empty;
+                if (c.DateOwner.HasValue) { ws.Cell(row, 13).Value = c.DateOwner.Value; ws.Cell(row, 13).Style.DateFormat.Format = "dd/MM/yyyy HH:mm"; }
+                ws.Cell(row, 14).Value = c.LastModify ?? string.Empty;
+                if (c.LastDate.HasValue) { ws.Cell(row, 15).Value = c.LastDate.Value; ws.Cell(row, 15).Style.DateFormat.Format = "dd/MM/yyyy HH:mm"; }
+                row++;
+            }
+
+            ws.Columns().AdjustToContents();
+            ws.SheetView.FreezeRows(1);
+            ws.Range(1, 1, 1, headers.Length).SetAutoFilter();
+            using var stream = new MemoryStream();
+            workbook.SaveAs(stream);
+            return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", $"CitacionDescargos_{DateTime.Now:yyyyMMdd_HHmm}.xlsx");
         }
 
         public async Task<IActionResult> Details(int? id)

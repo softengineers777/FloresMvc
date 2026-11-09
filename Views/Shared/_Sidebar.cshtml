@@ -4,15 +4,15 @@
     var emailSidebar = User.FindFirst(ClaimTypes.Email)?.Value ?? "";
     var controladorActual = ViewContext.RouteData.Values["controller"]?.ToString() ?? "";
     bool EsControlador(string nombre) => string.Equals(controladorActual, nombre, StringComparison.OrdinalIgnoreCase);
-   
+
     //***************Inicio Menu Administracion*****************************
     //Este Menu es  el administrador del  sistema tener contemplano el tema  de los permisos
 
     var enAdministracion = EsControlador("Roles") || EsControlador("Usuarios");
     var administracionExpandido = enAdministracion ? "true" : "false";
     var submenuAdministracionAbierto = enAdministracion ? "show" : "";
-    var rolesActivo = EsControlador ("Roles") ? "active" : "";
-    var usuariosActivo = EsControlador ("Usuarios") ? "active" : "";
+    var rolesActivo = EsControlador("Roles") ? "active" : "";
+    var usuariosActivo = EsControlador("Usuarios") ? "active" : "";
 
     //Este Menu es  el administrador del  sistema tener contemplano el tema  de los permisos
     //***************Fin Menu Administracion*****************************
@@ -47,6 +47,14 @@
     var subCitActivo = EsControlador("CitacionDescargas") ? "active" : "";
     var subActaActivo = EsControlador("ActaDescargos") ? "active" : "";
     //***************Fin Menu Gestion Humana (GH)*****************************
+
+    //***************Inicio Menu Psicologia***************************
+    var enPsicologia = EsControlador("ConsultaPeps");
+    var psicologiaExpandido = enPsicologia ? "true" : "false";
+    var submenuPsicologiaAbierto = enPsicologia ? "show" : "";
+    var consultaPepsActivo = EsControlador("ConsultaPeps") ? "active" : "";
+    //***************Fin Menu Psicologia******************************
+
 }
 <!-- ==========================================
          START: Sidebar Component
@@ -101,8 +109,8 @@
                         </li>
                     </ul>
                 </li>
-                
-               
+
+
                 <li class="sidebar-menu-item">
                     <a class="sidebar-menu-link" data-bs-toggle="collapse" href="#submenu-parametricas" role="button"
                        aria-expanded="@parametricasExpandido" aria-controls="submenu-parametricas"
@@ -202,6 +210,24 @@
                                id="menu-acta-descargos" title="Acta Descargos">
                                 <i class="bi bi-file-earmark-check"></i>
                                 <span>Acta Descargos</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="sidebar-menu-item">
+                    <a class="sidebar-menu-link" data-bs-toggle="collapse" href="#submenu-psicologia" role="button"
+                       aria-expanded="@psicologiaExpandido" aria-controls="submenu-psicologia"
+                       title="Psicología">
+                        <i class="bi bi-heart-pulse"></i>
+                        <span>Psicología</span>
+                        <i class="bi bi-chevron-down dropdown-caret"></i>
+                    </a>
+                    <ul class="sidebar-submenu collapse @submenuPsicologiaAbierto" id="submenu-psicologia">
+                        <li>
+                            <a href="/ConsultaPeps/Index" class="sidebar-submenu-link @consultaPepsActivo"
+                               id="menu-consulta-peps" title="Consultas PEPS">
+                                <i class="bi bi-search"></i>
+                                <span>Consultas PEPS</span>
                             </a>
                         </li>
                     </ul>

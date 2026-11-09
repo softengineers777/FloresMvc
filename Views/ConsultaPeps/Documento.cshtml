@@ -1,0 +1,121 @@
+@model FloresMvc.Models.ConsultaPeps
+@{
+    Layout = null;
+    var nombreUsuario = ViewBag.NombreUsuario as string ?? Model.IdUsuario.ToString();
+    var nombreCargo = ViewBag.NombreCargo as string ?? (Model.IdCargo > 0 ? Model.IdCargo.ToString() : "—");
+    var nombreArea = ViewBag.NombreArea as string ?? (Model.IdArea > 0 ? Model.IdArea.ToString() : "—");
+}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Consulta PEPS N.º @Model.IdConsulta</title>
+    <style>
+        :root { --ink: #111; --muted: #555; --line: #d7d7d7; }
+        * { box-sizing: border-box; }
+        body { margin: 0; font-family: Arial, Helvetica, sans-serif; color: var(--ink); background: #f3f4f6; }
+        .toolbar { position: sticky; top: 0; z-index: 10; display: flex; gap: 10px; justify-content: center; padding: 12px; background: #fff; border-bottom: 1px solid var(--line); }
+        .btn { display: inline-block; padding: 10px 16px; border-radius: 6px; border: 1px solid #1f6feb; background: #1f6feb; color: #fff; text-decoration: none; font-size: 14px; cursor: pointer; }
+        .btn.secondary { background: #fff; color: #333; border-color: #bbb; }
+        .page { width: 210mm; min-height: 297mm; margin: 18px auto; padding: 18mm 16mm; background: #fff; box-shadow: 0 2px 12px rgba(0,0,0,.08); }
+        h1 { margin: 0 0 4px; text-align: center; font-size: 20px; letter-spacing: .3px; text-transform: uppercase; }
+        .subtitle { margin: 0 0 18px; text-align: center; color: var(--muted); font-size: 13px; }
+        .meta { display: flex; justify-content: space-between; gap: 12px; margin-bottom: 18px; font-size: 13px; }
+        .box { border: 1px solid var(--line); border-radius: 6px; padding: 12px 14px; margin-bottom: 14px; }
+        .box h2 { margin: 0 0 10px; font-size: 13px; text-transform: uppercase; color: #222; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 18px; }
+        .field { font-size: 13px; }
+        .label { display: block; color: var(--muted); font-size: 11px; text-transform: uppercase; margin-bottom: 2px; }
+        .value { min-height: 18px; }
+        .full { grid-column: 1 / -1; }
+        .footer { margin-top: 18px; font-size: 11px; color: var(--muted); text-align: right; }
+        @@media print {
+            body { background: #fff; }
+            .toolbar { display: none !important; }
+            .page { width: auto; min-height: 0; margin: 0; padding: 12mm 10mm; box-shadow: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="toolbar">
+        <button type="button" class="btn" onclick="window.print()">Imprimir / Guardar como PDF</button>
+        <a class="btn secondary" href="@Url.Action("Details", "ConsultaPeps", new { id = Model.IdConsulta })">Volver al detalle</a>
+        <a class="btn secondary" href="@Url.Action("Index", "ConsultaPeps")">Listado</a>
+    </div>
+
+    <main class="page">
+        <h1>Consulta PEPS</h1>
+        <p class="subtitle">Psicología — Registro N.º @Model.IdConsulta</p>
+
+        <div class="meta">
+            <div><span class="label">Consecutivo</span><div class="value">@Model.IdConsulta</div></div>
+            <div><span class="label">Fecha registro</span><div class="value">@(Model.DateOwner.HasValue ? Model.DateOwner.Value.ToString("dd/MM/yyyy HH:mm") : "—")</div></div>
+        </div>
+
+        <section class="box">
+            <h2>Datos de la consulta</h2>
+            <div class="grid">
+                <div class="field full">
+                    <span class="label">Usuario</span>
+                    <div class="value">@nombreUsuario</div>
+                </div>
+                <div class="field">
+                    <span class="label">Cédula</span>
+                    <div class="value">@(string.IsNullOrWhiteSpace(Model.Cedula) ? "—" : Model.Cedula)</div>
+                </div>
+                <div class="field">
+                    <span class="label">Cargo</span>
+                    <div class="value">@nombreCargo</div>
+                </div>
+                <div class="field">
+                    <span class="label">Área</span>
+                    <div class="value">@nombreArea</div>
+                </div>
+                <div class="field full">
+                    <span class="label">¿Usted o un familiar es PEP?</span>
+                    <div class="value">@(Model.EsPep == true ? "Sí" : Model.EsPep == false ? "No" : "—")</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="box">
+            <h2>Auditoría</h2>
+            <div class="grid">
+                <div class="field">
+                    <span class="label">Creado por</span>
+                    <div class="value">@(string.IsNullOrWhiteSpace(Model.Owner) ? "—" : Model.Owner)</div>
+                </div>
+                <div class="field">
+                    <span class="label">Fecha registro</span>
+                    <div class="value">@(Model.DateOwner.HasValue ? Model.DateOwner.Value.ToString("dd/MM/yyyy HH:mm") : "—")</div>
+                </div>
+                <div class="field">
+                    <span class="label">Modificado por</span>
+                    <div class="value">@(string.IsNullOrWhiteSpace(Model.LastModify) ? "—" : Model.LastModify)</div>
+                </div>
+                <div class="field">
+                    <span class="label">Última modificación</span>
+                    <div class="value">@(Model.LastDate.HasValue ? Model.LastDate.Value.ToString("dd/MM/yyyy HH:mm") : "—")</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="box">
+            <h2>Firma</h2>
+            <div class="field">
+                @if (!string.IsNullOrWhiteSpace(Model.Firma))
+                {
+                    <img src="@Model.Firma" alt="Firma" style="max-width: 420px; max-height: 180px; display: block;" />
+                }
+                else
+                {
+                    <div class="value">—</div>
+                }
+            </div>
+        </section>
+
+        <div class="footer">Generado desde FloresMvc — @DateTime.Now.ToString("dd/MM/yyyy HH:mm")</div>
+    </main>
+</body>
+</html>

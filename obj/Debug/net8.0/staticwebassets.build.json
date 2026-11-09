@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "2zsJ+dihfPxxdeFkoqZtAXHrNYiFunHpCHuqGdvk5o4=",
+  "Hash": "BnSJuKDpAvqIHmZd8CvvQdOKru4s0Go1gzqCbYM/aLU=",
   "Source": "FloresMvc",
   "BasePath": "_content/FloresMvc",
   "Mode": "Default",
@@ -53,6 +53,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "C:\\Users\\jhon.bolivar\\OneDrive - GR Chia S.A.S\\Documentos\\Desarrollo\\FloresMvc\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\FloresMvc.bundle.scp.css"
+    },
+    {
+      "Identity": "C:\\Users\\jhon.bolivar\\OneDrive - GR Chia S.A.S\\Documentos\\Desarrollo\\FloresMvc\\wwwroot\\assets\\css\\acta-descargos-documento.css",
+      "SourceId": "FloresMvc",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\jhon.bolivar\\OneDrive - GR Chia S.A.S\\Documentos\\Desarrollo\\FloresMvc\\wwwroot\\",
+      "BasePath": "_content/FloresMvc",
+      "RelativePath": "assets/css/acta-descargos-documento.css",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\assets\\css\\acta-descargos-documento.css"
     },
     {
       "Identity": "C:\\Users\\jhon.bolivar\\OneDrive - GR Chia S.A.S\\Documentos\\Desarrollo\\FloresMvc\\wwwroot\\assets\\css\\main.css",
