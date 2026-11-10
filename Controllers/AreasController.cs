@@ -2,16 +2,19 @@ using System;
 using System.Data;
 using System.IO;
 using ClosedXML.Excel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using FloresMvc.Controllers;
 using FloresMvc.Extensions;
+using FloresMvc.Filters;
 using FloresMvc.Models;
 
 
 
 namespace FloresMvc.Controllers
 {
+    [Authorize]
     public class AreasController : Controller
     {
         private readonly IConfiguration _configuration;
@@ -21,12 +24,14 @@ namespace FloresMvc.Controllers
             _configuration =  configuration;
             _context = context;
         }
-        public async Task<IActionResult> Index ()
+        [Permiso("Areas.Ver")]
+        public async Task<IActionResult> Index()
         {
-            return View (await _context.Areas.ToListAsync());
+            return View(await _context.Areas.ToListAsync());
         }
 
         [HttpGet]
+        [Permiso("Areas.Exportar")]
         public async Task<IActionResult> ExportarExcel()
         {
             var items = await _context.Areas.AsNoTracking().OrderBy(a => a.IdArea).ToListAsync();
@@ -63,7 +68,8 @@ namespace FloresMvc.Controllers
             workbook.SaveAs(stream);
             return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", $"Areas_{DateTime.Now:yyyyMMdd_HHmm}.xlsx");
         }
-        public async Task<IActionResult>Details(int? id)
+        [Permiso("Areas.Ver")]
+        public async Task<IActionResult> Details(int? id)
         {
             if(id == null || _context.Areas == null)
             {
@@ -78,13 +84,15 @@ namespace FloresMvc.Controllers
             return View(Areas);
         }
         [HttpGet]
+        [Permiso("Areas.Crear")]
         public IActionResult Create()
         {
             return View();
         }
                 [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task <IActionResult>Create([Bind("IdArea,NomArea")]Areas areas)
+        [Permiso("Areas.Crear")]
+        public async Task<IActionResult> Create([Bind("IdArea,NomArea")] Areas areas)
         {
             if (ModelState.IsValid)
             {
@@ -98,7 +106,8 @@ namespace FloresMvc.Controllers
             return View(areas);
         }
         [HttpGet]
-        public async Task<IActionResult>Edit (int? id)
+        [Permiso("Areas.Editar")]
+        public async Task<IActionResult> Edit(int? id)
         {
             if(id == null)
             {
@@ -113,7 +122,8 @@ namespace FloresMvc.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task <IActionResult>Edit (int id,[Bind("IdArea,NomArea")]Areas areas)
+        [Permiso("Areas.Editar")]
+        public async Task<IActionResult> Edit(int id, [Bind("IdArea,NomArea")] Areas areas)
         {
             if (id != areas.IdArea)
             {
@@ -152,6 +162,7 @@ namespace FloresMvc.Controllers
             return View(areas);
         }
         [HttpGet, ActionName("Delete")]
+        [Permiso("Areas.Eliminar")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -172,6 +183,7 @@ namespace FloresMvc.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Permiso("Areas.Eliminar")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var areas = await _context.Areas.FindAsync(id);

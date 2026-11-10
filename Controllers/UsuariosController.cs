@@ -2,10 +2,12 @@ using System.Data;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 using ClosedXML.Excel;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using FloresMvc.Controllers;
 using FloresMvc.Extensions;
+using FloresMvc.Filters;
 using FloresMvc.Models;
 using FloresMvc.Services;
 using System.Runtime.CompilerServices;
@@ -14,6 +16,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace FloresMvc.Controllers
 {
+    [Authorize]
     public class UsuariosController : Controller
     {
         private readonly FloresDbContext _context;
@@ -29,6 +32,7 @@ namespace FloresMvc.Controllers
             _configuration = configuration;
             _passwordService = passwordService;
         }
+        [Permiso("Usuarios.Ver")]
         public async Task<IActionResult> Index()
         {
             return View(await _context.Usuarios.ToListAsync());
@@ -36,6 +40,7 @@ namespace FloresMvc.Controllers
         }
 
         [HttpGet]
+        [Permiso("Usuarios.Exportar")]
         public async Task<IActionResult> ExportarExcel()
         {
             var items = await _context.Usuarios.AsNoTracking().OrderBy(u => u.IdUsuarios).ToListAsync();
@@ -83,6 +88,7 @@ namespace FloresMvc.Controllers
 
         //EndPoints de  ususarios
         [HttpGet]
+        [Permiso("Usuarios.Ver")]
         public async Task<IActionResult> GetUsuariosJson()
         {
             var roles = await _context.Roles.AsNoTracking()
@@ -111,6 +117,7 @@ namespace FloresMvc.Controllers
             return Json(resultado);
         }
         [HttpPost]
+        [Permiso("Usuarios.Editar")]
         public async Task<IActionResult> ActualizarCelda([FromBody] UsuarioUpdateDto usuarioModificado)
         {
             if (usuarioModificado == null || usuarioModificado.IdUsuarios <= 0)
@@ -219,6 +226,7 @@ namespace FloresMvc.Controllers
             });
         }
         //EndPoints de  ususarios
+        [Permiso("Usuarios.Ver")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.Usuarios == null)
@@ -236,11 +244,13 @@ namespace FloresMvc.Controllers
             return View(Usuarios);
         }
         [HttpGet]
+        [Permiso("Usuarios.Crear")]
         public IActionResult Create()
         {
             return View();
         }
         [HttpPost]
+        [Permiso("Usuarios.Crear")]
         public async Task<IActionResult> CreateAjax([FromBody] UsuarioCreateDto dto)
         {
             if (dto == null)
@@ -358,6 +368,7 @@ namespace FloresMvc.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Permiso("Usuarios.Crear")]
         public async Task<IActionResult> Create([Bind("IdUsuarios,IdRol,Nombre,Apellido,fecha_creacion,email")] Usuarios usuarios)
         {
             if (ModelState.IsValid)
@@ -371,6 +382,7 @@ namespace FloresMvc.Controllers
             return View(usuarios);
         }
         [HttpGet]
+        [Permiso("Usuarios.Editar")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -387,6 +399,7 @@ namespace FloresMvc.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Permiso("Usuarios.Editar")]
         public async Task<IActionResult> Edit(int id, [Bind("IdUsuarios,IdRol,Nombre,Apellido,fecha_creacion")] Usuarios usuarios)
         {
             if (id != usuarios.IdUsuarios)
@@ -448,6 +461,7 @@ namespace FloresMvc.Controllers
         }
 
         [HttpGet, ActionName("Delete")]
+        [Permiso("Usuarios.Eliminar")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -464,6 +478,7 @@ namespace FloresMvc.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Permiso("Usuarios.Eliminar")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var usuarios = await _context.Usuarios.FindAsync(id);

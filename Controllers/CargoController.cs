@@ -2,14 +2,17 @@ using System;
 using System.Data;
 using System.IO;
 using ClosedXML.Excel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using FloresMvc.Controllers;
 using FloresMvc.Extensions;
+using FloresMvc.Filters;
 using FloresMvc.Models;
 
 namespace FloresMvc.Controllers
 {
+    [Authorize]
     public class CargoController : Controller
     {
         private readonly FloresDbContext _context;
@@ -20,12 +23,14 @@ namespace FloresMvc.Controllers
             _context = context;
             _configuration = configuration;
         }
+        [Permiso("Cargo.Ver")]
         public async Task<IActionResult> Index()
         {
             return View(await _context.Cargo.ToListAsync());
         }
 
         [HttpGet]
+        [Permiso("Cargo.Exportar")]
         public async Task<IActionResult> ExportarExcel()
         {
             var items = await _context.Cargo.AsNoTracking().OrderBy(c => c.IdCargo).ToListAsync();
@@ -62,6 +67,7 @@ namespace FloresMvc.Controllers
             workbook.SaveAs(stream);
             return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", $"Cargos_{DateTime.Now:yyyyMMdd_HHmm}.xlsx");
         }
+        [Permiso("Cargo.Ver")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.Cargo == null)
@@ -77,12 +83,14 @@ namespace FloresMvc.Controllers
             return View(cargo);
         }
         [HttpGet]
+        [Permiso("Cargo.Crear")]
         public IActionResult Create()
         {
             return View();
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Permiso("Cargo.Crear")]
         public async Task<IActionResult> Create([Bind("IdCargo,NomCargo")] Cargo cargo)
         {
             if (ModelState.IsValid)
@@ -97,6 +105,7 @@ namespace FloresMvc.Controllers
             return View(cargo);
         }
         [HttpGet]
+        [Permiso("Cargo.Editar")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -112,6 +121,7 @@ namespace FloresMvc.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Permiso("Cargo.Editar")]
         public async Task<IActionResult> Edit(int id, [Bind("IdCargo,NomCargo")] Cargo cargo)
         {
             if (id != cargo.IdCargo)
@@ -151,6 +161,7 @@ namespace FloresMvc.Controllers
             return View(cargo);
         }
         [HttpGet, ActionName("Delete")]
+        [Permiso("Cargo.Eliminar")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -171,6 +182,7 @@ namespace FloresMvc.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Permiso("Cargo.Eliminar")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var cargo = await _context.Cargo.FindAsync(id);

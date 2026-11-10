@@ -3,15 +3,18 @@ using System.Data;
 using System.IO;
 using System.Threading.Tasks;
 using ClosedXML.Excel;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using FloresMvc.Controllers;
 using FloresMvc.Extensions;
+using FloresMvc.Filters;
 using FloresMvc.Models;
 
 
 namespace FloresMvc.Controllers
 {
+    [Authorize]
     public class CategoriasController : Controller
     {
         private readonly FloresDbContext _context;
@@ -22,12 +25,14 @@ namespace FloresMvc.Controllers
             _context = context;
             _configuration = configuration;
         }
+        [Permiso("Categoria.Ver")]
         public async Task<IActionResult> Index()
         {
             return View(await _context.Categorias.ToListAsync());
         }
 
         [HttpGet]
+        [Permiso("Categoria.Exportar")]
         public async Task<IActionResult> ExportarExcel()
         {
             var items = await _context.Categorias.AsNoTracking().OrderBy(c => c.IdCategoria).ToListAsync();
@@ -64,6 +69,7 @@ namespace FloresMvc.Controllers
             workbook.SaveAs(stream);
             return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", $"Categorias_{DateTime.Now:yyyyMMdd_HHmm}.xlsx");
         }
+        [Permiso("Categoria.Ver")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.Categorias == null)
@@ -79,13 +85,15 @@ namespace FloresMvc.Controllers
             return View(Categorias);
         }
         [HttpGet]
+        [Permiso("Categoria.Crear")]
         public IActionResult Create()
         {
             return View();
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task <IActionResult>Create([Bind("IdCategoria,Nomcategoria,fecha_Creacion")]Categorias categorias)
+        [Permiso("Categoria.Crear")]
+        public async Task<IActionResult> Create([Bind("IdCategoria,Nomcategoria,fecha_Creacion")] Categorias categorias)
         {
             if(ModelState.IsValid)
             {
@@ -99,7 +107,8 @@ namespace FloresMvc.Controllers
             return View(categorias);
         }
         [HttpGet]
-        public async Task <IActionResult>Edit(int? id)
+        [Permiso("Categoria.Editar")]
+        public async Task<IActionResult> Edit(int? id)
         {
             if(id == null)
             {
@@ -114,7 +123,8 @@ namespace FloresMvc.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task <IActionResult>Edit(int id,[Bind("IdCategoria,Nomcategoria,fecha_Creacion")]Categorias categorias)
+        [Permiso("Categoria.Editar")]
+        public async Task<IActionResult> Edit(int id, [Bind("IdCategoria,Nomcategoria,fecha_Creacion")] Categorias categorias)
         {
             if(id != categorias.IdCategoria)
             {
@@ -155,7 +165,8 @@ namespace FloresMvc.Controllers
             return _context.Categorias.Any(c=> c.IdCategoria == id);
         }
         [HttpGet, ActionName("Delete")]
-        public async Task <IActionResult>Delete(int? id)
+        [Permiso("Categoria.Eliminar")]
+        public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
             {
@@ -171,7 +182,8 @@ namespace FloresMvc.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task <IActionResult>DeleteConfirmed(int id)
+        [Permiso("Categoria.Eliminar")]
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var categorias = await _context.Categorias.FindAsync(id);
             if (categorias == null)

@@ -3,16 +3,19 @@ using System.Data;
 using System.IO;
 using System.ComponentModel.DataAnnotations;
 using ClosedXML.Excel;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using FloresMvc.Controllers;
 using FloresMvc.Extensions;
+using FloresMvc.Filters;
 using FloresMvc.Models;
 
 
 namespace FloresMvc.Controllers
 
 {
+    [Authorize]
     public class FincasController : Controller
     {
         private readonly IConfiguration _configuration;
@@ -23,12 +26,14 @@ namespace FloresMvc.Controllers
             _context = context;
             _configuration = configuration;
         }
+        [Permiso("Fincas.Ver")]
         public async Task<IActionResult> Index()
         {
             return View(await _context.Fincas.ToListAsync());
         }
 
         [HttpGet]
+        [Permiso("Fincas.Exportar")]
         public async Task<IActionResult> ExportarExcel()
         {
             var items = await _context.Fincas.AsNoTracking().OrderBy(f => f.IdFinca).ToListAsync();
@@ -65,6 +70,7 @@ namespace FloresMvc.Controllers
             workbook.SaveAs(stream);
             return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", $"Fincas_{DateTime.Now:yyyyMMdd_HHmm}.xlsx");
         }
+        [Permiso("Fincas.Ver")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.Fincas == null)
@@ -80,12 +86,14 @@ namespace FloresMvc.Controllers
             return View(fincas);
         }
         [HttpGet]
+        [Permiso("Fincas.Crear")]
         public IActionResult Create()
         {
             return View();
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Permiso("Fincas.Crear")]
         public async Task<IActionResult> Create([Bind("IdFinca,NomFinca")] Fincas fincas)
         {
             if (ModelState.IsValid)
@@ -101,6 +109,7 @@ namespace FloresMvc.Controllers
             return View(fincas);
         }
         [HttpGet]
+        [Permiso("Fincas.Editar")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -117,6 +126,7 @@ namespace FloresMvc.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Permiso("Fincas.Editar")]
         public async Task<IActionResult> Edit(int id, [Bind("IdFinca,NomFinca")] Fincas fincas)
         {
             if (id != fincas.IdFinca)
@@ -159,6 +169,7 @@ namespace FloresMvc.Controllers
         }
 
         [HttpGet, ActionName("Delete")]
+        [Permiso("Fincas.Eliminar")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -176,6 +187,7 @@ namespace FloresMvc.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Permiso("Fincas.Eliminar")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var fincas = await _context.Fincas.FindAsync(id);

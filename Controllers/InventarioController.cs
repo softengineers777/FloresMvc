@@ -2,13 +2,16 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 using ClosedXML.Excel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using FloresMvc.Extensions;
+using FloresMvc.Filters;
 using FloresMvc.Models;
 
 namespace FloresMvc.Controllers
 {
+    [Authorize]
     public class InventarioController : Controller
     {
         private readonly FloresDbContext _context;
@@ -21,12 +24,14 @@ namespace FloresMvc.Controllers
         }
 
         // GET: Inventario
+        [Permiso("Inventario.Ver")]
         public async Task<IActionResult> Index()
         {
             return View(await _context.Inventario.ToListAsync());
         }
 
         [HttpGet]
+        [Permiso("Inventario.Exportar")]
         public async Task<IActionResult> ExportarExcel()
         {
             var items = await _context.Inventario.AsNoTracking().OrderBy(i => i.IdInventario).ToListAsync();
@@ -68,6 +73,7 @@ namespace FloresMvc.Controllers
         }
 
         // GET: Inventario/Details/5
+        [Permiso("Inventario.Ver")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.Inventario == null)
@@ -88,6 +94,7 @@ namespace FloresMvc.Controllers
 
         // GET: Inventario/Create
         [HttpGet]
+        [Permiso("Inventario.Crear")]
         public IActionResult Create()
         {
             return View();
@@ -96,6 +103,7 @@ namespace FloresMvc.Controllers
         // POST: Inventario/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Permiso("Inventario.Crear")]
         public async Task<IActionResult> Create(
             [Bind("IdInventario,Nombre,Descripcion,Cantidad,Precio")] Inventario inventario)
         {
@@ -115,6 +123,7 @@ namespace FloresMvc.Controllers
 
         // GET: Inventario/Edit/5
         [HttpGet]
+        [Permiso("Inventario.Editar")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -135,6 +144,7 @@ namespace FloresMvc.Controllers
         // POST: Inventario/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Permiso("Inventario.Editar")]
         public async Task<IActionResult> Edit(int id,
             [Bind("IdInventario,Nombre,Descripcion,Cantidad,Precio")] Inventario inventario)
         {
@@ -182,6 +192,7 @@ namespace FloresMvc.Controllers
 
         // GET: Inventario/Delete/5
         [HttpGet, ActionName("Delete")]
+        [Permiso("Inventario.Eliminar")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -203,6 +214,7 @@ namespace FloresMvc.Controllers
         // POST: Inventario/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Permiso("Inventario.Eliminar")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var inventario = await _context.Inventario.FindAsync(id);

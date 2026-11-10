@@ -2,14 +2,17 @@ using System;
 using System.Data;
 using System.IO;
 using ClosedXML.Excel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using FloresMvc.Controllers;
 using FloresMvc.Extensions;
+using FloresMvc.Filters;
 using FloresMvc.Models;
 
 namespace FloresMvc.Controllers
 {
+    [Authorize]
     public class SucursalController : Controller
     {
         private readonly FloresDbContext _context;
@@ -20,12 +23,14 @@ namespace FloresMvc.Controllers
             _context = context;
             _configuration = configuration;
         }
+        [Permiso("Sucursal.Ver")]
         public async Task<IActionResult> Index()
         {
             return View(await _context.Sucursal.ToListAsync());
         }
 
         [HttpGet]
+        [Permiso("Sucursal.Exportar")]
         public async Task<IActionResult> ExportarExcel()
         {
             var items = await _context.Sucursal.AsNoTracking().OrderBy(s => s.IdSucursal).ToListAsync();
@@ -62,6 +67,7 @@ namespace FloresMvc.Controllers
             workbook.SaveAs(stream);
             return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", $"Sucursales_{DateTime.Now:yyyyMMdd_HHmm}.xlsx");
         }
+        [Permiso("Sucursal.Ver")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.Sucursal == null)
@@ -77,12 +83,14 @@ namespace FloresMvc.Controllers
             return View(sucursal);
         }
         [HttpGet]
+        [Permiso("Sucursal.Crear")]
         public IActionResult Create()
         {
             return View();
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Permiso("Sucursal.Crear")]
         public async Task<IActionResult> Create([Bind("IdSucursal,NombreSuc")] Sucursal sucursal)
         {
             if (ModelState.IsValid)
@@ -97,6 +105,7 @@ namespace FloresMvc.Controllers
             return View(sucursal);
         }
         [HttpGet]
+        [Permiso("Sucursal.Editar")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -112,6 +121,7 @@ namespace FloresMvc.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Permiso("Sucursal.Editar")]
         public async Task<IActionResult> Edit(int id, [Bind("IdSucursal,NombreSuc")] Sucursal sucursal)
         {
             if (id != sucursal.IdSucursal)
@@ -151,6 +161,7 @@ namespace FloresMvc.Controllers
             return View(sucursal);
         }
         [HttpGet, ActionName("Delete")]
+        [Permiso("Sucursal.Eliminar")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -171,6 +182,7 @@ namespace FloresMvc.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Permiso("Sucursal.Eliminar")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var sucursal = await _context.Sucursal.FindAsync(id);

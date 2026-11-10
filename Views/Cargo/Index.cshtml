@@ -10,12 +10,18 @@
         <p class="page-subtitle mb-0">Administra los cargos registrados en FloresVida.</p>
     </div>
     <div class="d-flex flex-wrap gap-2">
-        <a asp-action="ExportarExcel" class="btn btn-outline-success">
-            <i class="bi bi-file-earmark-excel me-1"></i> Descargar Excel
-        </a>
-        <a asp-action="Create" class="btn btn-primary">
-            <i class="bi bi-plus-circle me-1"></i> Nuevo Cargo
-        </a>
+        @if (User.HasClaim("permiso", "Cargo.Exportar"))
+        {
+            <a asp-action="ExportarExcel" class="btn btn-outline-success">
+                <i class="bi bi-file-earmark-excel me-1"></i> Descargar Excel
+            </a>
+        }
+        @if (User.HasClaim("permiso", "Cargo.Crear"))
+        {
+            <a asp-action="Create" class="btn btn-primary">
+                <i class="bi bi-plus-circle me-1"></i> Nuevo Cargo
+            </a>
+        }
     </div>
 </div>
 
@@ -68,15 +74,24 @@
                             <td>@(cargo.LastDate.HasValue ? cargo.LastDate.Value.ToString("dd/MM/yyyy HH:mm") : "—")</td>
                             <td>
                                 <div class="d-flex justify-content-center gap-1">
-                                    <a asp-action="Details" asp-route-id="@cargo.IdCargo" class="table-btn-action" title="Ver detalle">
-                                        <i class="bi bi-eye"></i>
-                                    </a>
-                                    <a asp-action="Edit" asp-route-id="@cargo.IdCargo" class="table-btn-action" title="Editar">
-                                        <i class="bi bi-pencil"></i>
-                                    </a>
-                                    <a asp-action="Delete" asp-route-id="@cargo.IdCargo" class="table-btn-action delete" title="Eliminar">
-                                        <i class="bi bi-trash"></i>
-                                    </a>
+                                    @if (User.HasClaim("permiso", "Cargo.Ver"))
+                                    {
+                                        <a asp-action="Details" asp-route-id="@cargo.IdCargo" class="table-btn-action" title="Ver detalle">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                    }
+                                    @if (User.HasClaim("permiso", "Cargo.Editar"))
+                                    {
+                                        <a asp-action="Edit" asp-route-id="@cargo.IdCargo" class="table-btn-action" title="Editar">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                    }
+                                    @if (User.HasClaim("permiso", "Cargo.Eliminar"))
+                                    {
+                                        <a asp-action="Delete" asp-route-id="@cargo.IdCargo" class="table-btn-action delete" title="Eliminar">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
+                                    }
                                 </div>
                             </td>
                         </tr>

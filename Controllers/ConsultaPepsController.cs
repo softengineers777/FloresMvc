@@ -5,13 +5,16 @@ using System.Linq;
 using System.Threading.Tasks;
 using ClosedXML.Excel;
 using FloresMvc.Extensions;
+using FloresMvc.Filters;
 using FloresMvc.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace FloresMvc.Controllers
 {
+    [Authorize]
     public class ConsultaPepsController : Controller
     {
         private readonly FloresDbContext _context;
@@ -23,6 +26,7 @@ namespace FloresMvc.Controllers
             _configuration = configuration;
         }
 
+        [Permiso("ConsultaPeps.Ver")]
         public async Task<IActionResult> Index()
         {
             var items = await _context.ConsultaPeps
@@ -35,6 +39,7 @@ namespace FloresMvc.Controllers
         }
 
         [HttpGet]
+        [Permiso("ConsultaPeps.Exportar")]
         public async Task<IActionResult> ExportarExcel()
         {
             var items = await _context.ConsultaPeps
@@ -82,6 +87,7 @@ namespace FloresMvc.Controllers
             return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", $"ConsultasPeps_{DateTime.Now:yyyyMMdd_HHmm}.xlsx");
         }
 
+        [Permiso("ConsultaPeps.Ver")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null) return NotFound();
@@ -95,6 +101,7 @@ namespace FloresMvc.Controllers
         }
 
         [HttpGet]
+        [Permiso("ConsultaPeps.Documento")]
         public async Task<IActionResult> Documento(int? id)
         {
             if (id == null) return NotFound();
@@ -108,6 +115,7 @@ namespace FloresMvc.Controllers
         }
 
         [HttpGet]
+        [Permiso("ConsultaPeps.Crear")]
         public async Task<IActionResult> Create()
         {
             await CargarListasAsync();
@@ -116,6 +124,7 @@ namespace FloresMvc.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Permiso("ConsultaPeps.Crear")]
         public async Task<IActionResult> Create([Bind("IdConsulta,IdUsuario,Cedula,IdCargo,IdArea,EsPep,Firma")] ConsultaPeps consulta)
         {
             ValidarConsulta(consulta);
@@ -140,6 +149,7 @@ namespace FloresMvc.Controllers
         }
 
         [HttpGet]
+        [Permiso("ConsultaPeps.Editar")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null) return NotFound();
@@ -153,6 +163,7 @@ namespace FloresMvc.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Permiso("ConsultaPeps.Editar")]
         public async Task<IActionResult> Edit(int id, [Bind("IdConsulta,IdUsuario,Cedula,IdCargo,IdArea,EsPep,Firma")] ConsultaPeps consulta)
         {
             if (id != consulta.IdConsulta) return NotFound();
@@ -192,6 +203,7 @@ namespace FloresMvc.Controllers
         }
 
         [HttpGet, ActionName("Delete")]
+        [Permiso("ConsultaPeps.Eliminar")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null) return NotFound();
@@ -206,6 +218,7 @@ namespace FloresMvc.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Permiso("ConsultaPeps.Eliminar")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var item = await _context.ConsultaPeps.FindAsync(id);

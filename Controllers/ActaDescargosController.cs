@@ -8,11 +8,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using FloresMvc.Extensions;
+using FloresMvc.Filters;
 using FloresMvc.Models;
 using Microsoft.AspNetCore.Authorization;
 
 namespace FloresMvc.Controllers
 {
+    [Authorize]
     public class ActaDescargosController : Controller
     {
         private readonly IConfiguration _configuration;
@@ -23,7 +25,7 @@ namespace FloresMvc.Controllers
             _context = context;
             _configuration = configuration;
         }
-        [Authorize(Roles = "Administrador")]
+        [Permiso("ActaDescargos.Ver")]
         public async Task<IActionResult> Index()
         {
             var items = await _context.ActaDescargos
@@ -40,6 +42,7 @@ namespace FloresMvc.Controllers
         }
 
         [HttpGet]
+        [Permiso("ActaDescargos.Exportar")]
         public async Task<IActionResult> ExportarExcel()
         {
             var items = await _context.ActaDescargos
@@ -146,6 +149,7 @@ namespace FloresMvc.Controllers
             return File(content, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
         }
 
+        [Permiso("ActaDescargos.Ver")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null) return NotFound();
@@ -161,6 +165,7 @@ namespace FloresMvc.Controllers
         }
 
         [HttpGet]
+        [Permiso("ActaDescargos.Documento")]
         public async Task<IActionResult> Documento(int? id)
         {
             if (id == null) return NotFound();
@@ -176,6 +181,7 @@ namespace FloresMvc.Controllers
         }
 
         [HttpGet]
+        [Permiso("ActaDescargos.Crear")]
         public async Task<IActionResult> Create()
         {
             var model = new ActaDescargosViewModel
@@ -190,6 +196,7 @@ namespace FloresMvc.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Permiso("ActaDescargos.Crear")]
         public async Task<IActionResult> Create(ActaDescargosViewModel model)
         {
             ModelState.Remove(nameof(ActaDescargosViewModel.fecha_Creacion));
@@ -255,6 +262,7 @@ namespace FloresMvc.Controllers
         }
 
         [HttpGet]
+        [Permiso("ActaDescargos.Editar")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null) return NotFound();
@@ -274,6 +282,7 @@ namespace FloresMvc.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Permiso("ActaDescargos.Editar")]
         public async Task<IActionResult> Edit(int id, ActaDescargosViewModel model)
         {
             if (id != model.IdActa) return NotFound();
@@ -360,6 +369,7 @@ namespace FloresMvc.Controllers
         }
 
         [HttpGet, ActionName("Delete")]
+        [Permiso("ActaDescargos.Eliminar")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null) return NotFound();
@@ -376,6 +386,7 @@ namespace FloresMvc.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Permiso("ActaDescargos.Eliminar")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var acta = await _context.ActaDescargos

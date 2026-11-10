@@ -4,14 +4,17 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using ClosedXML.Excel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using FloresMvc.Extensions;
+using FloresMvc.Filters;
 using FloresMvc.Models;
 
 namespace FloresMvc.Controllers
 {
+    [Authorize]
     public class RemisionesController : Controller
     {
         private readonly FloresDbContext _context;
@@ -24,12 +27,14 @@ namespace FloresMvc.Controllers
         }
 
         // GET: Remisiones
+        [Permiso("Remisiones.Ver")]
         public IActionResult Index()
         {
             return View();
         }
 
         [HttpGet]
+        [Permiso("Remisiones.Exportar")]
         public async Task<IActionResult> ExportarExcel()
         {
             var remisiones = await _context.Remisiones
@@ -93,6 +98,7 @@ namespace FloresMvc.Controllers
         // Datos para Tabulator. Se proyecta solo lo que necesita el index
         // para evitar cargar el detalle completo de cada remisión.
         [HttpGet]
+        [Permiso("Remisiones.Ver")]
         public async Task<IActionResult> GetRemisionesJson()
         {
             var remisiones = await _context.Remisiones
@@ -115,6 +121,7 @@ namespace FloresMvc.Controllers
         }
 
         // GET: Remisiones/Details/5
+        [Permiso("Remisiones.Ver")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -138,6 +145,7 @@ namespace FloresMvc.Controllers
 
         // GET: Remisiones/Create
         [HttpGet]
+        [Permiso("Remisiones.Crear")]
         public async Task<IActionResult> Create()
         {
             var model = new RemisionViewModel();
@@ -149,6 +157,7 @@ namespace FloresMvc.Controllers
         // POST: Remisiones/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Permiso("Remisiones.Crear")]
         public async Task<IActionResult> Create(RemisionViewModel model)
         {
             var detalles = ValidarDetalles(model.Detalles);
@@ -208,6 +217,7 @@ namespace FloresMvc.Controllers
 
         // GET: Remisiones/Edit/5
         [HttpGet]
+        [Permiso("Remisiones.Editar")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -237,6 +247,7 @@ namespace FloresMvc.Controllers
         // POST: Remisiones/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Permiso("Remisiones.Editar")]
         public async Task<IActionResult> Edit(int id, RemisionViewModel model)
         {
             if (id != model.IdRemision)
@@ -326,6 +337,7 @@ namespace FloresMvc.Controllers
 
         // GET: Remisiones/Delete/5
         [HttpGet, ActionName("Delete")]
+        [Permiso("Remisiones.Eliminar")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -350,6 +362,7 @@ namespace FloresMvc.Controllers
         // POST: Remisiones/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Permiso("Remisiones.Eliminar")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var remision = await _context.Remisiones

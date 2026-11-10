@@ -3,14 +3,17 @@ using System.Data;
 using System.IO;
 using System.Threading.Tasks;
 using ClosedXML.Excel;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using FloresMvc.Extensions;
+using FloresMvc.Filters;
 using FloresMvc.Models;
 
 
 namespace FloresMvc.Controllers
 {
+    [Authorize]
     public class SubCategoriasController : Controller
     {
         private readonly FloresDbContext _context;
@@ -22,12 +25,14 @@ namespace FloresMvc.Controllers
             _configuration = configuration;
         }
 
+        [Permiso("SubCategorias.Ver")]
         public async Task<IActionResult> Index()
         {
             return View(await _context.SubCategorias.ToListAsync());
         }
 
         [HttpGet]
+        [Permiso("SubCategorias.Exportar")]
         public async Task<IActionResult> ExportarExcel()
         {
             var items = await _context.SubCategorias.AsNoTracking().OrderBy(s => s.IdSubcategoria).ToListAsync();
@@ -65,6 +70,7 @@ namespace FloresMvc.Controllers
             return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", $"SubCategorias_{DateTime.Now:yyyyMMdd_HHmm}.xlsx");
         }
 
+        [Permiso("SubCategorias.Ver")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.SubCategorias == null)
@@ -81,6 +87,7 @@ namespace FloresMvc.Controllers
         }
 
         [HttpGet]
+        [Permiso("SubCategorias.Crear")]
         public IActionResult Create()
         {
             return View();
@@ -88,6 +95,7 @@ namespace FloresMvc.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Permiso("SubCategorias.Crear")]
         public async Task<IActionResult> Create([Bind("IdSubcategoria,NomSubcategoria,fecha_Creacion")] SubCategorias subcategorias)
         {
             if (ModelState.IsValid)
@@ -103,6 +111,7 @@ namespace FloresMvc.Controllers
         }
 
         [HttpGet]
+        [Permiso("SubCategorias.Editar")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -119,6 +128,7 @@ namespace FloresMvc.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Permiso("SubCategorias.Editar")]
         public async Task<IActionResult> Edit(int id, [Bind("IdSubcategoria,NomSubcategoria,fecha_Creacion")] SubCategorias subcategorias)
         {
             if (id != subcategorias.IdSubcategoria)
@@ -162,6 +172,7 @@ namespace FloresMvc.Controllers
         }
 
         [HttpGet, ActionName("Delete")]
+        [Permiso("SubCategorias.Eliminar")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -179,6 +190,7 @@ namespace FloresMvc.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Permiso("SubCategorias.Eliminar")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var subcategorias = await _context.SubCategorias.FindAsync(id);

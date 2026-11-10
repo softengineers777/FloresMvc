@@ -95,18 +95,24 @@
                         <i class="bi bi-chevron-down dropdown-caret"></i>
                     </a>
                     <ul class="sidebar-submenu collapse @submenuAdministracionAbierto" id="submenu-administracion">
+                        @if (User.HasClaim("permiso", "Roles.Ver"))
+                        {
                         <li class="sidebar-menu-item">
                             <a href="/Roles/Index" class="sidebar-submenu-link @rolesActivo" id="menu-roles" title="Roles">
                                 <i class="bi bi-input-cursor-text"></i>
                                 <span>Roles</span>
                             </a>
                         </li>
+                        }
+                        @if (User.HasClaim("permiso", "Usuarios.Ver"))
+                        {
                         <li class="sidebar-menu-item">
                             <a href="/Usuarios/Index" class="sidebar-submenu-link @usuariosActivo" id="menu-usuarios" title="Usuarios">
                                 <i class="bi bi-table"></i>
                                 <span>Usuarios</span>
                             </a>
                         </li>
+                        }
                     </ul>
                 </li>
 
@@ -120,6 +126,8 @@
                         <i class="bi bi-chevron-down dropdown-caret"></i>
                     </a>
                     <ul class="sidebar-submenu collapse @submenuParametricasAbierto" id="submenu-parametricas">
+                        @if (User.HasClaim("permiso", "Categoria.Ver"))
+                        {
                         <li>
                             <a href="/Categorias/Index" class="sidebar-submenu-link @categoriasActivo"
                                id="menu-categorias" title="Categorías">
@@ -127,6 +135,9 @@
                                 <span>Categorías</span>
                             </a>
                         </li>
+                        }
+                        @if (User.HasClaim("permiso", "SubCategorias.Ver"))
+                        {
                         <li>
                             <a href="/SubCategorias/Index" class="sidebar-submenu-link @subCategoriasActivo"
                                id="menu-subcategorias" title="SubCategorías">
@@ -134,6 +145,9 @@
                                 <span>SubCategorías</span>
                             </a>
                         </li>
+                        }
+                        @if (User.HasClaim("permiso", "Areas.Ver"))
+                        {
                         <li>
                             <a href="/Areas/Index" class="sidebar-submenu-link @areasActivo" id="menu-areas"
                                title="Áreas">
@@ -141,6 +155,9 @@
                                 <span>Áreas</span>
                             </a>
                         </li>
+                        }
+                        @if (User.HasClaim("permiso", "Fincas.Ver"))
+                        {
                         <li>
                             <a href="/Fincas/Index" class="sidebar-submenu-link @fincasActivo" id="menu-fincas"
                                title="Fincas">
@@ -148,6 +165,9 @@
                                 <span>Fincas</span>
                             </a>
                         </li>
+                        }
+                        @if (User.HasClaim("permiso", "Cargo.Ver"))
+                        {
                         <li>
                             <a href="/Cargo/Index" class="sidebar-submenu-link @cargoActivo" id="menu-cargo"
                                title="Cargos">
@@ -155,6 +175,9 @@
                                 <span>Cargos</span>
                             </a>
                         </li>
+                        }
+                        @if (User.HasClaim("permiso", "Sucursal.Ver"))
+                        {
                         <li>
                             <a href="/Sucursal/Index" class="sidebar-submenu-link @sucursalActivo" id="menu-sucursal"
                                title="Sucursales">
@@ -162,6 +185,7 @@
                                 <span>Sucursales</span>
                             </a>
                         </li>
+                        }
                     </ul>
                 </li>
                 <li class="sidebar-menu-item">
@@ -173,6 +197,8 @@
                         <i class="bi bi-chevron-down dropdown-caret"></i>
                     </a>
                     <ul class="sidebar-submenu collapse @submenuMantenimientoAbierto" id="submenu-mantenimiento">
+                        @if (User.HasClaim("permiso", "Remisiones.Ver"))
+                        {
                         <li>
                             <a href="/Remisiones/Index" class="sidebar-submenu-link @remisionesActivo"
                                id="menu-remisiones" title="Remisiones">
@@ -180,6 +206,7 @@
                                 <span>Remisiones</span>
                             </a>
                         </li>
+                        }
                     </ul>
                 </li>
                 <li class="sidebar-menu-item">
@@ -191,6 +218,8 @@
                         <i class="bi bi-chevron-down dropdown-caret"></i>
                     </a>
                     <ul class="sidebar-submenu collapse @submenuGhAbierto" id="submenu-gestion-humana">
+                        @if (User.HasClaim("permiso", "ModeloDisciplinario.Ver"))
+                        {
                         <li>
                             <a href="/ModeloDisciplinario/Index" class="sidebar-submenu-link @subModeloDisActivo"
                                id="menu-modelo-disciplinario" title="Manejo Disciplinario">
@@ -198,6 +227,9 @@
                                 <span>Manejo Disciplinario</span>
                             </a>
                         </li>
+                        }
+                        @if (User.HasClaim("permiso", "CitacionDescargas.Ver"))
+                        {
                         <li>
                             <a href="/CitacionDescargas/Index" class="sidebar-submenu-link @subCitActivo"
                                id="menu-citacion-descargas" title="Citación Descargos">
@@ -205,6 +237,9 @@
                                 <span>Citación Descargos</span>
                             </a>
                         </li>
+                        }
+                        @if (User.HasClaim("permiso", "ActaDescargos.Ver"))
+                        {
                         <li>
                             <a href="/ActaDescargos/Index" class="sidebar-submenu-link @subActaActivo"
                                id="menu-acta-descargos" title="Acta Descargos">
@@ -212,6 +247,7 @@
                                 <span>Acta Descargos</span>
                             </a>
                         </li>
+                        }
                     </ul>
                 </li>
                 <li class="sidebar-menu-item">
@@ -223,6 +259,8 @@
                         <i class="bi bi-chevron-down dropdown-caret"></i>
                     </a>
                     <ul class="sidebar-submenu collapse @submenuPsicologiaAbierto" id="submenu-psicologia">
+                        @if (User.HasClaim("permiso", "ConsultaPeps.Ver"))
+                        {
                         <li>
                             <a href="/ConsultaPeps/Index" class="sidebar-submenu-link @consultaPepsActivo"
                                id="menu-consulta-peps" title="Consultas PEPS">
@@ -230,6 +268,7 @@
                                 <span>Consultas PEPS</span>
                             </a>
                         </li>
+                        }
                     </ul>
                 </li>
                 <li class="sidebar-menu-item">
