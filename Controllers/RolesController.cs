@@ -1,15 +1,20 @@
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.IO;
+using System.Linq;
 using ClosedXML.Excel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using FloresMvc.Controllers;
 using FloresMvc.Extensions;
+using FloresMvc.Filters;
 using FloresMvc.Models;
 
 namespace FloresMvc.Controllers
 {
+    [Authorize]
     public class RolesController : Controller
     {
         private readonly FloresDbContext _context;
@@ -20,12 +25,14 @@ namespace FloresMvc.Controllers
             _context = context;
             _configuration = configuration;
         }
-                public async Task<IActionResult> Index()
+        [Permiso("Roles.Ver")]
+        public async Task<IActionResult> Index()
         {
             return View(await _context.Roles.ToListAsync());
         }
 
         [HttpGet]
+        [Permiso("Roles.Exportar")]
         public async Task<IActionResult> ExportarExcel()
         {
             var items = await _context.Roles.AsNoTracking().OrderBy(r => r.IdRol).ToListAsync();
@@ -62,12 +69,14 @@ namespace FloresMvc.Controllers
             workbook.SaveAs(stream);
             return File(stream.ToArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", $"Roles_{DateTime.Now:yyyyMMdd_HHmm}.xlsx");
         }
-         public async Task<IActionResult> GetRolesJson()
+        [Permiso("Roles.Ver")]
+        public async Task<IActionResult> GetRolesJson()
         {
             var roles = await _context.Roles.ToListAsync();
             return Json(roles);
         }
         [HttpPost]
+        [Permiso("Roles.Editar")]
         public async Task<IActionResult> ActualizarCelda([FromBody] Roles rolModificado)
         {
             if (rolModificado == null)
@@ -99,6 +108,7 @@ namespace FloresMvc.Controllers
                 lastDate = rolDb.LastDate
             });
         }
+        [Permiso("Roles.Ver")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.Roles == null)
@@ -114,12 +124,14 @@ namespace FloresMvc.Controllers
             return View(Roles);
         }
         [HttpGet]
+        [Permiso("Roles.Crear")]
         public IActionResult Create()
         {
             return View();
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Permiso("Roles.Crear")]
         public async Task<IActionResult> Create([Bind("IdRol,Nombre")] Roles roles)
         {
             if (ModelState.IsValid)
@@ -135,6 +147,7 @@ namespace FloresMvc.Controllers
         }
 
         [HttpPost]
+        [Permiso("Roles.Crear")]
         public async Task<IActionResult> CreateAjax([FromBody] Roles rol)
         {
             if (rol == null)
@@ -164,7 +177,8 @@ namespace FloresMvc.Controllers
             });
         }
 
-                [HttpGet]
+        [HttpGet]
+        [Permiso("Roles.Editar")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -181,6 +195,7 @@ namespace FloresMvc.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Permiso("Roles.Editar")]
         public async Task<IActionResult> Edit(int id, [Bind("IdRol,Nombre")] Roles roles)
         {
             if (id != roles.IdRol)
@@ -224,6 +239,7 @@ namespace FloresMvc.Controllers
         }
 
         [HttpGet, ActionName("Delete")]
+        [Permiso("Roles.Eliminar")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -240,6 +256,7 @@ namespace FloresMvc.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Permiso("Roles.Eliminar")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var roles = await _context.Roles.FindAsync(id);
@@ -250,6 +267,81 @@ namespace FloresMvc.Controllers
             _context.Roles.Remove(roles);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+
+        [HttpGet]
+        [Permiso("Roles.Gestionar")]
+        public async Task<IActionResult> Permisos(int id)
+        {
+            var rol = await _context.Roles.AsNoTracking().FirstOrDefaultAsync(r => r.IdRol == id);
+            if (rol == null)
+            {
+                return NotFound();
+            }
+
+            var permisos = await _context.Permisos
+                .AsNoTracking()
+                .OrderBy(p => p.Modulo)
+                .ThenBy(p => p.Clave)
+                .ToListAsync();
+
+            var asignados = await _context.RolPermisos
+                .AsNoTracking()
+                .Where(rp => rp.IdRol == id)
+                .Select(rp => rp.IdPermiso)
+                .ToListAsync();
+
+            ViewBag.Rol = rol;
+            ViewBag.Asignados = new HashSet<int>(asignados);
+
+            return View(permisos);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Permiso("Roles.Gestionar")]
+        public async Task<IActionResult> Permisos(int id, int[]? permisosSeleccionados)
+        {
+            var rolExiste = await _context.Roles.AnyAsync(r => r.IdRol == id);
+            if (!rolExiste)
+            {
+                return NotFound();
+            }
+
+            await using var tx = await _context.Database.BeginTransactionAsync();
+
+            var actuales = await _context.RolPermisos
+                .Where(rp => rp.IdRol == id)
+                .ToListAsync();
+
+            if (actuales.Count > 0)
+            {
+                _context.RolPermisos.RemoveRange(actuales);
+            }
+
+            if (permisosSeleccionados != null && permisosSeleccionados.Length > 0)
+            {
+                var idsValidos = await _context.Permisos
+                    .Where(p => permisosSeleccionados.Contains(p.IdPermiso))
+                    .Select(p => p.IdPermiso)
+                    .ToListAsync();
+
+                foreach (var idPermiso in idsValidos.Distinct())
+                {
+                    _context.RolPermisos.Add(new RolPermiso
+                    {
+                        IdRol = id,
+                        IdPermiso = idPermiso
+                    });
+                }
+            }
+
+            await _context.SaveChangesAsync();
+            await tx.CommitAsync();
+
+            TempData["Success"] = "Permisos actualizados correctamente. Los usuarios con este rol verán los cambios al iniciar sesión nuevamente.";
+
+            return RedirectToAction(nameof(Permisos), new { id });
         }
     }
 }

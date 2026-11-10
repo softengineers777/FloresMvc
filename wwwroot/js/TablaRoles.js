@@ -56,6 +56,17 @@ document.addEventListener("DOMContentLoaded", function () {
                 formatter: function (cell) {
                     return formatearFecha(cell.getValue());
                 }
+            },
+            {
+                title: "Acciones",
+                field: "idRol",
+                hozAlign: "center",
+                headerSort: false,
+                width: 140,
+                formatter: function (cell) {
+                    var id = cell.getValue();
+                    return '<a class="btn btn-sm btn-outline-primary" href="/Roles/Permisos/' + id + '" title="Gestionar permisos"><i class="bi bi-shield-lock"></i> Permisos</a>';
+                }
             }
         ],
     });

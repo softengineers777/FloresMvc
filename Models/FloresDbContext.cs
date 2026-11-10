@@ -38,6 +38,8 @@ namespace FloresMvc.Models
       public DbSet<Colaborador>Colaborador {get; set;}
       public DbSet<ConsultaPeps> ConsultaPeps { get; set; }
       public DbSet<PasswordResetToken> PasswordResetTokens { get; set; }
+      public DbSet<Permiso> Permisos { get; set; }
+      public DbSet<RolPermiso> RolPermisos { get; set; }
 
 
 
@@ -374,6 +376,35 @@ namespace FloresMvc.Models
             entity.Property(t => t.CreatedAt).HasColumnName("CreatedAt").HasColumnType("timestamp without time zone");
             entity.HasIndex(t => t.TokenHash);
             entity.HasIndex(t => t.UserId);
+         });
+
+         modelBuilder.Entity<Permiso>(entity =>
+         {
+            entity.ToTable("Permisos");
+            entity.HasKey(p => p.IdPermiso);
+            entity.Property(p => p.IdPermiso).HasColumnName("IdPermiso");
+            entity.Property(p => p.Clave).HasColumnName("Clave").HasMaxLength(100).IsRequired();
+            entity.Property(p => p.Modulo).HasColumnName("Modulo").HasMaxLength(50).IsRequired();
+            entity.Property(p => p.Descripcion).HasColumnName("Descripcion").HasMaxLength(200).IsRequired();
+            entity.HasIndex(p => p.Clave).IsUnique();
+         });
+
+         modelBuilder.Entity<RolPermiso>(entity =>
+         {
+            entity.ToTable("RolPermisos");
+            entity.HasKey(rp => new { rp.IdRol, rp.IdPermiso });
+            entity.Property(rp => rp.IdRol).HasColumnName("IdRol");
+            entity.Property(rp => rp.IdPermiso).HasColumnName("IdPermiso");
+
+            entity.HasOne(rp => rp.Rol)
+                  .WithMany()
+                  .HasForeignKey(rp => rp.IdRol)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(rp => rp.Permiso)
+                  .WithMany(p => p.RolPermisos)
+                  .HasForeignKey(rp => rp.IdPermiso)
+                  .OnDelete(DeleteBehavior.Cascade);
          });
 
       }

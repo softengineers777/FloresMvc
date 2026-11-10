@@ -1,0 +1,89 @@
+@model IEnumerable<FloresMvc.Models.Permiso>
+@using System.Linq
+@{
+    var rol = ViewBag.Rol as FloresMvc.Models.Roles;
+    var asignados = ViewBag.Asignados as HashSet<int> ?? new HashSet<int>();
+    ViewData["Title"] = rol != null ? $"Permisos - {rol.Nombre}" : "Permisos del rol";
+    var grupos = Model.GroupBy(p => p.Modulo).OrderBy(g => g.Key);
+}
+
+<div class="container-fluid mt-3">
+    <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+        <div>
+            <h2 class="mb-0">Permisos del rol: @(rol?.Nombre ?? "N/A")</h2>
+            <p class="text-muted mb-0">Selecciona los permisos que tendrá este rol. Los cambios aplican cuando el usuario vuelva a iniciar sesión.</p>
+        </div>
+        <a asp-action="Index" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Volver a roles
+        </a>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+        </div>
+    }
+
+    <form asp-action="Permisos" method="post">
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="id" value="@rol?.IdRol" />
+
+        <div class="mb-3 d-flex gap-2 flex-wrap">
+            <button type="submit" class="btn btn-primary">
+                <i class="bi bi-save"></i> Guardar permisos
+            </button>
+            <button type="button" class="btn btn-outline-secondary" id="btnMarcarTodos">Marcar todos</button>
+            <button type="button" class="btn btn-outline-secondary" id="btnDesmarcarTodos">Desmarcar todos</button>
+        </div>
+
+        <div class="row">
+            @foreach (var grupo in grupos)
+            {
+                <div class="col-12 col-lg-6 col-xl-4 mb-3">
+                    <div class="card h-100">
+                        <div class="card-header bg-light">
+                            <strong>@grupo.Key</strong>
+                        </div>
+                        <div class="card-body">
+                            @foreach (var permiso in grupo)
+                            {
+                                var isChecked = asignados.Contains(permiso.IdPermiso);
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input permiso-check" type="checkbox"
+                                           name="permisosSeleccionados"
+                                           value="@permiso.IdPermiso"
+                                           id="permiso_@permiso.IdPermiso"
+                                           @(isChecked ? "checked" : null) />
+                                    <label class="form-check-label" for="permiso_@permiso.IdPermiso">
+                                        <span class="fw-semibold">@permiso.Clave</span><br />
+                                        <small class="text-muted">@permiso.Descripcion</small>
+                                    </label>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div class="mt-2">
+            <button type="submit" class="btn btn-primary">
+                <i class="bi bi-save"></i> Guardar permisos
+            </button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var checks = function () { return document.querySelectorAll('.permiso-check'); };
+            var marcar = document.getElementById('btnMarcarTodos');
+            var desmarcar = document.getElementById('btnDesmarcarTodos');
+            if (marcar) marcar.addEventListener('click', function () { checks().forEach(function (c) { c.checked = true; }); });
+            if (desmarcar) desmarcar.addEventListener('click', function () { checks().forEach(function (c) { c.checked = false; }); });
+        });
+    </script>
+}

@@ -100,14 +100,33 @@ namespace FloresMvc.Controllers
             _context.Update(loginRecord);
             await _context.SaveChangesAsync();
 
-            // Creamos la sesión del usuario con sus datos básicos
+            // Creamos la sesión del usuario con sus datos básicos y permisos del rol
+            var rol = await _context.Roles
+                .AsNoTracking()
+                .FirstOrDefaultAsync(r => r.IdRol == usuario.IdRol);
+
+            var permisos = await _context.RolPermisos
+                .AsNoTracking()
+                .Where(rp => rp.IdRol == usuario.IdRol)
+                .Select(rp => rp.Permiso!.Clave)
+                .Distinct()
+                .ToListAsync();
+
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, usuario.IdUsuarios.ToString()),
                 new Claim(ClaimTypes.Name, $"{usuario.Nombre} {usuario.Apellido}".Trim()),
-                new Claim(ClaimTypes.Email, usuario.email),
-                new Claim(ClaimTypes.Role, usuario.IdRol.ToString())
+                new Claim(ClaimTypes.Email, usuario.email ?? string.Empty),
+                new Claim(ClaimTypes.Role, rol?.Nombre ?? "SinRol")
             };
+
+            foreach (var clave in permisos)
+            {
+                if (!string.IsNullOrWhiteSpace(clave))
+                {
+                    claims.Add(new Claim("permiso", clave));
+                }
+            }
 
             var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 
