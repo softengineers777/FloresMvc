@@ -49,10 +49,11 @@
     //***************Fin Menu Gestion Humana (GH)*****************************
 
     //***************Inicio Menu Psicologia***************************
-    var enPsicologia = EsControlador("ConsultaPeps");
+    var enPsicologia = EsControlador("ConsultaPeps") || EsControlador("DeclaracionConflictoInteres");
     var psicologiaExpandido = enPsicologia ? "true" : "false";
     var submenuPsicologiaAbierto = enPsicologia ? "show" : "";
     var consultaPepsActivo = EsControlador("ConsultaPeps") ? "active" : "";
+    var declaracionConflictoActivo = EsControlador("DeclaracionConflictoInteres") ? "active" : "";
     //***************Fin Menu Psicologia******************************
 
 }
@@ -269,6 +270,13 @@
                             </a>
                         </li>
                         }
+                        <li>
+                            <a href="/DeclaracionConflictoInteres/Index" class="sidebar-submenu-link @declaracionConflictoActivo"
+                               id="menu-declaracion-conflicto" title="Declaración Conflicto de Interés">
+                                <i class="bi bi-file-earmark-person"></i>
+                                <span>Declaración Conflicto de Interés</span>
+                            </a>
+                        </li>
                     </ul>
                 </li>
                 <li class="sidebar-menu-item">

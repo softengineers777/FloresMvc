@@ -40,6 +40,9 @@ namespace FloresMvc.Models
       public DbSet<PasswordResetToken> PasswordResetTokens { get; set; }
       public DbSet<Permiso> Permisos { get; set; }
       public DbSet<RolPermiso> RolPermisos { get; set; }
+      public DbSet<PreguntasConflictoInteres> PreguntasConflictoInteres { get; set; }
+      public DbSet<DeclaracionConflictoInteres> DeclaracionConflictoInteres { get; set; }
+      public DbSet<DeclaracionConflictoInteresPreguntas> DeclaracionConflictoInteresPreguntas { get; set; }
 
 
 
@@ -405,6 +408,73 @@ namespace FloresMvc.Models
                   .WithMany(p => p.RolPermisos)
                   .HasForeignKey(rp => rp.IdPermiso)
                   .OnDelete(DeleteBehavior.Cascade);
+         });
+
+         modelBuilder.Entity<PreguntasConflictoInteres>(entity =>
+         {
+            entity.ToTable("PreguntasConflictoInteres");
+            entity.HasKey(p => p.IdPregunta);
+            entity.Property(p => p.IdPregunta).HasColumnName("IdPregunta");
+            entity.Property(p => p.Codigo).HasColumnName("Codigo").HasMaxLength(50).IsRequired();
+            entity.Property(p => p.Descripcion).HasColumnName("Descripcion").HasColumnType("text").IsRequired();
+            entity.Property(p => p.Activo).HasColumnName("Activo").HasDefaultValue(true);
+            entity.HasIndex(p => p.Codigo).IsUnique();
+         });
+
+         modelBuilder.Entity<DeclaracionConflictoInteres>(entity =>
+         {
+            entity.ToTable("DeclaracionConflictoInteres");
+            entity.HasKey(d => d.IdDeclaracion);
+            entity.Property(d => d.IdDeclaracion).HasColumnName("IdDeclaracion");
+            entity.Property(d => d.IdUsuario).HasColumnName("IdUsuario");
+            entity.Property(d => d.TipoDoc).HasColumnName("TipoDoc").HasMaxLength(10).HasDefaultValue("CC");
+            entity.Property(d => d.NumeroDocumento).HasColumnName("NumeroDocumento").HasMaxLength(50).IsRequired();
+            entity.Property(d => d.IdCargo).HasColumnName("IdCargo");
+            entity.Property(d => d.IdArea).HasColumnName("IdArea");
+            entity.Property(d => d.FechaDeclaracion).HasColumnName("FechaDeclaracion").HasColumnType("date");
+            entity.Property(d => d.NombreFamiliar).HasColumnName("NombreFamiliar").HasMaxLength(150);
+            entity.Property(d => d.CargoFamiliar).HasColumnName("CargoFamiliar").HasMaxLength(150);
+            entity.Property(d => d.AreaFamiliar).HasColumnName("AreaFamiliar").HasMaxLength(150);
+            entity.Property(d => d.Observaciones).HasColumnName("Observaciones").HasColumnType("text");
+            entity.Property(d => d.Owner).HasColumnName("Owner").HasMaxLength(30);
+            entity.Property(d => d.DateOwner).HasColumnName("DateOwner").HasColumnType("timestamp without time zone");
+            entity.Property(d => d.LastModify).HasColumnName("LastModify").HasMaxLength(30);
+            entity.Property(d => d.LastDate).HasColumnName("LastDate").HasColumnType("timestamp without time zone");
+
+            entity.HasOne(d => d.Usuario)
+                  .WithMany()
+                  .HasForeignKey(d => d.IdUsuario)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(d => d.Cargo)
+                  .WithMany()
+                  .HasForeignKey(d => d.IdCargo)
+                  .OnDelete(DeleteBehavior.SetNull);
+
+            entity.HasOne(d => d.Area)
+                  .WithMany()
+                  .HasForeignKey(d => d.IdArea)
+                  .OnDelete(DeleteBehavior.SetNull);
+         });
+
+         modelBuilder.Entity<DeclaracionConflictoInteresPreguntas>(entity =>
+         {
+            entity.ToTable("DeclaracionConflictoInteresPreguntas");
+            entity.HasKey(dp => dp.IdDeclaracionPregunta);
+            entity.Property(dp => dp.IdDeclaracionPregunta).HasColumnName("IdDeclaracionPregunta");
+            entity.Property(dp => dp.IdDeclaracion).HasColumnName("IdDeclaracion");
+            entity.Property(dp => dp.IdPregunta).HasColumnName("IdPregunta");
+            entity.Property(dp => dp.Aplica).HasColumnName("Aplica").HasDefaultValue(false);
+
+            entity.HasOne(dp => dp.Declaracion)
+                  .WithMany(d => d.Preguntas)
+                  .HasForeignKey(dp => dp.IdDeclaracion)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(dp => dp.Pregunta)
+                  .WithMany(p => p.DeclaracionesPreguntas)
+                  .HasForeignKey(dp => dp.IdPregunta)
+                  .OnDelete(DeleteBehavior.Restrict);
          });
 
       }

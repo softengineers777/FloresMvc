@@ -1,0 +1,110 @@
+@model FloresMvc.Models.DeclaracionConflictoInteresViewModel
+
+<div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+<div class="row g-3">
+    <div class="col-md-6">
+        <label asp-for="IdUsuario" class="form-label"></label>
+        <select asp-for="IdUsuario" asp-items="Model.Usuarios" class="form-select">
+            <option value="">Seleccione un usuario</option>
+        </select>
+        <span asp-validation-for="IdUsuario" class="text-danger"></span>
+    </div>
+    <div class="col-md-2">
+        <label asp-for="TipoDoc" class="form-label"></label>
+        <select asp-for="TipoDoc" class="form-select">
+            <option value="CC">CC</option>
+            <option value="CE">CE</option>
+            <option value="TI">TI</option>
+            <option value="PAS">PAS</option>
+            <option value="OTRO">OTRO</option>
+        </select>
+        <span asp-validation-for="TipoDoc" class="text-danger"></span>
+    </div>
+    <div class="col-md-4">
+        <label asp-for="NumeroDocumento" class="form-label"></label>
+        <input asp-for="NumeroDocumento" class="form-control" />
+        <span asp-validation-for="NumeroDocumento" class="text-danger"></span>
+    </div>
+
+    <div class="col-md-4">
+        <label asp-for="IdCargo" class="form-label"></label>
+        <select asp-for="IdCargo" asp-items="Model.Cargos" class="form-select">
+            <option value="">Seleccione un cargo</option>
+        </select>
+        <span asp-validation-for="IdCargo" class="text-danger"></span>
+    </div>
+    <div class="col-md-4">
+        <label asp-for="IdArea" class="form-label"></label>
+        <select asp-for="IdArea" asp-items="Model.Areas" class="form-select">
+            <option value="">Seleccione un área</option>
+        </select>
+        <span asp-validation-for="IdArea" class="text-danger"></span>
+    </div>
+    <div class="col-md-4">
+        <label asp-for="FechaDeclaracion" class="form-label"></label>
+        <input asp-for="FechaDeclaracion" type="date" class="form-control" />
+        <span asp-validation-for="FechaDeclaracion" class="text-danger"></span>
+    </div>
+</div>
+
+<hr class="my-4" />
+<h5 class="mb-3">Información de familiar (si aplica)</h5>
+<div class="row g-3">
+    <div class="col-md-4">
+        <label asp-for="NombreFamiliar" class="form-label"></label>
+        <input asp-for="NombreFamiliar" class="form-control" />
+        <span asp-validation-for="NombreFamiliar" class="text-danger"></span>
+    </div>
+    <div class="col-md-4">
+        <label asp-for="CargoFamiliar" class="form-label"></label>
+        <input asp-for="CargoFamiliar" class="form-control" />
+        <span asp-validation-for="CargoFamiliar" class="text-danger"></span>
+    </div>
+    <div class="col-md-4">
+        <label asp-for="AreaFamiliar" class="form-label"></label>
+        <input asp-for="AreaFamiliar" class="form-control" />
+        <span asp-validation-for="AreaFamiliar" class="text-danger"></span>
+    </div>
+    <div class="col-12">
+        <label asp-for="Observaciones" class="form-label"></label>
+        <textarea asp-for="Observaciones" class="form-control" rows="3"></textarea>
+        <span asp-validation-for="Observaciones" class="text-danger"></span>
+    </div>
+</div>
+
+<hr class="my-4" />
+<h5 class="mb-3">Situaciones de posible conflicto de interés</h5>
+<p class="text-muted">Marque las situaciones que apliquen en su caso.</p>
+
+<div class="table-responsive">
+    <table class="table table-bordered align-middle">
+        <thead class="table-light">
+            <tr>
+                <th style="width: 90px;">Aplica</th>
+                <th style="width: 220px;">Código</th>
+                <th>Descripción</th>
+            </tr>
+        </thead>
+        <tbody>
+        @for (var i = 0; i < Model.Preguntas.Count; i++)
+        {
+            <tr>
+                <td class="text-center">
+                    <input type="hidden" asp-for="Preguntas[i].IdDeclaracionPregunta" />
+                    <input type="hidden" asp-for="Preguntas[i].IdPregunta" />
+                    <input type="hidden" asp-for="Preguntas[i].Codigo" />
+                    <input type="hidden" asp-for="Preguntas[i].Descripcion" />
+                    <input class="form-check-input" asp-for="Preguntas[i].Aplica" />
+                </td>
+                <td><strong>@Model.Preguntas[i].Codigo</strong></td>
+                <td>@Model.Preguntas[i].Descripcion</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>
+@if (Model.Preguntas.Count == 0)
+{
+    <div class="alert alert-warning">No hay preguntas activas en el catálogo. Verifique la tabla <code>PreguntasConflictoInteres</code>.</div>
+}

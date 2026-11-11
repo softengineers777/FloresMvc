@@ -1,0 +1,37 @@
+@model FloresMvc.Models.DeclaracionConflictoInteres
+@{
+    ViewData["Title"] = "Eliminar Declaración de Conflicto de Interés";
+    var nombreUsuario = Model.Usuario != null ? $"{Model.Usuario.Nombre} {Model.Usuario.Apellido}".Trim() : Model.IdUsuario.ToString();
+}
+
+<div class="page-header mb-4">
+    <h1 class="page-title text-danger">Eliminar Declaración de Conflicto de Interés</h1>
+    <p class="page-subtitle mb-0">¿Está seguro de que desea eliminar este registro? Esta acción no se puede deshacer.</p>
+</div>
+
+<div class="card shadow-sm border-danger">
+    <div class="card-body">
+        <dl class="row mb-0">
+            <dt class="col-sm-3">Consecutivo</dt>
+            <dd class="col-sm-9">@Model.IdDeclaracion</dd>
+            <dt class="col-sm-3">Usuario</dt>
+            <dd class="col-sm-9">@nombreUsuario</dd>
+            <dt class="col-sm-3">Documento</dt>
+            <dd class="col-sm-9">@(Model.TipoDoc ?? "CC") @Model.NumeroDocumento</dd>
+            <dt class="col-sm-3">Fecha declaración</dt>
+            <dd class="col-sm-9">@Model.FechaDeclaracion.ToString("dd/MM/yyyy")</dd>
+            <dt class="col-sm-3">Cargo</dt>
+            <dd class="col-sm-9">@(Model.Cargo?.NomCargo ?? "—")</dd>
+            <dt class="col-sm-3">Área</dt>
+            <dd class="col-sm-9">@(Model.Area?.NomArea ?? "—")</dd>
+        </dl>
+    </div>
+    <div class="card-footer d-flex gap-2">
+        <form asp-action="Delete" method="post">
+            @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="IdDeclaracion" />
+            <button type="submit" class="btn btn-danger"><i class="bi bi-trash"></i> Eliminar</button>
+        </form>
+        <a asp-action="Index" class="btn btn-outline-secondary">Cancelar</a>
+    </div>
+</div>

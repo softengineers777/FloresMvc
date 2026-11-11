@@ -1,0 +1,27 @@
+@model FloresMvc.Models.DeclaracionConflictoInteresViewModel
+@{
+    ViewData["Title"] = "Editar Declaración de Conflicto de Interés";
+}
+
+<div class="page-header mb-4">
+    <h1 class="page-title">Editar Declaración de Conflicto de Interés</h1>
+    <p class="page-subtitle mb-0">Actualice la información y las situaciones que apliquen.</p>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <form asp-action="Edit" method="post">
+            @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="IdDeclaracion" />
+            <partial name="_FormFields" model="Model" />
+            <div class="mt-4 d-flex gap-2">
+                <button type="submit" class="btn btn-primary"><i class="bi bi-save me-1"></i> Guardar cambios</button>
+                <a asp-action="Index" class="btn btn-outline-secondary">Cancelar</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

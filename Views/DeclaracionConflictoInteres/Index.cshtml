@@ -1,0 +1,101 @@
+@model IEnumerable<FloresMvc.Models.DeclaracionConflictoInteres>
+@{
+    ViewData["Title"] = "Declaración de Conflicto de Interés";
+    var items = Model?.ToList() ?? new List<FloresMvc.Models.DeclaracionConflictoInteres>();
+}
+
+<div class="page-header d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+    <div>
+        <h1 class="page-title">Declaración de Conflicto de Interés</h1>
+        <p class="page-subtitle mb-0">Registro y consulta de declaraciones de conflicto de interés.</p>
+    </div>
+    <div class="d-flex flex-wrap gap-2">
+        <a asp-action="Create" class="btn btn-primary">
+            <i class="bi bi-plus-circle me-1"></i> Nueva Declaración
+        </a>
+    </div>
+</div>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["Success"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+    </div>
+}
+
+<div class="table-card-custom">
+    <div class="table-header-control">
+        <div class="table-search-box">
+            <i class="bi bi-search table-search-icon"></i>
+            <input type="text" id="declaraciones-search" class="table-search-input" placeholder="Buscar declaración...">
+        </div>
+        <div class="table-filter-group">
+            <span class="badge bg-light text-dark">
+                <i class="bi bi-collection me-1"></i> @items.Count registro(s)
+            </span>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table-custom" id="declaraciones-table" data-paginate data-page-size="10">
+            <thead>
+                <tr>
+                    <th style="width: 90px;">N.º</th>
+                    <th>Usuario</th>
+                    <th>Documento</th>
+                    <th>Cargo</th>
+                    <th>Área</th>
+                    <th>Fecha declaración</th>
+                    <th class="text-center" style="width: 180px;">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (items.Count == 0)
+                {
+                    <tr>
+                        <td colspan="7" class="text-center py-5 text-muted">
+                            <i class="bi bi-inbox d-block mb-2" style="font-size: 2rem;"></i>
+                            No hay declaraciones registradas todavía.
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    foreach (var item in items)
+                    {
+                        var nombreUsuario = item.Usuario != null ? $"{item.Usuario.Nombre} {item.Usuario.Apellido}".Trim() : item.IdUsuario.ToString();
+                        <tr>
+                            <td class="table-order-id">@item.IdDeclaracion</td>
+                            <td class="table-product-name">@nombreUsuario</td>
+                            <td>@(item.TipoDoc ?? "CC") @item.NumeroDocumento</td>
+                            <td>@(item.Cargo?.NomCargo ?? "—")</td>
+                            <td>@(item.Area?.NomArea ?? "—")</td>
+                            <td>@item.FechaDeclaracion.ToString("dd/MM/yyyy")</td>
+                            <td>
+                                <div class="d-flex justify-content-center gap-1">
+                                    <a asp-action="Details" asp-route-id="@item.IdDeclaracion" class="table-btn-action" title="Ver detalle">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                    <a asp-action="Documento" asp-route-id="@item.IdDeclaracion" class="table-btn-action" title="Documento / PDF" target="_blank">
+                                        <i class="bi bi-file-earmark-pdf"></i>
+                                    </a>
+                                    <a asp-action="Edit" asp-route-id="@item.IdDeclaracion" class="table-btn-action" title="Editar">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <a asp-action="Delete" asp-route-id="@item.IdDeclaracion" class="table-btn-action delete" title="Eliminar">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/assets/js/table-pagination.js"></script>
+}
