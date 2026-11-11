@@ -23,4 +23,49 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.1.7/dist/signature_pad.umd.min.js"></script>
+    <script>
+        (function () {
+            var canvas = document.getElementById('firma-pad');
+            var input = document.getElementById('Firma');
+            var clearBtn = document.getElementById('firma-clear');
+            if (!canvas || !input || typeof SignaturePad === 'undefined') return;
+
+            function resizeCanvas() {
+                var ratio = Math.max(window.devicePixelRatio || 1, 1);
+                var data = signaturePad && !signaturePad.isEmpty() ? signaturePad.toData() : null;
+                canvas.width = canvas.offsetWidth * ratio;
+                canvas.height = 180 * ratio;
+                canvas.getContext('2d').scale(ratio, ratio);
+                if (signaturePad) {
+                    signaturePad.clear();
+                    if (data) signaturePad.fromData(data);
+                }
+            }
+
+            var signaturePad = new SignaturePad(canvas, {
+                backgroundColor: 'rgb(255, 255, 255)',
+                penColor: 'rgb(20, 20, 20)'
+            });
+
+            window.addEventListener('resize', resizeCanvas);
+            resizeCanvas();
+
+            if (clearBtn) {
+                clearBtn.addEventListener('click', function () {
+                    signaturePad.clear();
+                    input.value = '';
+                });
+            }
+
+            var form = canvas.closest('form');
+            if (form) {
+                form.addEventListener('submit', function () {
+                    if (!signaturePad.isEmpty()) {
+                        input.value = signaturePad.toDataURL('image/png');
+                    }
+                });
+            }
+        })();
+    </script>
 }

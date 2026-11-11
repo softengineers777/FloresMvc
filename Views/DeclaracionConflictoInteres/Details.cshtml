@@ -34,6 +34,17 @@
             <div class="col-md-4"><strong>Cargo:</strong><br />@(Model.CargoFamiliar ?? "—")</div>
             <div class="col-md-4"><strong>Área:</strong><br />@(Model.AreaFamiliar ?? "—")</div>
             <div class="col-12"><strong>Observaciones:</strong><br />@(string.IsNullOrWhiteSpace(Model.Observaciones) ? "—" : Model.Observaciones)</div>
+            <div class="col-12">
+                <strong>Firma:</strong><br />
+                @if (!string.IsNullOrWhiteSpace(Model.Firma))
+                {
+                    <img src="@Model.Firma" alt="Firma" style="max-width: 320px; max-height: 140px; border: 1px solid #dee2e6; border-radius: 4px; background: #fff;" />
+                }
+                else
+                {
+                    <span>—</span>
+                }
+            </div>
         </div>
     </div>
 </div>

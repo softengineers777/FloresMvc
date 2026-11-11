@@ -436,6 +436,7 @@ namespace FloresMvc.Models
             entity.Property(d => d.CargoFamiliar).HasColumnName("CargoFamiliar").HasMaxLength(150);
             entity.Property(d => d.AreaFamiliar).HasColumnName("AreaFamiliar").HasMaxLength(150);
             entity.Property(d => d.Observaciones).HasColumnName("Observaciones").HasColumnType("text");
+            entity.Property(d => d.Firma).HasColumnName("Firma").HasColumnType("text").IsRequired(false);
             entity.Property(d => d.Owner).HasColumnName("Owner").HasMaxLength(30);
             entity.Property(d => d.DateOwner).HasColumnName("DateOwner").HasColumnType("timestamp without time zone");
             entity.Property(d => d.LastModify).HasColumnName("LastModify").HasMaxLength(30);

@@ -49,6 +49,10 @@ namespace FloresMvc.Models
         [Display(Name = "Observaciones")]
         public string? Observaciones { get; set; }
 
+        [Required(ErrorMessage = "La firma es obligatoria.")]
+        [Display(Name = "Firma")]
+        public string? Firma { get; set; }
+
         // Auditoría (solo lectura)
         public string? Owner { get; set; }
         public DateTime? DateOwner { get; set; }

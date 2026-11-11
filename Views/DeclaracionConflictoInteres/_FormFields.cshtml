@@ -71,6 +71,21 @@
         <textarea asp-for="Observaciones" class="form-control" rows="3"></textarea>
         <span asp-validation-for="Observaciones" class="text-danger"></span>
     </div>
+
+    <div class="col-12">
+        <label asp-for="Firma" class="form-label"></label>
+        <input type="hidden" asp-for="Firma" id="Firma" />
+        <div class="border rounded bg-white p-2" style="max-width: 520px;">
+            <canvas id="firma-pad" class="w-100" height="180" style="touch-action: none; display: block;"></canvas>
+        </div>
+        <div class="mt-2 d-flex gap-2">
+            <button type="button" class="btn btn-outline-secondary btn-sm" id="firma-clear">
+                <i class="bi bi-eraser me-1"></i> Limpiar firma
+            </button>
+        </div>
+        <div class="form-text">Dibuje la firma en el recuadro.</div>
+        <span asp-validation-for="Firma" class="text-danger"></span>
+    </div>
 </div>
 
 <hr class="my-4" />

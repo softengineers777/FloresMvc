@@ -24,6 +24,17 @@
             <dd class="col-sm-9">@(Model.Cargo?.NomCargo ?? "—")</dd>
             <dt class="col-sm-3">Área</dt>
             <dd class="col-sm-9">@(Model.Area?.NomArea ?? "—")</dd>
+            <dt class="col-sm-3">Firma</dt>
+            <dd class="col-sm-9">
+                @if (!string.IsNullOrWhiteSpace(Model.Firma))
+                {
+                    <img src="@Model.Firma" alt="Firma" style="max-width: 260px; max-height: 120px; border: 1px solid #dee2e6; border-radius: 4px; background: #fff;" />
+                }
+                else
+                {
+                    <span>—</span>
+                }
+            </dd>
         </dl>
     </div>
     <div class="card-footer d-flex gap-2">

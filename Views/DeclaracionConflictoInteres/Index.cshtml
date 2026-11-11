@@ -47,6 +47,10 @@
                     <th>Cargo</th>
                     <th>Área</th>
                     <th>Fecha declaración</th>
+                    <th>Creado por</th>
+                    <th>Fecha creación</th>
+                    <th>Modificado por</th>
+                    <th>Última modificación</th>
                     <th class="text-center" style="width: 180px;">Acciones</th>
                 </tr>
             </thead>
@@ -54,7 +58,7 @@
                 @if (items.Count == 0)
                 {
                     <tr>
-                        <td colspan="7" class="text-center py-5 text-muted">
+                        <td colspan="11" class="text-center py-5 text-muted">
                             <i class="bi bi-inbox d-block mb-2" style="font-size: 2rem;"></i>
                             No hay declaraciones registradas todavía.
                         </td>
@@ -72,6 +76,10 @@
                             <td>@(item.Cargo?.NomCargo ?? "—")</td>
                             <td>@(item.Area?.NomArea ?? "—")</td>
                             <td>@item.FechaDeclaracion.ToString("dd/MM/yyyy")</td>
+                            <td>@(string.IsNullOrWhiteSpace(item.Owner) ? "—" : item.Owner)</td>
+                            <td>@item.DateOwner.ToString("dd/MM/yyyy HH:mm")</td>
+                            <td>@(string.IsNullOrWhiteSpace(item.LastModify) ? "—" : item.LastModify)</td>
+                            <td>@(item.LastDate.HasValue ? item.LastDate.Value.ToString("dd/MM/yyyy HH:mm") : "—")</td>
                             <td>
                                 <div class="d-flex justify-content-center gap-1">
                                     <a asp-action="Details" asp-route-id="@item.IdDeclaracion" class="table-btn-action" title="Ver detalle">

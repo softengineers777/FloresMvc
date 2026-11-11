@@ -1,7 +1,8 @@
 :root {
     --ink: #111;
-    --muted: #555;
-    --line: #d7d7d7;
+    --muted: #444;
+    --line: #333;
+    --soft: #d7d7d7;
 }
 
 * {
@@ -13,6 +14,7 @@ body {
     font-family: Arial, Helvetica, sans-serif;
     color: var(--ink);
     background: #f3f4f6;
+    font-size: 12px;
 }
 
 .toolbar {
@@ -24,7 +26,7 @@ body {
     justify-content: center;
     padding: 12px;
     background: #fff;
-    border-bottom: 1px solid var(--line);
+    border-bottom: 1px solid var(--soft);
 }
 
 .btn {
@@ -49,129 +51,183 @@ body {
     width: 210mm;
     min-height: 297mm;
     margin: 18px auto;
-    padding: 18mm 16mm;
+    padding: 12mm 14mm;
     background: #fff;
     box-shadow: 0 2px 12px rgba(0, 0, 0, .08);
 }
 
-h1 {
-    margin: 0 0 4px;
-    text-align: center;
-    font-size: 20px;
-    letter-spacing: .3px;
-    text-transform: uppercase;
+.header-table,
+.form-table {
+    width: 100%;
+    border-collapse: collapse;
 }
 
-.subtitle {
-    margin: 0 0 18px;
-    text-align: center;
-    color: var(--muted);
-    font-size: 13px;
-}
-
-.meta {
-    display: flex;
-    justify-content: space-between;
-    gap: 12px;
-    margin-bottom: 18px;
-    font-size: 13px;
-}
-
-.box {
+.header-table td,
+.form-table th,
+.form-table td {
     border: 1px solid var(--line);
-    border-radius: 6px;
-    padding: 12px 14px;
-    margin-bottom: 14px;
 }
 
-.box h2 {
-    margin: 0 0 10px;
+.header-table {
+    margin-bottom: 10px;
+}
+
+.logo-cell {
+    width: 130px;
+    text-align: center;
+    vertical-align: middle;
+    padding: 6px;
+}
+
+.logo {
+    max-width: 110px;
+    max-height: 55px;
+    object-fit: contain;
+}
+
+.title-cell {
+    text-align: center;
+    vertical-align: middle;
+    padding: 6px 8px;
+}
+
+.company {
+    font-weight: 700;
     font-size: 13px;
+    margin-bottom: 4px;
+}
+
+.title {
+    font-weight: 700;
+    font-size: 15px;
     text-transform: uppercase;
-    color: #222;
 }
 
-.grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px 18px;
+.meta-cell {
+    width: 150px;
+    padding: 6px 8px;
+    vertical-align: middle;
+    font-size: 11px;
+    line-height: 1.5;
 }
 
-.field {
-    font-size: 13px;
+.form-table {
+    margin-bottom: 0;
 }
 
-.label {
-    display: block;
-    color: var(--muted);
+.form-table th.label {
+    width: 180px;
+    background: #f5f5f5;
+    text-align: left;
+    padding: 6px 8px;
     font-size: 11px;
     text-transform: uppercase;
-    margin-bottom: 2px;
+    font-weight: 700;
+    vertical-align: middle;
 }
 
-.value {
-    min-height: 18px;
+.form-table td.value {
+    padding: 6px 8px;
+    font-size: 12px;
+    vertical-align: middle;
+    min-height: 22px;
+}
+
+.situacion-table {
+    margin-top: -1px;
+}
+
+.section-title {
+    width: auto !important;
+    text-align: center !important;
+}
+
+.situacion-cell {
+    height: 320px;
+    vertical-align: top !important;
+    padding: 8px 10px !important;
+}
+
+.situacion-note {
+    font-size: 10px;
+    color: var(--muted);
+    font-style: italic;
+    margin-bottom: 8px;
+}
+
+.situacion-text {
+    font-size: 12px;
+    line-height: 1.5;
     white-space: pre-wrap;
-}
-
-.full {
-    grid-column: 1 / -1;
-}
-
-.body-text {
-    font-size: 13px;
-    line-height: 1.55;
     text-align: justify;
-    margin: 0;
-    white-space: pre-wrap;
 }
 
-.signs {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 28px;
-    margin-top: 34px;
+.signature-block {
+    margin-top: 30px;
+    display: flex;
+    justify-content: flex-start;
 }
 
-.sign {
-    text-align: center;
+.signature-box {
+    width: 320px;
+}
+
+.atentamente {
+    margin-bottom: 10px;
     font-size: 12px;
 }
 
-.sign-mark {
+.sign-area {
     min-height: 80px;
     display: flex;
     align-items: flex-end;
-    justify-content: center;
-    padding-bottom: 4px;
-    color: #444;
 }
 
-.sign-mark img {
-    max-width: 280px;
-    max-height: 74px;
+.firma-img {
+    max-width: 260px;
+    max-height: 70px;
     display: block;
-    margin: 0 auto;
+}
+
+.firma-text {
+    font-size: 12px;
+    padding-bottom: 4px;
 }
 
 .sign-line {
     border-top: 1px solid #333;
-    margin: 0 8px;
+    margin-top: 4px;
 }
 
 .sign-caption {
-    padding-top: 6px;
+    margin-top: 4px;
+    font-size: 11px;
+    text-align: center;
+    font-weight: 700;
 }
 
-.sign-role {
-    color: #666;
+.sign-sub {
+    font-weight: 400;
+    color: var(--muted);
+}
+
+.sign-owner {
+    margin-top: 2px;
+    font-size: 11px;
+    text-align: center;
+    color: #333;
 }
 
 .footer {
-    margin-top: 18px;
-    font-size: 11px;
+    margin-top: 16px;
+    font-size: 10px;
     color: var(--muted);
     text-align: right;
+}
+
+@page {
+    size: A4 portrait;
+    margin: 10mm;
 }
 
 @media print {
@@ -187,7 +243,7 @@ h1 {
         width: auto;
         min-height: 0;
         margin: 0;
-        padding: 12mm 10mm;
+        padding: 0;
         box-shadow: none;
     }
 }

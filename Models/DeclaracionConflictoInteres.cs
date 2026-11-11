@@ -49,6 +49,9 @@ namespace FloresMvc.Models
         [Display(Name = "Observaciones")]
         public string? Observaciones { get; set; }
 
+        [Display(Name = "Firma")]
+        public string? Firma { get; set; }
+
         [MaxLength(30)]
         public string? Owner { get; set; }
 

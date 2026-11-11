@@ -9,8 +9,24 @@
       "PackagePath": "staticwebassets\\assets\\css\\acta-descargos-documento.css"
     },
     {
+      "Id": "C:\\Users\\jhon.bolivar\\OneDrive - GR Chia S.A.S\\Documentos\\Desarrollo\\FloresMvc\\wwwroot\\assets\\css\\citacion-descargos-documento.css",
+      "PackagePath": "staticwebassets\\assets\\css\\citacion-descargos-documento.css"
+    },
+    {
+      "Id": "C:\\Users\\jhon.bolivar\\OneDrive - GR Chia S.A.S\\Documentos\\Desarrollo\\FloresMvc\\wwwroot\\assets\\css\\consulta-peps-documento.css",
+      "PackagePath": "staticwebassets\\assets\\css\\consulta-peps-documento.css"
+    },
+    {
+      "Id": "C:\\Users\\jhon.bolivar\\OneDrive - GR Chia S.A.S\\Documentos\\Desarrollo\\FloresMvc\\wwwroot\\assets\\css\\declaracion-conflicto-interes-documento.css",
+      "PackagePath": "staticwebassets\\assets\\css\\declaracion-conflicto-interes-documento.css"
+    },
+    {
       "Id": "C:\\Users\\jhon.bolivar\\OneDrive - GR Chia S.A.S\\Documentos\\Desarrollo\\FloresMvc\\wwwroot\\assets\\css\\main.css",
       "PackagePath": "staticwebassets\\assets\\css\\main.css"
+    },
+    {
+      "Id": "C:\\Users\\jhon.bolivar\\OneDrive - GR Chia S.A.S\\Documentos\\Desarrollo\\FloresMvc\\wwwroot\\assets\\css\\modelo-disciplinario-documento.css",
+      "PackagePath": "staticwebassets\\assets\\css\\modelo-disciplinario-documento.css"
     },
     {
       "Id": "C:\\Users\\jhon.bolivar\\OneDrive - GR Chia S.A.S\\Documentos\\Desarrollo\\FloresMvc\\wwwroot\\assets\\images\\AdminImage.com",
@@ -23,6 +39,14 @@
     {
       "Id": "C:\\Users\\jhon.bolivar\\OneDrive - GR Chia S.A.S\\Documentos\\Desarrollo\\FloresMvc\\wwwroot\\assets\\images\\favicon.ico",
       "PackagePath": "staticwebassets\\assets\\images\\favicon.ico"
+    },
+    {
+      "Id": "C:\\Users\\jhon.bolivar\\OneDrive - GR Chia S.A.S\\Documentos\\Desarrollo\\FloresMvc\\wwwroot\\assets\\images\\logo-conflicto-interes.png",
+      "PackagePath": "staticwebassets\\assets\\images\\logo-conflicto-interes.png"
+    },
+    {
+      "Id": "C:\\Users\\jhon.bolivar\\OneDrive - GR Chia S.A.S\\Documentos\\Desarrollo\\FloresMvc\\wwwroot\\assets\\images\\logo-modelo-disciplinario.png",
+      "PackagePath": "staticwebassets\\assets\\images\\logo-modelo-disciplinario.png"
     },
     {
       "Id": "C:\\Users\\jhon.bolivar\\OneDrive - GR Chia S.A.S\\Documentos\\Desarrollo\\FloresMvc\\wwwroot\\assets\\images\\spark-admin-free.png",

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using FloresMvc.Extensions;
+using FloresMvc.Filters;
 using FloresMvc.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -21,6 +22,7 @@ namespace FloresMvc.Controllers
             _context = context;
         }
 
+        [Permiso("DeclaracionConflictoInteres.Ver")]
         public async Task<IActionResult> Index()
         {
             var items = await _context.DeclaracionConflictoInteres
@@ -34,6 +36,7 @@ namespace FloresMvc.Controllers
             return View(items);
         }
 
+        [Permiso("DeclaracionConflictoInteres.Ver")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null) return NotFound();
@@ -53,6 +56,7 @@ namespace FloresMvc.Controllers
         }
 
         [HttpGet]
+        [Permiso("DeclaracionConflictoInteres.Documento")]
         public async Task<IActionResult> Documento(int? id)
         {
             if (id == null) return NotFound();
@@ -76,6 +80,7 @@ namespace FloresMvc.Controllers
         }
 
         [HttpGet]
+        [Permiso("DeclaracionConflictoInteres.Crear")]
         public async Task<IActionResult> Create()
         {
             var model = new DeclaracionConflictoInteresViewModel
@@ -91,6 +96,7 @@ namespace FloresMvc.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Permiso("DeclaracionConflictoInteres.Crear")]
         public async Task<IActionResult> Create(DeclaracionConflictoInteresViewModel model)
         {
             NormalizarModelo(model);
@@ -118,6 +124,7 @@ namespace FloresMvc.Controllers
                 CargoFamiliar = Limpiar(model.CargoFamiliar),
                 AreaFamiliar = Limpiar(model.AreaFamiliar),
                 Observaciones = Limpiar(model.Observaciones),
+                Firma = model.Firma,
                 Owner = usuarioActual,
                 DateOwner = ahora
             };
@@ -139,6 +146,7 @@ namespace FloresMvc.Controllers
         }
 
         [HttpGet]
+        [Permiso("DeclaracionConflictoInteres.Editar")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null) return NotFound();
@@ -157,6 +165,7 @@ namespace FloresMvc.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Permiso("DeclaracionConflictoInteres.Editar")]
         public async Task<IActionResult> Edit(int id, DeclaracionConflictoInteresViewModel model)
         {
             if (id != model.IdDeclaracion) return NotFound();
@@ -190,6 +199,7 @@ namespace FloresMvc.Controllers
             declaracionDb.CargoFamiliar = Limpiar(model.CargoFamiliar);
             declaracionDb.AreaFamiliar = Limpiar(model.AreaFamiliar);
             declaracionDb.Observaciones = Limpiar(model.Observaciones);
+            declaracionDb.Firma = model.Firma;
             declaracionDb.LastModify = usuarioActual;
             declaracionDb.LastDate = ahora;
 
@@ -216,6 +226,7 @@ namespace FloresMvc.Controllers
         }
 
         [HttpGet, ActionName("Delete")]
+        [Permiso("DeclaracionConflictoInteres.Eliminar")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null) return NotFound();
@@ -236,6 +247,7 @@ namespace FloresMvc.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Permiso("DeclaracionConflictoInteres.Eliminar")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var declaracion = await _context.DeclaracionConflictoInteres
@@ -267,6 +279,7 @@ namespace FloresMvc.Controllers
                 CargoFamiliar = declaracion.CargoFamiliar,
                 AreaFamiliar = declaracion.AreaFamiliar,
                 Observaciones = declaracion.Observaciones,
+                Firma = declaracion.Firma,
                 Owner = declaracion.Owner,
                 DateOwner = declaracion.DateOwner,
                 LastModify = declaracion.LastModify,
@@ -361,6 +374,9 @@ namespace FloresMvc.Controllers
 
             if (model.FechaDeclaracion == default)
                 ModelState.AddModelError(nameof(model.FechaDeclaracion), "La fecha de declaración es obligatoria.");
+
+            if (string.IsNullOrWhiteSpace(model.Firma))
+                ModelState.AddModelError(nameof(model.Firma), "La firma es obligatoria.");
         }
 
         private static void NormalizarModelo(DeclaracionConflictoInteresViewModel model)
@@ -371,6 +387,7 @@ namespace FloresMvc.Controllers
             model.CargoFamiliar = Limpiar(model.CargoFamiliar);
             model.AreaFamiliar = Limpiar(model.AreaFamiliar);
             model.Observaciones = Limpiar(model.Observaciones);
+            model.Firma = model.Firma?.Trim();
             model.Preguntas ??= new List<DeclaracionConflictoPreguntaItemViewModel>();
         }
 

@@ -33,6 +33,7 @@ CREATE TABLE IF NOT EXISTS "DeclaracionConflictoInteres" (
     "CargoFamiliar" VARCHAR(150),
     "AreaFamiliar" VARCHAR(150),
     "Observaciones" TEXT,
+    "Firma" TEXT,
 
     -- Auditoría
     "Owner" VARCHAR(30),

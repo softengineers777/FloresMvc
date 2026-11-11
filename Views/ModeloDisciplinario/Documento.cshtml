@@ -3,6 +3,7 @@
     Layout = null;
     var nombreArea = ViewBag.NombreArea as string ?? Model.IdArea.ToString();
     var nombreCargo = ViewBag.NombreCargo as string ?? Model.cargo.ToString();
+    var fecha = Model.fecha_creacion == default ? "" : Model.fecha_creacion.ToString("dd/MM/yyyy");
 }
 <!DOCTYPE html>
 <html lang="es">
@@ -20,64 +21,75 @@
     </div>
 
     <main class="page">
-        <h1>Modelo Disciplinario</h1>
-        <p class="subtitle">Gestión Humana — Registro N.º @Model.IdModelo</p>
+        <table class="header-table">
+            <tr>
+                <td class="logo-cell">
+                    <img src="~/assets/images/logo-conflicto-interes.png" alt="Logo" class="logo" asp-append-version="true" />
+                </td>
+                <td class="title-cell">
+                    <div class="company">MOUNTAIN ROSES SAS</div>
+                    <div class="title">MODELO INFORME DISCIPLINARIO</div>
+                </td>
+                <td class="meta-cell">
+                    <div><strong>Consecutivo</strong> @Model.IdModelo</div>
+                    <div><strong>Fecha</strong> @(string.IsNullOrWhiteSpace(fecha) ? "—" : fecha)</div>
+                </td>
+            </tr>
+        </table>
 
-        <div class="meta">
-            <div><span class="label">Para</span><div class="value">@Model.para</div></div>
-            <div><span class="label">Fecha de creación</span><div class="value">@(Model.fecha_creacion == default ? "—" : Model.fecha_creacion.ToString("dd/MM/yyyy HH:mm"))</div></div>
-        </div>
+        <table class="form-table">
+            <tr>
+                <th class="label">Ciudad y fecha</th>
+                <td class="value" colspan="3">@fecha</td>
+            </tr>
+            <tr>
+                <th class="label">Para</th>
+                <td class="value" colspan="3">@Model.para</td>
+            </tr>
+            <tr>
+                <th class="label">Asunto</th>
+                <td class="value" colspan="3">@Model.asunto</td>
+            </tr>
+            <tr>
+                <th class="label">Nombre del trabajador</th>
+                <td class="value" colspan="3">@Model.NomTrabajador</td>
+            </tr>
+            <tr>
+                <th class="label">Cargo</th>
+                <td class="value">@nombreCargo</td>
+                <th class="label">Área / Proceso</th>
+                <td class="value">@nombreArea — @Model.Proceso</td>
+            </tr>
+        </table>
 
-        <section class="box">
-            <h2>Información general</h2>
-            <div class="grid">
-                <div class="field full">
-                    <span class="label">Asunto</span>
-                    <div class="value">@Model.asunto</div>
-                </div>
-                <div class="field full">
-                    <span class="label">Nombre del trabajador</span>
-                    <div class="value">@Model.NomTrabajador</div>
-                </div>
-                <div class="field">
-                    <span class="label">Área</span>
-                    <div class="value">@nombreArea</div>
-                </div>
-                <div class="field">
-                    <span class="label">Cargo</span>
-                    <div class="value">@nombreCargo</div>
-                </div>
-                <div class="field full">
-                    <span class="label">Proceso</span>
-                    <div class="value">@Model.Proceso</div>
-                </div>
-            </div>
-        </section>
+        <table class="form-table situacion-table">
+            <tr>
+                <th class="label section-title">Situación</th>
+            </tr>
+            <tr>
+                <td class="value situacion-cell">
+                    <div class="situacion-note">(Describa la situación de forma clara y precisa: cuándo, quién, qué, dónde, testigos, anexando los soportes según corresponda)</div>
+                    <div class="situacion-text">@(string.IsNullOrWhiteSpace(Model.Situacion) ? "—" : Model.Situacion)</div>
+                </td>
+            </tr>
+        </table>
 
-        <section class="box">
-            <h2>Situación</h2>
-            <p class="body-text">@(string.IsNullOrWhiteSpace(Model.Situacion) ? "—" : Model.Situacion)</p>
-        </section>
-
-        <div class="signs">
-            <div class="sign">
-                <div class="sign-mark">@(string.IsNullOrWhiteSpace(Model.Owner) ? "" : Model.Owner)</div>
-                <div class="sign-line"></div>
-                <div class="sign-caption">Firma responsable</div>
-            </div>
-            <div class="sign">
-                <div class="sign-mark">
+        <div class="signature-block">
+            <div class="signature-box">
+                <div class="atentamente">Atentamente,</div>
+                <div class="sign-area">
                     @if (!string.IsNullOrWhiteSpace(Model.Firma) && Model.Firma.StartsWith("data:image"))
                     {
-                        <img src="@Model.Firma" alt="Firma" />
+                        <img src="@Model.Firma" alt="Firma" class="firma-img" />
                     }
                     else if (!string.IsNullOrWhiteSpace(Model.Firma))
                     {
-                        @Model.Firma
+                        <div class="firma-text">@Model.Firma</div>
                     }
                 </div>
                 <div class="sign-line"></div>
-                <div class="sign-caption">Firma<br /><span class="sign-role">@nombreCargo</span></div>
+                <div class="sign-caption">JEFE DIRECTO<br /><span class="sign-sub">Nombre y firma</span></div>
+                <div class="sign-owner">@(string.IsNullOrWhiteSpace(Model.Owner) ? "" : Model.Owner)</div>
             </div>
         </div>
 

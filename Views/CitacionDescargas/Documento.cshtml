@@ -3,9 +3,11 @@
     Layout = null;
     var nombreCargo = ViewBag.NombreCargo as string ?? Model.IdCargo.ToString();
     var nombreArea = ViewBag.NombreArea as string ?? Model.IdArea.ToString();
-    var fechaDiligencia = Model.fecha_Diligencia?.ToString("dd/MM/yyyy");
+    var fechaDiligencia = Model.fecha_Diligencia?.ToString("dd 'de' MMMM 'de' yyyy");
     var horaDiligencia = Model.HoraDiligencia?.ToString("HH:mm");
-    var fechaHechos = Model.FechaHechos?.ToString("dd/MM/yyyy");
+    var fechaHechos = Model.FechaHechos?.ToString("dd 'de' MMMM 'de' yyyy");
+    var fechaCreacion = Model.fecha_Creacion == default ? "" : Model.fecha_Creacion.ToString("dd/MM/yyyy");
+    var ciudadFecha = string.IsNullOrWhiteSpace(Model.Ciudad) ? fechaCreacion : $"{Model.Ciudad}, {fechaCreacion}";
 }
 <!DOCTYPE html>
 <html lang="es">
@@ -17,83 +19,84 @@
 </head>
 <body>
     <div class="toolbar">
-        <button type="button" class="btn" onclick="window.print()">
-            Imprimir / Guardar como PDF
-        </button>
+        <button type="button" class="btn" onclick="window.print()">Imprimir / Guardar como PDF</button>
         <a class="btn secondary" href="@Url.Action("Details", "CitacionDescargas", new { id = Model.IdCitacion })">Volver al detalle</a>
         <a class="btn secondary" href="@Url.Action("Index", "CitacionDescargas")">Listado</a>
     </div>
 
     <main class="page">
-        <h1>Citación a Descargos</h1>
-        <p class="subtitle">Gestión Humana — Registro N.º @Model.IdCitacion</p>
+        <table class="header-table">
+            <tr>
+                <td class="logo-cell">
+                    <img src="~/assets/images/logo-conflicto-interes.png" alt="Logo" class="logo" asp-append-version="true" />
+                </td>
+                <td class="title-cell">
+                    <div class="company">MOUNTAIN ROSES SAS</div>
+                    <div class="title">CITACIÓN A DESCARGOS</div>
+                </td>
+                <td class="meta-cell">
+                    <div><strong>Consecutivo</strong> @Model.IdCitacion</div>
+                    <div><strong>Fecha</strong> @(string.IsNullOrWhiteSpace(fechaCreacion) ? "—" : fechaCreacion)</div>
+                </td>
+            </tr>
+        </table>
 
-        <div class="meta">
-            <div><span class="label">Ciudad</span><div class="value">@(string.IsNullOrWhiteSpace(Model.Ciudad) ? "—" : Model.Ciudad)</div></div>
-            <div><span class="label">Fecha de creación</span><div class="value">@(Model.fecha_Creacion == default ? "—" : Model.fecha_Creacion.ToString("dd/MM/yyyy HH:mm"))</div></div>
-        </div>
+        <table class="form-table">
+            <tr>
+                <th class="label">Ciudad y fecha</th>
+                <td class="value" colspan="3">@ciudadFecha</td>
+            </tr>
+            <tr>
+                <th class="label">Nombre del trabajador</th>
+                <td class="value" colspan="3">@Model.NomTrabajador</td>
+            </tr>
+            <tr>
+                <th class="label">Cargo</th>
+                <td class="value">@nombreCargo</td>
+                <th class="label">Área o proceso</th>
+                <td class="value">@nombreArea — @Model.Proceso</td>
+            </tr>
+            <tr>
+                <th class="label">Asunto</th>
+                <td class="value" colspan="3"><strong>Citación a diligencia de descargos</strong></td>
+            </tr>
+        </table>
 
-        <section class="box">
-            <h2>Datos del trabajador</h2>
-            <div class="grid">
-                <div class="field full">
-                    <span class="label">Nombre del trabajador</span>
-                    <div class="value">@Model.NomTrabajador</div>
-                </div>
-                <div class="field">
-                    <span class="label">Cargo</span>
-                    <div class="value">@nombreCargo</div>
-                </div>
-                <div class="field">
-                    <span class="label">Área</span>
-                    <div class="value">@nombreArea</div>
-                </div>
-                <div class="field">
-                    <span class="label">Proceso</span>
-                    <div class="value">@Model.Proceso</div>
-                </div>
-                <div class="field">
-                    <span class="label">C.C. Recibido</span>
-                    <div class="value">@Model.CcRecibido</div>
-                </div>
-            </div>
-        </section>
-
-        <section class="box">
-            <h2>Información de la diligencia</h2>
-            <div class="grid">
-                <div class="field">
-                    <span class="label">Fecha de diligencia</span>
-                    <div class="value">@(fechaDiligencia ?? "—")</div>
-                </div>
-                <div class="field">
-                    <span class="label">Hora de diligencia</span>
-                    <div class="value">@(horaDiligencia ?? "—")</div>
-                </div>
-                <div class="field full">
-                    <span class="label">Fecha de los hechos</span>
-                    <div class="value">@(fechaHechos ?? "—")</div>
-                </div>
-            </div>
-            <p class="body-text">
-                Por medio del presente documento se cita al trabajador para que rinda sus descargos
-                relacionados con los hechos indicados, en la fecha y hora señaladas para la diligencia.
-                El trabajador podrá presentar las pruebas y explicaciones que considere pertinentes.
+        <div class="body-box">
+            <p>
+                Por medio de la presente nos permitimos citarlo el día
+                <strong>@(fechaDiligencia ?? "________________")</strong>
+                a las <strong>@(horaDiligencia ?? "________")</strong>
+                a la Oficina de la Dirección de Gestión Humana con el fin de oír sus descargos sobre los hechos ocurridos el día
+                <strong>@(fechaHechos ?? "________________")</strong>.
             </p>
-        </section>
-
-        <div class="signs">
-            <div class="sign">
-                <div class="sign-mark">@(string.IsNullOrWhiteSpace(Model.Owner) ? "" : Model.Owner)</div>
-                <div class="sign-line"></div>
-                <div class="sign-caption">Firma de quien cita</div>
-            </div>
-            <div class="sign">
-                <div class="sign-mark">@Model.CcRecibido</div>
-                <div class="sign-line"></div>
-                <div class="sign-caption">Firma del trabajador / C.C. recibido</div>
-            </div>
+            <p>
+                En caso de que no se presente a la diligencia, la empresa entenderá que renuncia a su derecho de contradicción y defensa.
+            </p>
         </div>
+
+        <table class="sign-table">
+            <tr>
+                <td class="sign-col">
+                    <div class="sign-label">Atentamente,</div>
+                    <div class="sign-space">
+                        @if (!string.IsNullOrWhiteSpace(Model.Owner))
+                        {
+                            <span>@Model.Owner</span>
+                        }
+                    </div>
+                    <div class="sign-line"></div>
+                    <div class="sign-caption">Dirección de Gestión Humana</div>
+                </td>
+                <td class="sign-col">
+                    <div class="sign-label">Recibí:</div>
+                    <div class="sign-space"></div>
+                    <div class="sign-line"></div>
+                    <div class="sign-caption">Firma del trabajador</div>
+                    <div class="sign-cc">CC No. <strong>@Model.CcRecibido</strong></div>
+                </td>
+            </tr>
+        </table>
 
         <div class="footer">Generado desde FloresMvc — @DateTime.Now.ToString("dd/MM/yyyy HH:mm")</div>
     </main>

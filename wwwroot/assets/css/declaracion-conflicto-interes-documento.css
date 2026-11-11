@@ -1,7 +1,8 @@
 :root {
     --ink: #111;
-    --muted: #555;
-    --line: #d7d7d7;
+    --muted: #444;
+    --line: #333;
+    --soft: #d7d7d7;
 }
 
 * {
@@ -13,6 +14,7 @@ body {
     font-family: Arial, Helvetica, sans-serif;
     color: var(--ink);
     background: #f3f4f6;
+    font-size: 11px;
 }
 
 .toolbar {
@@ -24,7 +26,7 @@ body {
     justify-content: center;
     padding: 12px;
     background: #fff;
-    border-bottom: 1px solid var(--line);
+    border-bottom: 1px solid var(--soft);
 }
 
 .btn {
@@ -46,92 +48,129 @@ body {
 }
 
 .page {
-    width: 210mm;
-    min-height: 297mm;
+    width: 297mm;
+    min-height: 210mm;
     margin: 18px auto;
-    padding: 18mm 16mm;
+    padding: 8mm 8mm 10mm;
     background: #fff;
     box-shadow: 0 2px 12px rgba(0, 0, 0, .08);
 }
 
-h1 {
-    margin: 0 0 4px;
-    text-align: center;
-    font-size: 20px;
-    letter-spacing: .3px;
-    text-transform: uppercase;
-}
-
-.subtitle {
-    margin: 0 0 18px;
-    text-align: center;
-    color: var(--muted);
-    font-size: 13px;
-}
-
-.meta {
-    display: flex;
-    justify-content: space-between;
-    gap: 12px;
-    margin-bottom: 18px;
-    font-size: 13px;
-}
-
-.box {
-    border: 1px solid var(--line);
-    border-radius: 6px;
-    padding: 12px 14px;
-    margin-bottom: 14px;
-}
-
-.box h2 {
-    margin: 0 0 10px;
-    font-size: 13px;
-    text-transform: uppercase;
-    color: #222;
-}
-
-.grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px 18px;
-}
-
-.field {
-    font-size: 13px;
-}
-
-.label {
-    display: block;
-    color: var(--muted);
-    font-size: 11px;
-    text-transform: uppercase;
-    margin-bottom: 2px;
-}
-
-.value {
-    min-height: 18px;
-}
-
-.full {
-    grid-column: 1 / -1;
-}
-
-table {
+.header-table,
+.info-table,
+.data-table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 12px;
 }
 
-th,
-td {
+.header-table td,
+.info-table th,
+.info-table td,
+.data-table th,
+.data-table td {
     border: 1px solid var(--line);
-    padding: 8px;
+}
+
+.header-table {
+    margin-bottom: 6px;
+}
+
+.logo-cell {
+    width: 140px;
+    text-align: center;
+    vertical-align: middle;
+    padding: 6px;
+}
+
+.logo {
+    max-width: 120px;
+    max-height: 60px;
+    object-fit: contain;
+}
+
+.title-cell {
+    text-align: center;
+    vertical-align: middle;
+    padding: 6px 8px;
+}
+
+.company {
+    font-weight: 700;
+    font-size: 13px;
+    margin-bottom: 4px;
+}
+
+.title {
+    font-weight: 700;
+    font-size: 14px;
+    text-transform: uppercase;
+}
+
+.meta-cell {
+    width: 170px;
+    padding: 6px 8px;
+    vertical-align: middle;
+    font-size: 11px;
+    line-height: 1.4;
+}
+
+.info-table {
+    margin-bottom: 8px;
+}
+
+.info-table th {
+    background: #f5f5f5;
+    font-size: 10px;
+    text-transform: uppercase;
+    padding: 4px 6px;
+    width: 1%;
+    white-space: nowrap;
+}
+
+.info-table td {
+    padding: 4px 6px;
+    font-size: 11px;
+}
+
+.legal-text {
+    border: 1px solid var(--line);
+    padding: 6px 8px;
+    font-size: 9.5px;
+    line-height: 1.35;
+    text-align: justify;
+    margin-bottom: 8px;
+}
+
+.table-wrap {
+    overflow: visible;
+}
+
+.data-table th,
+.data-table td {
+    padding: 4px 4px;
+    vertical-align: middle;
+    font-size: 9px;
+}
+
+.data-table th {
+    background: #efefef;
+    text-align: center;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.data-table th.q {
+    width: 70px;
+    font-size: 8px;
+    font-weight: 600;
     vertical-align: top;
 }
 
-th {
-    background: #f8f9fa;
+.data-table td {
+    height: 48px;
+}
+
+.left {
     text-align: left;
 }
 
@@ -139,20 +178,44 @@ th {
     text-align: center;
 }
 
-.badge-si {
-    color: #b42318;
+.mark {
+    text-align: center;
+    font-size: 14px;
     font-weight: 700;
+    width: 70px;
 }
 
-.badge-no {
-    color: #555;
+.firma-cell {
+    width: 150px;
+    text-align: center;
+    vertical-align: middle;
+    padding: 2px;
+}
+
+.firma-img {
+    max-width: 140px;
+    max-height: 44px;
+    display: block;
+    margin: 0 auto;
+}
+
+.observaciones {
+    margin-top: 8px;
+    font-size: 10px;
+    border: 1px solid var(--line);
+    padding: 6px 8px;
 }
 
 .footer {
-    margin-top: 18px;
-    font-size: 11px;
+    margin-top: 8px;
+    font-size: 10px;
     color: var(--muted);
     text-align: right;
+}
+
+@page {
+    size: A4 landscape;
+    margin: 8mm;
 }
 
 @media print {
@@ -168,7 +231,7 @@ th {
         width: auto;
         min-height: 0;
         margin: 0;
-        padding: 12mm 10mm;
+        padding: 0;
         box-shadow: none;
     }
 }

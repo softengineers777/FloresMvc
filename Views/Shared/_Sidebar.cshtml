@@ -270,6 +270,8 @@
                             </a>
                         </li>
                         }
+                        @if (User.HasClaim("permiso", "DeclaracionConflictoInteres.Ver"))
+                        {
                         <li>
                             <a href="/DeclaracionConflictoInteres/Index" class="sidebar-submenu-link @declaracionConflictoActivo"
                                id="menu-declaracion-conflicto" title="Declaración Conflicto de Interés">
@@ -277,6 +279,7 @@
                                 <span>Declaración Conflicto de Interés</span>
                             </a>
                         </li>
+                        }
                     </ul>
                 </li>
                 <li class="sidebar-menu-item">
