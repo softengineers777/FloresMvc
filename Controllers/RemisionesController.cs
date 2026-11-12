@@ -143,6 +143,33 @@ namespace FloresMvc.Controllers
             return View(remision);
         }
 
+        // GET: Remisiones/Documento/5
+        [Permiso("Remisiones.Ver")]
+        public async Task<IActionResult> Documento(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var remision = await _context.Remisiones
+                .AsNoTracking()
+                .Include(r => r.Area)
+                .Include(r => r.Finca)
+                .Include(r => r.Detalles)
+                .FirstOrDefaultAsync(r => r.IdRemision == id);
+
+            if (remision == null)
+            {
+                return NotFound();
+            }
+
+            ViewBag.nombreArea = remision.Area?.NomArea ?? remision.IdArea.ToString();
+            ViewBag.nombreFinca = remision.Finca?.NomFinca ?? remision.IdFinca.ToString();
+
+            return View(remision);
+        }
+
         // GET: Remisiones/Create
         [HttpGet]
         [Permiso("Remisiones.Crear")]

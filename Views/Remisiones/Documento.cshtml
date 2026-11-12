@@ -1,0 +1,127 @@
+@model FloresMvc.Models.Remisiones
+@{
+    Layout = null;
+    var nombreArea = ViewBag.nombreArea as string ?? Model.Area?.NomArea ?? Model.IdArea.ToString();
+    var nombreFinca = ViewBag.nombreFinca as string ?? Model.Finca?.NomFinca ?? Model.IdFinca.ToString();
+    var fecha = Model.fecha_Creacion == default ? "—" : Model.fecha_Creacion.ToString("dd/MM/yyyy");
+    var solicitante = $"{Model.Nombre} {Model.Apellido}".Trim();
+    var detalles = Model.Detalles?.OrderBy(d => d.IdDetalle).ToList() ?? new List<FloresMvc.Models.RemisionesDTO>();
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Remisión N.º @Model.NumeroRemision</title>
+    <link rel="stylesheet" href="~/assets/css/modelo-disciplinario-documento.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/assets/css/remisiones-documento.css" asp-append-version="true" />
+</head>
+<body>
+    <div class="toolbar">
+        <button type="button" class="btn" onclick="window.print()">Imprimir / Guardar como PDF</button>
+        <a class="btn secondary" href="@Url.Action("Details", "Remisiones", new { id = Model.IdRemision })">Volver al detalle</a>
+        <a class="btn secondary" href="@Url.Action("Index", "Remisiones")">Listado</a>
+    </div>
+
+    <main class="page">
+        <table class="header-table">
+            <tr>
+                <td class="logo-cell">
+                    <img src="~/assets/images/logo-conflicto-interes.png" alt="Logo" class="logo" asp-append-version="true" />
+                </td>
+                <td class="title-cell">
+                    <div class="company">MOUNTAIN ROSES SAS</div>
+                    <div class="title">REMISIÓN</div>
+                </td>
+                <td class="meta-cell">
+                    <div><strong>N.º Remisión:</strong> @Model.NumeroRemision</div>
+                    <div><strong>Consecutivo:</strong> @Model.IdRemision</div>
+                    <div><strong>Fecha:</strong> @fecha</div>
+                </td>
+            </tr>
+        </table>
+
+        <table class="form-table remi-info">
+            <tr>
+                <th class="label">Solicitante</th>
+                <td class="value">@solicitante</td>
+                <th class="label">Placa vehículo</th>
+                <td class="value">@Model.PlacaVehiculo</td>
+            </tr>
+            <tr>
+                <th class="label">Dirección</th>
+                <td class="value" colspan="3">@Model.Direccion</td>
+            </tr>
+            <tr>
+                <th class="label">Área</th>
+                <td class="value">@nombreArea</td>
+                <th class="label">Finca</th>
+                <td class="value">@nombreFinca</td>
+            </tr>
+        </table>
+
+        <table class="items-table">
+            <thead>
+                <tr>
+                    <th class="idx">#</th>
+                    <th class="ref">Referencia</th>
+                    <th class="num">Cantidad</th>
+                    <th>Descripción</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (detalles.Count == 0)
+                {
+                    <tr>
+                        <td colspan="4" style="text-align:center; padding:12px; color:#666;">Sin insumos registrados.</td>
+                    </tr>
+                }
+                else
+                {
+                    var i = 1;
+                    foreach (var d in detalles)
+                    {
+                        <tr>
+                            <td class="idx">@i</td>
+                            <td class="ref">@d.referencia</td>
+                            <td class="num">@d.Cantidad.ToString("N2")</td>
+                            <td>@d.Descripcion</td>
+                        </tr>
+                        i++;
+                    }
+                }
+            </tbody>
+        </table>
+
+        <table class="form-table totals">
+            <tr>
+                <th class="label">Peso total</th>
+                <td class="value" style="text-align:right;"><strong>@Model.PesoTotal.ToString("N2")</strong></td>
+            </tr>
+        </table>
+
+        <div class="obs-box">
+            <div class="obs-title">Observaciones</div>
+            <div>@(string.IsNullOrWhiteSpace(Model.Observaciones) ? "—" : Model.Observaciones)</div>
+        </div>
+
+        <div class="signatures">
+            <div class="sig">
+                <div class="line">Despachado por</div>
+                <div class="name">@(!string.IsNullOrWhiteSpace(Model.DespachadoPor) ? Model.DespachadoPor : "")</div>
+            </div>
+            <div class="sig">
+                <div class="line">Transportado por</div>
+                <div class="name">@(!string.IsNullOrWhiteSpace(Model.TransportadoPor) ? Model.TransportadoPor : "")</div>
+            </div>
+            <div class="sig">
+                <div class="line">Recibido por</div>
+                <div class="name">@(!string.IsNullOrWhiteSpace(Model.RecibidoPor) ? Model.RecibidoPor : "")</div>
+            </div>
+        </div>
+
+        <div class="footer">Generado desde FloresMvc — @DateTime.Now.ToString("dd/MM/yyyy HH:mm") — Remisión N.º @Model.NumeroRemision</div>
+    </main>
+</body>
+</html>

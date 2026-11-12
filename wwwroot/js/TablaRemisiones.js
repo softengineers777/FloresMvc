@@ -103,7 +103,7 @@ document.addEventListener("DOMContentLoaded", function () {
             {
                 title: "Acciones",
                 field: "acciones",
-                width: 130,
+                width: 170,
                 hozAlign: "center",
                 headerSort: false,
                 formatter: formatearAcciones
@@ -145,7 +145,12 @@ document.addEventListener("DOMContentLoaded", function () {
         var grupo = document.createElement("div");
         grupo.className = "d-flex justify-content-center gap-1";
 
+        var btnDocumento = crearAccion("/Remisiones/Documento/" + id, "Ver documento / PDF", "bi-file-earmark-pdf", "");
+        btnDocumento.target = "_blank";
+        btnDocumento.rel = "noopener";
+
         grupo.appendChild(crearAccion("/Remisiones/Details/" + id, "Ver detalle", "bi-eye", ""));
+        grupo.appendChild(btnDocumento);
         grupo.appendChild(crearAccion("/Remisiones/Edit/" + id, "Editar", "bi-pencil", ""));
         grupo.appendChild(crearAccion("/Remisiones/Delete/" + id, "Eliminar", "bi-trash", "delete"));
 

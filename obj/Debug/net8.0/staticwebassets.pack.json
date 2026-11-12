@@ -29,6 +29,10 @@
       "PackagePath": "staticwebassets\\assets\\css\\modelo-disciplinario-documento.css"
     },
     {
+      "Id": "C:\\Users\\jhon.bolivar\\OneDrive - GR Chia S.A.S\\Documentos\\Desarrollo\\FloresMvc\\wwwroot\\assets\\css\\remisiones-documento.css",
+      "PackagePath": "staticwebassets\\assets\\css\\remisiones-documento.css"
+    },
+    {
       "Id": "C:\\Users\\jhon.bolivar\\OneDrive - GR Chia S.A.S\\Documentos\\Desarrollo\\FloresMvc\\wwwroot\\assets\\images\\AdminImage.com",
       "PackagePath": "staticwebassets\\assets\\images\\AdminImage.com"
     },
@@ -47,10 +51,6 @@
     {
       "Id": "C:\\Users\\jhon.bolivar\\OneDrive - GR Chia S.A.S\\Documentos\\Desarrollo\\FloresMvc\\wwwroot\\assets\\images\\logo-modelo-disciplinario.png",
       "PackagePath": "staticwebassets\\assets\\images\\logo-modelo-disciplinario.png"
-    },
-    {
-      "Id": "C:\\Users\\jhon.bolivar\\OneDrive - GR Chia S.A.S\\Documentos\\Desarrollo\\FloresMvc\\wwwroot\\assets\\images\\spark-admin-free.png",
-      "PackagePath": "staticwebassets\\assets\\images\\spark-admin-free.png"
     },
     {
       "Id": "C:\\Users\\jhon.bolivar\\OneDrive - GR Chia S.A.S\\Documentos\\Desarrollo\\FloresMvc\\wwwroot\\assets\\images\\user_1.jpg",

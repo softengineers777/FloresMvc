@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "rb1tXO6wIFNNMwd2TgRZ+OmpvyHSXzN0NUw09JTPBY4=",
+  "Hash": "NqIxT6N4Myp3DWCmGW6HPAm7WKDdJylbTwa8VZU/IKE=",
   "Source": "FloresMvc",
   "BasePath": "_content/FloresMvc",
   "Mode": "Default",
@@ -169,6 +169,25 @@
       "OriginalItemSpec": "wwwroot\\assets\\css\\modelo-disciplinario-documento.css"
     },
     {
+      "Identity": "C:\\Users\\jhon.bolivar\\OneDrive - GR Chia S.A.S\\Documentos\\Desarrollo\\FloresMvc\\wwwroot\\assets\\css\\remisiones-documento.css",
+      "SourceId": "FloresMvc",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\jhon.bolivar\\OneDrive - GR Chia S.A.S\\Documentos\\Desarrollo\\FloresMvc\\wwwroot\\",
+      "BasePath": "_content/FloresMvc",
+      "RelativePath": "assets/css/remisiones-documento.css",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\assets\\css\\remisiones-documento.css"
+    },
+    {
       "Identity": "C:\\Users\\jhon.bolivar\\OneDrive - GR Chia S.A.S\\Documentos\\Desarrollo\\FloresMvc\\wwwroot\\assets\\images\\AdminImage.com",
       "SourceId": "FloresMvc",
       "SourceType": "Discovered",
@@ -262,25 +281,6 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\assets\\images\\logo-modelo-disciplinario.png"
-    },
-    {
-      "Identity": "C:\\Users\\jhon.bolivar\\OneDrive - GR Chia S.A.S\\Documentos\\Desarrollo\\FloresMvc\\wwwroot\\assets\\images\\spark-admin-free.png",
-      "SourceId": "FloresMvc",
-      "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\jhon.bolivar\\OneDrive - GR Chia S.A.S\\Documentos\\Desarrollo\\FloresMvc\\wwwroot\\",
-      "BasePath": "_content/FloresMvc",
-      "RelativePath": "assets/images/spark-admin-free.png",
-      "AssetKind": "All",
-      "AssetMode": "All",
-      "AssetRole": "Primary",
-      "AssetMergeBehavior": "PreferTarget",
-      "AssetMergeSource": "",
-      "RelatedAsset": "",
-      "AssetTraitName": "",
-      "AssetTraitValue": "",
-      "CopyToOutputDirectory": "Never",
-      "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\assets\\images\\spark-admin-free.png"
     },
     {
       "Identity": "C:\\Users\\jhon.bolivar\\OneDrive - GR Chia S.A.S\\Documentos\\Desarrollo\\FloresMvc\\wwwroot\\assets\\images\\user_1.jpg",
